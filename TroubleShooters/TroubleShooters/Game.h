@@ -9,6 +9,8 @@ public:
     Player& player2; // Referin?? la al doilea juc?tor
     Player* currentPlayer; // Pointer c?tre juc?torul curent
     Game(Board& gameBoard, Player& p1, Player& p2);
-
+    void switchPLayer();
+    bool isOver();
+    bool checkGameResult(Game game);
 };
 
