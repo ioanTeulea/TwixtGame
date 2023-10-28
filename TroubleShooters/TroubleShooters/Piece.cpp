@@ -19,6 +19,26 @@ Piece& Piece::operator=(const Piece& other)
     return *this;
 }
 
+Player* Piece::getOwner() const
+{
+    return owner;
+}
+
+int Piece::getX() const
+{
+    return x;
+}
+
+int Piece::getY() const
+{
+    return y;
+}
+
+bool Piece::getPlaced() const
+{
+    return placed;
+}
+
 
 
 

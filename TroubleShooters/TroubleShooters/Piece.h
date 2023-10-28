@@ -11,5 +11,9 @@ public:
     ~Piece();
     Piece(const Piece& other);
     Piece& operator=(const Piece& other);
+    Player* getOwner() const;
+    int getX()const;
+    int getY()const;
+    bool getPlaced() const;
 };
 
