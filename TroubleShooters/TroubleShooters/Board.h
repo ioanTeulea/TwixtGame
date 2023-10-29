@@ -2,10 +2,9 @@
 #include "Player.h"
 class Board
 {
-public:
     int size; // Dimensiunea tablei
     int** board; // Matrice de întregi pentru reprezentarea tablei
-
+public:
     // Constructor
     Board(int boardSize);
     ~Board();

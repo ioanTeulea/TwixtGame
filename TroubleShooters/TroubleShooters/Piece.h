@@ -2,10 +2,10 @@
 #include"Player.h"
 class Piece
 {
-public:
     Player* owner; // Owner of the piece
     bool placed; // Is the piece placed on the board
     int x, y; // Position on the board
+public:
     // Constructor
     Piece(Player* player);
     ~Piece();
