@@ -1,6 +1,6 @@
 #include "Game.h"
 #include<iostream>
-Game::Game(Board& gameBoard, Player& p1, Player& p2) : board(gameBoard), player1(p1), player2(p2), currentPlayer(&player1) 
+Game::Game(Board& gameBoard, Player& p1, Player& p2) : board{ gameBoard }, player1{ p1 }, player2{ p2 }, currentPlayer{ &player1 }
 {
     // Initialize the game engine
 }
@@ -24,7 +24,7 @@ bool Game::isOver()
 
 bool Game::checkGameResult(Game game)
 {
-    if (player1.score == player1.pieces.size() && player2.score == player2.pieces.size())
+    if (player1.getScore() == player1.getNumberPieces() && player2.getScore() == player2.getNumberPieces())
     {
         std::cout << "It' s a draw! Both players are out of pices!" << "\n";
         return true;
@@ -32,7 +32,7 @@ bool Game::checkGameResult(Game game)
     else
         if (game.isOver())
         {
-            std::cout << "Player" << currentPlayer->name << " has won!" << "\n";
+            std::cout << "Player" << currentPlayer->getName() << " has won!" << "\n";
             return true;
         }
     return false;

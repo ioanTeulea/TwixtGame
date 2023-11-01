@@ -2,19 +2,24 @@
 #include<string>
 #include<vector>
 #include"Piece.h"
+enum Color
+{
+    Red,
+    Black
+};
 class Player
 {
     std::string name;
-    int color;
+    Color color;
     std::vector<Piece> pieces;
     int score;
 public:
     // Constructor
-    Player(const std::string& playerName, int playerColor);
+    Player(const std::string& playerName, Color playerColor);
     std::string getName() const;
-    int getColor() const;
-    int getScore() const;
+    const Color& getColor() const;
+    const int& getScore() const;
     void increaseScore();
-
+    const int& getNumberPieces()const;
 };
 

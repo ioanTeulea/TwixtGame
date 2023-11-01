@@ -1,6 +1,8 @@
 #include "Board.h"
 
-Board::Board(int boardSize) : size(boardSize) {
+Board::Board(int boardSize) : 
+    size{ boardSize } 
+{
     // Alocare dinamic? pentru tabla de joc
     board = new int* [size];
     for (int i = 0; i < size; ++i) {
@@ -29,7 +31,7 @@ Board::Board(const Board& other)
     for (int i = 0; i < size; i++) {
         board[i] = new int[size];
         for (int j = 0; j < size; j++) {
-            board[i][j] = other.board[i][j];
+            board[i][j]= other.board[i][j];
         }
     }
 }
@@ -68,16 +70,16 @@ bool Board::isValidLocation(int x, int y, int boardSize)
     
 }
 
-bool Board::isOccupied(int x, int y, int** board)
+bool Board::isOccupied(int x, int y,const int** board)
 {
     return board[x][y] != 0;
 }
 
-bool Board::placePiece(Player player, int x, int y)
+bool Board::placePiece(const Player& player, int x, int y)
 {
     if (isValidLocation(x, y, size) && !isOccupied(x, y, board))
     {
-        board[x][y] = player.color;
+        board[x][y] = player.getColor();
         return true;
     }
     return false;
