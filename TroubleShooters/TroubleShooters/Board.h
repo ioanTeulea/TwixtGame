@@ -11,7 +11,7 @@ public:
     Board(const Board& other);
     Board& operator=(const Board& other);
     bool isValidLocation(int x, int y, int boardSize);
-    bool isOccupied(int x, int y,const int** board);
+    bool isOccupied(int x, int y,int** board);
     bool placePiece(const Player& player, int x, int y);
 };
 

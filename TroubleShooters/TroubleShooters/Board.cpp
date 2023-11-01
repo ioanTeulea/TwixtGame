@@ -70,7 +70,7 @@ bool Board::isValidLocation(int x, int y, int boardSize)
     
 }
 
-bool Board::isOccupied(int x, int y,const int** board)
+bool Board::isOccupied(int x, int y,int** board)
 {
     return board[x][y] != 0;
 }
