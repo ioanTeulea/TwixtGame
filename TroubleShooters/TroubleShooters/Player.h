@@ -4,8 +4,8 @@
 #include"Piece.h"
 enum Color
 {
-    Red,
-    Black
+    Red=0,
+    Black=1
 };
 class Player
 {
