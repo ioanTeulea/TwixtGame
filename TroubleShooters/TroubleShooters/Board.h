@@ -1,5 +1,6 @@
 #pragma once
 #include "Player.h"
+#include <iostream>
 class Board
 {
     int size; // Dimensiunea tablei
@@ -13,5 +14,6 @@ public:
     bool isValidLocation(int x, int y, int boardSize);
     bool isOccupied(int x, int y,int** board);
     bool placePiece(const Player& player, int x, int y);
+    void displayBoard();
 };
 

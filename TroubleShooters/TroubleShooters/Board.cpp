@@ -85,4 +85,22 @@ bool Board::placePiece(const Player& player, int x, int y)
     return false;
 }
 
+void Board::displayBoard()
+{
+    for (int row = 0; row < size; row++) {
+        for (int col = 0; col < size; col++) {
+            if (board[row][col] == Color::Red) {
+                std::cout << "R ";
+            }
+            else if (board[row][col] == Color::Black) {
+                std::cout << "B ";
+            }
+            else {
+                std::cout << "O ";
+            }
+        }
+        std::cout << '\n';
+    }
+}
+
 
