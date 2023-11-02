@@ -19,7 +19,7 @@ void Game::switchPLayer()
 
 bool Game::isOver()
 {
-   // return false;
+   return false;
 }
 
 bool Game::checkGameResult(Game game)

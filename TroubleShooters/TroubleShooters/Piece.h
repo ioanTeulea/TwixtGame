@@ -1,5 +1,5 @@
 #pragma once
-#include"Player.h"
+class Player;
 class Piece
 {
     Player* owner; // Owner of the piece
