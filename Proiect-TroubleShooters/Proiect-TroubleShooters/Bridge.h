@@ -1,4 +1,6 @@
 #pragma once
+#include "Piece.h"
+#include "Player.h"
 
 class Bridge
 {

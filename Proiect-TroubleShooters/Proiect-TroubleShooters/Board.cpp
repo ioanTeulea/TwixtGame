@@ -103,5 +103,17 @@ void Board::displayBoard()
     }
 }
 
+bool Board::Pod(const Piece& newPiece, const std::vector<Piece>& existingPieces) {
+    for (const Piece& existingPiece : existing Pieces) {
+        if ((abs(newPiece.x - existingPiece.x) == 1 && abs(newPiece.y - existingPiece.y) == 2) ||
+            (abs(newPiece.x - existingPiece.x) == 2 && abs(newPiece.y - existingPiece.y) == 1)) {
+            return true;
+        }
+    }
+    return false;
+}
+
+
+
 
 

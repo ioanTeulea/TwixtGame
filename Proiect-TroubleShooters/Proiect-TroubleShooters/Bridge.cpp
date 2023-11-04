@@ -1,5 +1,4 @@
 #include "Bridge.h"
-#include "Piece.h"
 
 Bridge::Bridge(Piece piece1, Piece piece2) :m_piece1(piece1), m_piece2(piece2), m_owner(piece1.getOwner()) {}
 

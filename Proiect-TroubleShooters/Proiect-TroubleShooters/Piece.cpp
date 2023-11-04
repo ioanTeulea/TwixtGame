@@ -1,9 +1,9 @@
 #include "Piece.h"
 #include "Player.h"
 class Player;
-Piece::Piece(Player* player) :owner{ player }, placed{ false }, x{ 0 }, y{ 0 } {}
+Piece::Piece(Player* player, int coordX, int coordY) :owner{ player }, x{ coordX }, y{ coordY } {}
 Piece::~Piece() {}
-Piece::Piece(const Piece& other) : owner{ other.owner }, placed{ other.placed }, x{ other.x }, y{ other.y } {}
+Piece::Piece(const Piece& other) : owner{ other.owner }, x{ other.x }, y{ other.y } {}
 
 Piece& Piece::operator=(const Piece& other)
 {
@@ -13,7 +13,6 @@ Piece& Piece::operator=(const Piece& other)
 
     // Copierea datelor
     owner = other.owner;
-    placed = other.placed;
     x = other.x;
     y = other.y;
 
@@ -33,11 +32,6 @@ const int& Piece::getX() const
 const int& Piece::getY() const
 {
     return y;
-}
-
-const bool& Piece::getPlaced() const
-{
-    return placed;
 }
 
 

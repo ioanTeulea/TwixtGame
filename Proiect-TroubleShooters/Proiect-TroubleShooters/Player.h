@@ -21,6 +21,7 @@ public:
     const int& getScore() const;
     void increaseScore();
     const int& getNumberPieces()const;
+    const std::vector<Piece>& getPieces() const;
 };
 
 
