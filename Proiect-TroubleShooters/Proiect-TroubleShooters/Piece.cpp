@@ -20,7 +20,7 @@ Piece& Piece::operator=(const Piece& other)
     return *this;
 }
 
-const Player* Piece::getOwner() const
+Player* Piece::getOwner()
 {
     return owner;
 }
