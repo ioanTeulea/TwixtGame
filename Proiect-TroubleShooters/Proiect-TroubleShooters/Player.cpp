@@ -22,9 +22,13 @@ const int& Player::getNumberPieces() const
 {
 	return pieces.size();
 }
-const std::vector<Piece>& Player::getPieces() const
+std::vector<Piece>& Player::getPieces()
 {
 	return pieces;
+}
+std::vector<Bridge>& Player::getBridges()
+{
+	return bridges;
 }
 
 

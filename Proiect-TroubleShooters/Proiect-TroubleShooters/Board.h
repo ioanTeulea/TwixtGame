@@ -1,6 +1,7 @@
 #pragma once
 #include "Player.h"
 #include <iostream>
+#include <vector>
 class Board
 {
     int size; // Dimensiunea tablei
@@ -15,8 +16,9 @@ public:
     int** getBoard() const;
     bool isValidLocation(int x, int y, int boardSize);
     bool isOccupied(int x, int y, int** board);
-    bool placePiece(const Player& player, int x, int y);
+    bool placePiece(Player player, int x, int y);
     void displayBoard();
+    void Pod(Piece newPiece, const std::vector<Piece>& existingPieces);
 };
 
 

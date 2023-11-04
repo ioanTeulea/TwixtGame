@@ -1,10 +1,11 @@
 #pragma once
 #include "Piece.h"
-#include "Player.h"
+//#include "Player.h"
 
+//class Player;
 class Bridge
 {
-	Player* m_owner;
+	//Player* m_owner;
 	Piece m_piece1, m_piece2;
 public:
 	Bridge(Piece piece1, Piece piece2);
