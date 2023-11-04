@@ -20,7 +20,7 @@ int main(int argc, char* argv[]) {
 
     Game Twixt(board, player1, player2);
 
-    board.displayBoard();
+   board.displayBoard();
 
     return app.exec();
 }

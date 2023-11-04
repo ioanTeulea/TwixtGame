@@ -11,6 +11,8 @@ public:
     ~Board();
     Board(const Board& other);
     Board& operator=(const Board& other);
+    const int& getSize() const;
+    int** getBoard() const;
     bool isValidLocation(int x, int y, int boardSize);
     bool isOccupied(int x, int y, int** board);
     bool placePiece(const Player& player, int x, int y);

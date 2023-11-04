@@ -64,6 +64,16 @@ Board& Board::operator=(const Board& other)
     return *this;
 }
 
+const int& Board::getSize() const
+{
+    return size;
+}
+
+int** Board::getBoard() const
+{
+    return board;
+}
+
 bool Board::isValidLocation(int x, int y, int boardSize)
 {
     return x > 0 && x < boardSize - 1 && y>0 && y < boardSize - 1;
