@@ -1,5 +1,5 @@
 #include "Game.h"
-#include<iostream>
+
 Game::Game(Board& gameBoard, Player& p1, Player& p2) : board{ gameBoard }, player1{ p1 }, player2{ p2 }, currentPlayer{ &player1 }
 {
     // Initialize the game engine
@@ -19,7 +19,7 @@ void Game::switchPLayer()
 
 bool Game::isOver()
 {
-   return false;
+    return false;
 }
 
 bool Game::checkGameResult(Game game)

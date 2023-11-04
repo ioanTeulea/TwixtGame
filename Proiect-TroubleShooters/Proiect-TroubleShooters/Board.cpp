@@ -1,7 +1,7 @@
 #include "Board.h"
 
-Board::Board(int boardSize) : 
-    size{ boardSize } 
+Board::Board(int boardSize) :
+    size{ boardSize }
 {
     // Alocare dinamic? pentru tabla de joc
     board = new int* [size];
@@ -31,7 +31,7 @@ Board::Board(const Board& other)
     for (int i = 0; i < size; i++) {
         board[i] = new int[size];
         for (int j = 0; j < size; j++) {
-            board[i][j]= other.board[i][j];
+            board[i][j] = other.board[i][j];
         }
     }
 }
@@ -66,11 +66,11 @@ Board& Board::operator=(const Board& other)
 
 bool Board::isValidLocation(int x, int y, int boardSize)
 {
-        return x > 0 && x < boardSize - 1 && y>0 && y < boardSize - 1;
-    
+    return x > 0 && x < boardSize - 1 && y>0 && y < boardSize - 1;
+
 }
 
-bool Board::isOccupied(int x, int y,int** board)
+bool Board::isOccupied(int x, int y, int** board)
 {
     return board[x][y] != 0;
 }
@@ -102,5 +102,6 @@ void Board::displayBoard()
         std::cout << '\n';
     }
 }
+
 
 

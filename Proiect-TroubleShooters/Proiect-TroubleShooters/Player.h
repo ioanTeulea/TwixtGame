@@ -4,8 +4,8 @@
 #include"Piece.h"
 enum Color
 {
-    Red=0,
-    Black=1
+    Red = 0,
+    Black = 1
 };
 class Player
 {
@@ -22,4 +22,5 @@ public:
     void increaseScore();
     const int& getNumberPieces()const;
 };
+
 

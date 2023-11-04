@@ -2,7 +2,7 @@
 #include "Player.h"
 class Player;
 Piece::Piece(Player* player) :owner{ player }, placed{ false }, x{ 0 }, y{ 0 } {}
-Piece::~Piece(){}
+Piece::~Piece() {}
 Piece::Piece(const Piece& other) : owner{ other.owner }, placed{ other.placed }, x{ other.x }, y{ other.y } {}
 
 Piece& Piece::operator=(const Piece& other)
@@ -39,6 +39,7 @@ const bool& Piece::getPlaced() const
 {
     return placed;
 }
+
 
 
 

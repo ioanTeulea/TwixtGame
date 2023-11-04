@@ -1,6 +1,7 @@
 #include <QApplication>
-#include "MyWindow.h"
-#include "Game.h"
+#include<iostream>
+#include"MyWindow.h"
+#include"Game.h"
 
 int main(int argc, char* argv[]) {
     QApplication app(argc, argv);
@@ -8,7 +9,6 @@ int main(int argc, char* argv[]) {
     MyWindow mainWindow;
     mainWindow.setWindowTitle("Fereastra mea");
     mainWindow.show();
-
     Player player1("Grig", Color::Red);
     Player player2("Cernat", Color::Black);
 

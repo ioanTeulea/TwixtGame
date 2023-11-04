@@ -1,6 +1,7 @@
 #pragma once
 #include"Board.h"
 #include"Player.h"
+#include<iostream>
 class Game
 {
 public:
@@ -13,4 +14,5 @@ public:
     bool isOver();
     bool checkGameResult(Game game);
 };
+
 
