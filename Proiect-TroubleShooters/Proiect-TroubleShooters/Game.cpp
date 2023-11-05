@@ -55,4 +55,19 @@ bool Game::checkGameResult(Game game)
     return false;
 }
 
+void Game::Play()
+{
+    std::cout<<"Introduceti numarul maxim de piloni/jucator: "
+    std::cin >> piece_no;
+    while (currentPlayer->getNumberPieces() <= piece_no && !checkGameResult(*this)) {
+        int x, y;
+        std::cout << '\n' << currentPlayer->getColor() << "'s turn\n";
+        std::cout << "Alege coordonatele pilonului: ";
+        std::cin >> x >> y;
+        board.placePiece(*currentPlayer, x, y);
+        std::cout << '\n';
+        board.displayBoard();
+    }
+}
+
 

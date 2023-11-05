@@ -22,5 +22,7 @@ int main(int argc, char* argv[]) {
 
    board.displayBoard();
 
+   Twixt.Play();
+
     return app.exec();
 }

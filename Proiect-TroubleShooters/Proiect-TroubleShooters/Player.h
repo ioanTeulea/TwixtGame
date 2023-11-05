@@ -6,8 +6,8 @@
 
 enum Color
 {
-    Red = 0,
-    Black = 1
+    Red = 1,
+    Black = 2
 };
 class Player
 {
