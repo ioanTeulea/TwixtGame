@@ -15,6 +15,7 @@ public:
     bool checkWinCondition(Player player);
     bool isConnected(int x, int y, Color playerColor, std::vector<std::vector<bool>>& visited);
     bool checkGameResult(Game game);
+    void displayPlayerPieces(const Player& player);
     void Play();
 };
 

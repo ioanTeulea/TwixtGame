@@ -54,10 +54,15 @@ bool Game::checkGameResult(Game game)
         }
     return false;
 }
+void Game::displayPlayerPieces(const Player& player) {
+    std::cout << "Remaining pieces for " << player.getName()<< '\n';
+    std::cout << "Pieces: " << piece_no - player.getNumberPieces()<< '\n';
+    std::cout << "Bridges: " << piece_no - player.getNumberBridges() << '\n';
+}
 
 void Game::Play()
 {
-    std::cout<<"Introduceti numarul maxim de piloni/jucator: "
+    std::cout << "Introduceti numarul maxim de piloni/jucator: ";
     std::cin >> piece_no;
     while (currentPlayer->getNumberPieces() <= piece_no && !checkGameResult(*this)) {
         int x, y;

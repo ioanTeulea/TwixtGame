@@ -24,6 +24,7 @@ public:
     const int& getScore() const;
     void increaseScore();
     const int& getNumberPieces()const;
+    const int& getNumberBridges()const;
     std::vector<Piece>& getPieces();
     std::vector<Bridge>& getBridges();
 };
