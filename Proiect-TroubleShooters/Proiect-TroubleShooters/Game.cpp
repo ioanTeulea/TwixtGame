@@ -41,7 +41,7 @@ bool Game::isConnected(int x, int y, Color playerColor, std::vector<std::vector<
 
 bool Game::checkGameResult(Game game)
 {
-    if (player1.getScore() == player1.getNumberPieces() && player2.getScore() == player2.getNumberPieces())
+    if (maxPieces == player1.getNumberPieces() && maxPieces == player2.getNumberPieces())
     {
         std::cout << "It' s a draw! Both players are out of pieces!" << "\n";
         return true;
@@ -56,15 +56,15 @@ bool Game::checkGameResult(Game game)
 }
 void Game::displayPlayerPieces(const Player& player) {
     std::cout << "Remaining pieces for " << player.getName()<< '\n';
-    std::cout << "Pieces: " << piece_no - player.getNumberPieces()<< '\n';
-    std::cout << "Bridges: " << piece_no - player.getNumberBridges() << '\n';
+    std::cout << "Pieces: " << maxPieces - player.getNumberPieces()<< '\n';
+    std::cout << "Bridges: " << maxPieces - player.getNumberBridges() << '\n';
 }
 
 void Game::Play()
 {
     std::cout << "Introduceti numarul maxim de piloni/jucator: ";
-    std::cin >> piece_no;
-    while (currentPlayer->getNumberPieces() <= piece_no && !checkGameResult(*this)) {
+    std::cin >> maxPieces;
+    while (currentPlayer->getNumberPieces() <= maxPieces && !checkGameResult(*this)) {
         int x, y;
         std::cout << '\n' << currentPlayer->getColor() << "'s turn\n";
         std::cout << "Alege coordonatele pilonului: ";

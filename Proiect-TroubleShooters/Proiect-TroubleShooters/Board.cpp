@@ -77,7 +77,8 @@ int** Board::getBoard() const
 bool Board::isValidLocation(int x, int y, int boardSize)
 {
     return x > 0 && x < boardSize - 1 && y>0 && y < boardSize - 1;
-
+    if((x==boardSize-1||x==0)&&(y==boardSize-1||y==0))
+        return false;
 }
 
 bool Board::isOccupied(int x, int y, int** board)
@@ -89,14 +90,16 @@ void Board::displayBoard()
 {
     for (int row = 0; row < size; row++) {
         for (int col = 0; col < size; col++) {
-            if (board[row][col] == Color::Red) {
-                std::cout << "R ";
-            }
-            else if (board[row][col] == Color::Black) {
-                std::cout << "B ";
-            }
-            else {
-                std::cout << "O ";
+            if (!((row == size - 1 || row == 0) && (col == size - 1 || col == 0))) {
+                if (board[row][col] == Color::Red) {
+                    std::cout << "R ";
+                }
+                else if (board[row][col] == Color::Black) {
+                    std::cout << "B ";
+                }
+                else {
+                    std::cout << "O ";
+                }
             }
         }
         std::cout << '\n';
