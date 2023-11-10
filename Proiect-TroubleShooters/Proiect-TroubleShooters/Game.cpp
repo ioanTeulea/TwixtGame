@@ -72,6 +72,7 @@ void Game::Play()
         board.placePiece(*currentPlayer, x, y);
         std::cout << '\n';
         board.displayBoard();
+        switchPLayer();
     }
 }
 

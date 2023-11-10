@@ -39,11 +39,11 @@ Board::Board(const Board& other)
 Board& Board::operator=(const Board& other)
 {
     if (this == &other) {
-        // Evit?m auto-atribuirea
+        // Evitam auto-atribuirea
         return *this;
     }
 
-    // Dealoc?m memoria pentru matricea curent?
+    // Dealocam memoria pentru matricea curenta
     for (int i = 0; i < size; i++) {
         delete[] board[i];
     }
@@ -52,7 +52,7 @@ Board& Board::operator=(const Board& other)
     // Copiem dimensiunea
     size = other.size;
 
-    // Alocare memorie pentru matricea nou?
+    // Alocare memorie pentru matricea noua
     board = new int* [size];
     for (int i = 0; i < size; i++) {
         board[i] = new int[size];
@@ -89,17 +89,21 @@ bool Board::isOccupied(int x, int y, int** board)
 void Board::displayBoard()
 {
     for (int row = 0; row < size; row++) {
+        if (row == 0 || row == size - 1) {
+            std::cout << "  ";
+        }
         for (int col = 0; col < size; col++) {
             if (!((row == size - 1 || row == 0) && (col == size - 1 || col == 0))) {
-                if (board[row][col] == Color::Red) {
-                    std::cout << "R ";
-                }
-                else if (board[row][col] == Color::Black) {
-                    std::cout << "B ";
-                }
-                else {
-                    std::cout << "O ";
-                }
+                    if (board[row][col] == Color::Red) {
+                        std::cout << "R ";
+                    }
+                    else if (board[row][col] == Color::Black) {
+                        std::cout << "B ";
+                    }
+                    else {
+                        std::cout << "O ";
+                    }
+                
             }
         }
         std::cout << '\n';
