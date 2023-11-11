@@ -10,9 +10,10 @@ public:
     ~Piece();
     Piece(const Piece& other);
     Piece& operator=(const Piece& other);
-    Player* getOwner();
+    Player* getOwner() const;
     const int& getX()const;
     const int& getY()const;
+    bool operator==(const Piece& other) const;
 };
 
 

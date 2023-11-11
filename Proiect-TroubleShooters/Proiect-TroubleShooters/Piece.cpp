@@ -19,7 +19,7 @@ Piece& Piece::operator=(const Piece& other)
     return *this;
 }
 
-Player* Piece::getOwner()
+Player* Piece::getOwner() const
 {
     return owner;
 }
@@ -32,6 +32,18 @@ const int& Piece::getX() const
 const int& Piece::getY() const
 {
     return y;
+}
+
+bool Piece::operator==(const Piece& other) const
+{
+    if (owner == other.getOwner()) {}
+    else
+        return false;
+    if (x != other.getX())
+        return false;
+    if (y != other.getY())
+        return false;
+    return true;
 }
 
 

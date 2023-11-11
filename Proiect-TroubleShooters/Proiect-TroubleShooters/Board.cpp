@@ -110,7 +110,7 @@ void Board::displayBoard()
     }
 }
 
-void Board::Pod(Piece newPiece, const std::vector<Piece>& existingPieces) {
+void Board::placeBridge(Piece newPiece, const std::vector<Piece>& existingPieces) {
     for (const Piece& existingPiece : existingPieces) 
     {
         if ((abs(newPiece.getX() - existingPiece.getX()) == 1 && abs(newPiece.getY() - existingPiece.getY()) == 2) ||
@@ -132,11 +132,24 @@ bool Board::placePiece(Player player, int x, int y)
         {
             if (!isOccupied(x, y, board))
             {
-                Pod(newPiece, player.getPieces());
+                placeBridge(newPiece, player.getPieces());
             }
         }
         return true;
 
+    }
+    return false;
+}
+
+bool Board::isBridgeBetween(const Piece& piece1, const Piece& piece2) const
+{
+    if (piece1.getOwner() == piece2.getOwner())
+    {
+        for (auto bridge : piece1.getOwner()->getBridges())
+        {
+            if ((bridge.getPiece1() == piece1 || bridge.getPiece1() == piece2) && (bridge.getPiece2() == piece1 || bridge.getPiece2() == piece2))
+                return true;
+        }
     }
     return false;
 }
