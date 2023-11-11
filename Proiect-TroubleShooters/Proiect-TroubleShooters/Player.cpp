@@ -1,6 +1,6 @@
 #include "Player.h"
 #include"Piece.h"
-
+#include<iostream>
 Player::Player(const std::string& playerName, Color playerColor) :name{ playerName }, color{ playerColor } {}
 std::string Player::getName() const
 {
@@ -9,6 +9,16 @@ std::string Player::getName() const
 const Color& Player::getColor() const
 {
 	return color;
+}
+void Player::displayPlayerNumberPieces()
+{
+	std::cout << "Remaining pieces for " << getName() << '\n';
+	std::cout << "Pieces: " << maxPieces - getNumberPieces() << '\n';
+	std::cout << "Bridges: " << maxPieces - getNumberBridges() << '\n';
+}
+const int& Player::getNumberMaxPieces() const
+{
+	return maxPieces;
 }
 //const int& Player::getScore() const
 //{
@@ -34,6 +44,12 @@ std::vector<Bridge>& Player::getBridges()
 {
 	return bridges;
 }
+
+void Player::setMaxPieces(const int& maxPieces)
+{
+	this->maxPieces = maxPieces;
+}
+
 
 
 

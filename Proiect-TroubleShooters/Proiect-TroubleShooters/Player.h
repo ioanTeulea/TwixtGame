@@ -13,6 +13,7 @@ class Player
 {
     std::string name;
     Color color;
+    int maxPieces;
     std::vector<Piece> pieces;
     std::vector<Bridge> bridges;
     //int score;
@@ -23,10 +24,13 @@ public:
     const Color& getColor() const;
     //const int& getScore() const;
     //void increaseScore();
+    void displayPlayerNumberPieces();
+    const int& getNumberMaxPieces()const;
     const int& getNumberPieces()const;
     const int& getNumberBridges()const;
     std::vector<Piece>& getPieces();
     std::vector<Bridge>& getBridges();
+    void setMaxPieces(const int& maxPieces);
 };
 
 
