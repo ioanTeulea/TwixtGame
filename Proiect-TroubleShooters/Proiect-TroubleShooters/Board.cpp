@@ -140,20 +140,20 @@ void Board::deleteBridge(Piece p1, Piece p2)
 
 bool Board::placePiece(Player player, int x, int y)
 {
-    if (isValidLocation(x, y, size) && !isOccupied(x, y, board))
-    {
-        board[x][y] = player.getColor();
-        Piece newPiece(&player, x, y);
-        for (const Piece& existingPiece : player.getPieces())
-        {
-            if (!isOccupied(x, y, board))
+            if (isValidLocation(x, y, size) && !isOccupied(x, y, board))
             {
-                placeBridge(newPiece, player.getPieces());
-            }
-        }
-        return true;
+                board[x][y] = player.getColor();
+                Piece newPiece(&player, x, y);
+                for (const Piece& existingPiece : player.getPieces())
+                {
+                    if (!isOccupied(x, y, board))
+                    {
+                        placeBridge(newPiece, player.getPieces());
+                    }
+                }
+                return true;
 
-    }
+            }
     return false;
 }
 

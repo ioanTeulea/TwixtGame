@@ -75,19 +75,30 @@ void Game::Play()
         int x, y;
         std::cout << '\n' << currentPlayer->getName()<< "'s turn\n";
 
-        if (currentPlayer->getNumberPieces() == 0 && currentPlayer == &player2&& count==0) {
+        if (currentPlayer->getNumberPieces() == 0 && currentPlayer == &player2 && count == 1) {
             std::cout << "Alege actiunea (1 - plaseaza pion, 2 - elimina poduri, 3 - preia prima piesa): ";
             int action;
             std::cin >> action;
 
             switch (action) {
             case 1:
-                std::cout << "Alege coordonatele pilonului: ";
-                std::cin >> x >> y;
-                board.placePiece(*currentPlayer, x, y);
+            {
+                bool piece_placed = false;
+                while (!piece_placed) {
+                    std::cout << "Alege coordonatele pilonului: ";
+                    std::cin >> x >> y;
+                    if (*currentPlayer == player2 && (x == 0 || x == board.getSize() - 1)) {
+                        std::cout << "Mutare nepermisa!\n";
+                    }
+                    else {
+                        board.placePiece(*currentPlayer, x, y);
+                        piece_placed = true;
+                        count++;
+                    }
+                }
                 switchPlayer();
-                count++;
                 break;
+            }
             case 2:
             {
                 if (currentPlayer->getBridges().empty())
@@ -122,11 +133,23 @@ void Game::Play()
 
             switch (action) {
             case 1:
-                std::cout << "Alege coordonatele pilonului: ";
-                std::cin >> x >> y;
-                board.placePiece(*currentPlayer, x, y);
+            {
+                bool piece_placed = false;
+                while (!piece_placed) {
+                    std::cout << "Alege coordonatele pilonului: ";
+                    std::cin >> x >> y;
+                    if ((*currentPlayer == player1 && (y == 0 || y == board.getSize() - 1)) || (*currentPlayer == player2 && (x == 0 || x == board.getSize() - 1))) {
+                        std::cout << "Mutare nepermisa!\n";
+                    }
+                    else {
+                        board.placePiece(*currentPlayer, x, y);
+                        piece_placed = true;
+                        count++;
+                    }
+                }
                 switchPlayer();
                 break;
+            }
             case 2:
             {
                 if (currentPlayer->getBridges().empty())
