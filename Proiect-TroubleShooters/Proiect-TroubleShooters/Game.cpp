@@ -1,5 +1,5 @@
 #include "Game.h"
-
+#include<algorithm>
 Game::Game(Board& gameBoard, Player& p1, Player& p2) : board{ gameBoard }, player1{ p1 }, player2{ p2 }, currentPlayer{ &player1 }
 {
     // Initialize the game engine
@@ -15,6 +15,13 @@ void Game::switchPlayer()
     {
         currentPlayer = &player1;
     }
+}
+
+void Game::sortBridges()
+{
+    std::sort(currentPlayer->getBridges().begin(), currentPlayer->getBridges().end(), [](const Bridge& bridge1, const Bridge& bridge2) {
+        return bridge1.sortBridgesComparator(bridge2);
+        });
 }
 
 

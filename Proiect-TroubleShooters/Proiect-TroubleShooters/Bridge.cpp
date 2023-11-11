@@ -17,6 +17,23 @@ Bridge& Bridge::operator=(const Bridge& other)
     return *this;
 }
 
+bool Bridge::sortBridgesComparator(const Bridge& other)const 
+{
+    if (this->getPiece1().getX() != other.getPiece1().getX()) {
+        return this->getPiece1().getX() < other.getPiece1().getX();
+    }
+    else if (this->getPiece1().getY() != other.getPiece1().getY()) {
+        return this->getPiece1().getY() < other.getPiece1().getY();
+    }
+    else if (this->getPiece2().getX() != other.getPiece2().getX()) {
+        return this->getPiece2().getX() < other.getPiece2().getX();
+    }
+    else {
+        return this->getPiece2().getY() < other.getPiece2().getY();
+    }
+
+}
+
 const Piece& Bridge::getPiece1() const {
     return m_piece1;
 }
