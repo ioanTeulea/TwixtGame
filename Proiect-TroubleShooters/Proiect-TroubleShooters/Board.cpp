@@ -122,6 +122,22 @@ void Board::placeBridge(Piece newPiece, const std::vector<Piece>& existingPieces
     }
 }
 
+void Board::deleteBridge(Piece p1, Piece p2)
+{
+    if (p1.getOwner() != p2.getOwner())
+        return;
+    else
+    {
+        for (auto it = p1.getOwner()->getBridges().begin(); it != p1.getOwner()->getBridges().end(); ++it) {
+            if ((it->getPiece1()==p1 && it->getPiece2()==p2) ||
+                (it->getPiece2() == p2 && it->getPiece1() == p1) ){
+                p1.getOwner()->getBridges().erase(it);
+                break;
+            }
+        }
+    }
+}
+
 bool Board::placePiece(Player player, int x, int y)
 {
     if (isValidLocation(x, y, size) && !isOccupied(x, y, board))

@@ -5,7 +5,7 @@ Game::Game(Board& gameBoard, Player& p1, Player& p2) : board{ gameBoard }, playe
     // Initialize the game engine
 }
 
-void Game::switchPLayer()
+void Game::switchPlayer()
 {
     if (currentPlayer == &player1)
     {
@@ -63,15 +63,88 @@ void Game::Play()
     std::cin >> maxPieces;
     player1.setMaxPieces(maxPieces);
     player2.setMaxPieces(maxPieces);
+    int count = 0;
     while (currentPlayer->getNumberPieces() <= maxPieces && !checkGameResult(*this)) {
         int x, y;
-        std::cout << '\n' << currentPlayer->getColor() << "'s turn\n";
-        std::cout << "Alege coordonatele pilonului: ";
-        std::cin >> x >> y;
-        board.placePiece(*currentPlayer, x, y);
+        std::cout << '\n' << currentPlayer->getName()<< "'s turn\n";
+
+        if (currentPlayer->getNumberPieces() == 0 && currentPlayer == &player2&& count==0) {
+            std::cout << "Alege actiunea (1 - plaseaza pion, 2 - elimina poduri, 3 - preia prima piesa): ";
+            int action;
+            std::cin >> action;
+
+            switch (action) {
+            case 1:
+                std::cout << "Alege coordonatele pilonului: ";
+                std::cin >> x >> y;
+                board.placePiece(*currentPlayer, x, y);
+                switchPlayer();
+                count++;
+                break;
+            case 2:
+            {
+                if (currentPlayer->getBridges().empty())
+                {
+                    std::cout << "Nu exista poduri";
+                    break;
+                }
+                std::cout << "Alege coordonatele pilonilor intre care se afla un pod:\n";
+                std::cout << "pilonul1: ";
+                std::cin >> x >> y;
+                Piece p1(currentPlayer, x, y);
+                std::cout << "pilonul2: ";
+                std::cin >> x >> y;
+                Piece p2(currentPlayer, x, y);
+                board.deleteBridge(p1, p2);
+                count++;
+                break;
+            }
+            case 3:
+                player2.transferFirstPiece(*currentPlayer);
+                count++;
+                break;
+            default:
+                std::cout << "Actiune invalida. Alege 1, 2, 3 sau 4.\n";
+                continue; // Continua bucla pentru a alege o actiune valida
+            }
+        }
+        else {
+            std::cout << "Alege actiunea (1 - plaseaza pion, 2 -elimina poduri): ";
+            int action;
+            std::cin >> action;
+
+            switch (action) {
+            case 1:
+                std::cout << "Alege coordonatele pilonului: ";
+                std::cin >> x >> y;
+                board.placePiece(*currentPlayer, x, y);
+                switchPlayer();
+                break;
+            case 2:
+            {
+                if (currentPlayer->getBridges().empty())
+                {
+                    std::cout << "Nu exista poduri";
+                    break;
+                }
+                std::cout << "Alege coordonatele pilonilor intre care se afla un pod:\n";
+                std::cout << "pilonul1: ";
+                std::cin >> x >> y;
+                Piece p1(currentPlayer, x, y);
+                std::cout << "pilonul2: ";
+                std::cin >> x >> y;
+                Piece p2(currentPlayer, x, y);
+                board.deleteBridge(p1, p2);
+                break;
+            }
+            default:
+                std::cout << "Actiune invalida. Alege 1 sau 2.\n";
+                continue; // Continua bucla pentru a alege o actiune valida
+            }
+        }
+
         std::cout << '\n';
         board.displayBoard();
-        switchPLayer();
     }
 }
 

@@ -50,15 +50,12 @@ void Player::setMaxPieces(const int& maxPieces)
 	this->maxPieces = maxPieces;
 }
 
-void Player::deleteBridge(int x1, int y1, int x2, int y2) {
-	for (auto it = bridges.begin(); it != bridges.end(); ++it) {
-		if ((it->getPiece1().getX() == x1 && it->getPiece1().getY() == y1 && it->getPiece2().getX() == x2 && it->getPiece2().getY() == y2) ||
-			(it->getPiece1().getX() == x2 && it->getPiece1().getY() == y2 && it->getPiece2().getX() == x1 && it->getPiece2().getY() == y1)) {
-			getBridges().erase(it);
-			break;
-		}
-	}
+void Player::setColor(Color c)
+{
+	color = c;
 }
+
+
 
 bool Player::operator==(const Player& other)
 {
@@ -67,12 +64,15 @@ bool Player::operator==(const Player& other)
 
 void Player::transferFirstPiece(Player& otherPlayer)
 {
-	if (!pieces.empty()) {
-		Piece transferredPiece = pieces.front(); // Ia prima pies?
-		pieces.erase(pieces.begin()); // Elimin? prima pies? din vectorul curent
-		otherPlayer.getPieces().push_back(transferredPiece); // Adaug? piesa în vectorul celuilalt juc?tor
+	if (!otherPlayer.pieces.empty()) {
+		Piece transferredPiece = otherPlayer.pieces.front(); // Ia prima pies?
+		otherPlayer.pieces.erase(otherPlayer.pieces.begin()); // Elimin? prima pies? din vectorul curent
+		getPieces().push_back(transferredPiece); // Adaug? piesa în vectorul celuilalt juc?tor
 	}
-
+	
+	Color tempColor = color; 
+	color = otherPlayer.getColor(); 
+	otherPlayer.setColor(tempColor);
 }
 
 

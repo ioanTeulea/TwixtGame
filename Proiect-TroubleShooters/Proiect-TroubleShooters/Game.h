@@ -10,7 +10,7 @@ public:
     Player& player2; // Referin?? la al doilea juc?tor
     Player* currentPlayer; // Pointer c?tre juc?torul curent
     Game(Board& gameBoard, Player& p1, Player& p2);
-    void switchPLayer();
+    void switchPlayer();
     bool checkWinCondition(Player player);
     bool isConnected(int x, int y, Color playerColor, std::vector<std::vector<bool>>& visited);
     bool checkGameResult(Game game);
