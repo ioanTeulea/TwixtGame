@@ -65,6 +65,16 @@ bool Player::operator==(const Player& other)
 	return color == other.color;
 }
 
+void Player::transferFirstPiece(Player& otherPlayer)
+{
+	if (!pieces.empty()) {
+		Piece transferredPiece = pieces.front(); // Ia prima pies?
+		pieces.erase(pieces.begin()); // Elimin? prima pies? din vectorul curent
+		otherPlayer.getPieces().push_back(transferredPiece); // Adaug? piesa în vectorul celuilalt juc?tor
+	}
+
+}
+
 
 
 

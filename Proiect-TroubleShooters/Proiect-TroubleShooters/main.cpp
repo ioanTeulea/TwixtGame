@@ -19,10 +19,16 @@ int main(int argc, char* argv[]) {
     Board board(b_size);
 
     Game Twixt(board, player1, player2);
+    board.placePiece(player1, 3, 0);
+    player1.transferFirstPiece(player2);
+    if (player1.getPieces().empty())
+        std::cout << "Da";
 
-   board.displayBoard();
 
-   Twixt.Play();
+
+   //board.displayBoard();
+
+   //Twixt.Play();
 
     return app.exec();
 }
