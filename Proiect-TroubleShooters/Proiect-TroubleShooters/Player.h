@@ -31,6 +31,7 @@ public:
     std::vector<Piece>& getPieces();
     std::vector<Bridge>& getBridges();
     void setMaxPieces(const int& maxPieces);
+    void deleteBridge(int x1, int y1, int x2, int y2);
 };
 
 

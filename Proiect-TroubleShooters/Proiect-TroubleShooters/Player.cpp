@@ -50,6 +50,16 @@ void Player::setMaxPieces(const int& maxPieces)
 	this->maxPieces = maxPieces;
 }
 
+void Player::deleteBridge(int x1, int y1, int x2, int y2) {
+	for (auto it = getBridges().begin(); it != getBridges().end(); ++it) {
+		if ((it->getPiece1().getX() == x1 && it->getPiece1().getY() == y1 && it->getPiece2().getX() == x2 && it->getPiece2().getY() == y2) ||
+			(it->getPiece1().getX() == x2 && it->getPiece1().getY() == y2 && it->getPiece2().getX() == x1 && it->getPiece2().getY() == y1)) {
+			getBridges().erase(it);
+			break;
+		}
+	}
+}
+
 
 
 

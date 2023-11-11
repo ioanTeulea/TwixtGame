@@ -17,3 +17,11 @@ Bridge& Bridge::operator=(const Bridge& other)
     return *this;
 }
 
+const Piece& Bridge::getPiece1() const {
+    return m_piece1;
+}
+
+const Piece& Bridge::getPiece2() const {
+    return m_piece2;
+}
+
