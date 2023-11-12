@@ -70,12 +70,12 @@ void Game::Play()
     std::cin >> maxPieces;
     player1.setMaxPieces(maxPieces);
     player2.setMaxPieces(maxPieces);
-    int count = 0;
+    bool firstTurn = true;
     while (currentPlayer->getNumberPieces() <= maxPieces && !checkGameResult(*this)) {
         int x, y;
         std::cout << '\n' << currentPlayer->getName()<< "'s turn\n";
 
-        if (currentPlayer->getNumberPieces() == 0 && currentPlayer == &player2 && count == 1) {
+        if (currentPlayer->getNumberPieces() == 0 && currentPlayer == &player2 && firstTurn == true) {
             std::cout << "Alege actiunea (1 - plaseaza pion, 2 - elimina poduri, 3 - preia prima piesa): ";
             int action;
             std::cin >> action;
@@ -93,7 +93,7 @@ void Game::Play()
                     else {
                         board.placePiece(*currentPlayer, x, y);
                         piece_placed = true;
-                        count++;
+                        firstTurn=false;
                     }
                 }
                 switchPlayer();
@@ -114,15 +114,16 @@ void Game::Play()
                 std::cin >> x >> y;
                 Piece p2(currentPlayer, x, y);
                 board.deleteBridge(p1, p2);
-                count++;
+                firstTurn = false;
                 break;
             }
             case 3:
-                player2.transferFirstPiece(*currentPlayer);
-                count++;
+                player2.transferFirstPiece(player1);
+                firstTurn=false;
+                switchPlayer();
                 break;
             default:
-                std::cout << "Actiune invalida. Alege 1, 2, 3 sau 4.\n";
+                std::cout << "Actiune invalida. Alege 1, 2, 3.\n";
                 continue; // Continua bucla pentru a alege o actiune valida
             }
         }
@@ -144,7 +145,7 @@ void Game::Play()
                     else {
                         board.placePiece(*currentPlayer, x, y);
                         piece_placed = true;
-                        count++;
+                       
                     }
                 }
                 switchPlayer();
