@@ -34,6 +34,8 @@ public:
     void setColor(Color c);
     bool operator==(const Player& other);
     void transferFirstPiece(Player& otherPlayer);
+    void addPiece(const Piece& piece);
+    void addBridge(const Bridge& bridge);
 };
 
 

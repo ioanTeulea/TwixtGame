@@ -75,6 +75,16 @@ void Player::transferFirstPiece(Player& otherPlayer)
 	otherPlayer.setColor(tempColor);
 }
 
+void Player::addPiece(const Piece& piece)
+{
+	pieces.push_back(piece);
+}
+
+void Player::addBridge(const Bridge& bridge)
+{
+	bridges.push_back(bridge);
+}
+
 
 
 
