@@ -117,7 +117,7 @@ void Board::placeBridge(Piece newPiece, const std::vector<Piece>& existingPieces
             (abs(newPiece.getX() - existingPiece.getX()) == 2 && abs(newPiece.getY() - existingPiece.getY()) == 1)) 
         {
             Bridge newBridge(newPiece, existingPiece);
-            newPiece.getOwner()->getBridges().push_back(newBridge);
+            newPiece.getOwner()->addBridge(newBridge);
         }
     }
 }
@@ -138,22 +138,16 @@ void Board::deleteBridge(Piece p1, Piece p2)
     }
 }
 
-bool Board::placePiece(Player player, int x, int y)
+bool Board::placePiece(Player& player, int x, int y)
 {
-            if (isValidLocation(x, y, size) && !isOccupied(x, y, board))
-            {
-                board[x][y] = player.getColor();
-                Piece newPiece(&player, x, y);
-                for (const Piece& existingPiece : player.getPieces())
-                {
-                    if (!isOccupied(x, y, board))
-                    {
-                        placeBridge(newPiece, player.getPieces());
-                    }
-                }
-                return true;
-
-            }
+    if (isValidLocation(x, y, size) && !isOccupied(x, y, board))
+    {
+      board[x][y] = player.getColor();
+      Piece newPiece(&player, x, y);
+      player.addPiece(newPiece);
+      placeBridge(newPiece, player.getPieces());
+      return true;
+    }
     return false;
 }
 

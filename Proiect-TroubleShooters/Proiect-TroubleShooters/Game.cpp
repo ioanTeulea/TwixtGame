@@ -28,7 +28,6 @@ void Game::sortBridges()
 
 bool Game::checkWinCondition(Player player)
 {
-    std::vector<std::vector<bool>> visited(board.getSize(), std::vector<bool>(board.getSize(), false));
     Color playerColor = player.getColor();
 
     for (int i = 0; i < board.getSize(); i++) {
@@ -68,13 +67,14 @@ bool Game::isConnected(Player player)
             {
                 bool found = false;
 
-                for (int i = 1; i < player.getNumberBridges(); i++)
+                for (int i = 1; i < player.getNumberBridges()&&!found; i++)
                 {
                     if (!visited[i] && player.getBridges()[i].getPiece1() == start2)
                     {
                         found = true;
                         visited[i] = true;
                         connected_bridges.push(player.getBridges()[i]);
+                        start2 = player.getBridges()[i].getPiece2();
                     }
                 }
                 if (!found)
