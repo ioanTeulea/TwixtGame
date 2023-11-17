@@ -12,7 +12,7 @@ public:
     Game(Board& gameBoard, Player& p1, Player& p2);
     void switchPlayer();
     bool checkWinCondition(Player player);
-    bool isConnected(int x, int y, Color playerColor, std::vector<std::vector<bool>>& visited);
+    bool isConnected(Player player);
     bool checkGameResult(Game game);
     void Play();
     void sortBridges();
