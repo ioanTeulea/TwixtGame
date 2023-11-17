@@ -143,9 +143,13 @@ void Game::Play()
                         std::cout << "Mutare nepermisa!\n";
                     }
                     else {
-                        board.placePiece(*currentPlayer, x, y);
-                        piece_placed = true;
-                        firstTurn=false;
+                        if (board.placePiece(*currentPlayer, x, y))
+                        {
+                            piece_placed = true;
+                            firstTurn = false;
+                        }
+                        else
+                            std::cout << "Mutare nepermisa!\n";
                     }
                 }
                 switchPlayer();
@@ -195,9 +199,10 @@ void Game::Play()
                         std::cout << "Mutare nepermisa!\n";
                     }
                     else {
-                        board.placePiece(*currentPlayer, x, y);
-                        piece_placed = true;
-                       
+                        if (board.placePiece(*currentPlayer, x, y))
+                            piece_placed = true;
+                        else
+                            std::cout << "Mutare nepermisa!\n";
                     }
                 }
                 switchPlayer();
