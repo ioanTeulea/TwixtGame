@@ -114,6 +114,12 @@ bool Game::checkGameResult(Game game)
     return false;
 }
 
+bool Game::forfeitGame()
+{
+    std::cout << "Player " << currentPlayer->getName() << " has forfeited!" << "\n";
+    return false;
+}
+
 
 void Game::Play()
 {
@@ -128,7 +134,7 @@ void Game::Play()
         std::cout << '\n' << currentPlayer->getName()<< "'s turn\n";
 
         if (currentPlayer->getNumberPieces() == 0 && currentPlayer == &player2 && firstTurn == true) {
-            std::cout << "Alege actiunea (1 - plaseaza pion, 2 - elimina poduri, 3 - preia prima piesa): ";
+            std::cout << "Alege actiunea (1 - plaseaza pion, 2 - elimina poduri, 3 - preia prima piesa, 4 - renunta la joc): ";
             int action;
             std::cin >> action;
 
@@ -178,13 +184,18 @@ void Game::Play()
                 firstTurn=false;
                 switchPlayer();
                 break;
+            case 4:
+                forfeitGame();
+                switchPlayer();
+                std::cout << "Player " << currentPlayer->getName() << " has won!" << "\n";
+                return;
             default:
-                std::cout << "Actiune invalida. Alege 1, 2, 3.\n";
+                std::cout << "Actiune invalida. Alege 1, 2, 3, 4.\n";
                 continue; // Continua bucla pentru a alege o actiune valida
             }
         }
         else {
-            std::cout << "Alege actiunea (1 - plaseaza pion, 2 -elimina poduri): ";
+            std::cout << "Alege actiunea (1 - plaseaza pion, 2 - elimina poduri, 3 - renunta la joc): ";
             int action;
             std::cin >> action;
 
@@ -225,8 +236,13 @@ void Game::Play()
                 board.deleteBridge(p1, p2);
                 break;
             }
+            case 3:
+                forfeitGame();
+                switchPlayer();
+                std::cout << "Player" << currentPlayer->getName() << " has won!" << "\n";
+                return;
             default:
-                std::cout << "Actiune invalida. Alege 1 sau 2.\n";
+                std::cout << "Actiune invalida. Alege 1, 2 sau 3.\n";
                 continue; // Continua bucla pentru a alege o actiune valida
             }
         }
