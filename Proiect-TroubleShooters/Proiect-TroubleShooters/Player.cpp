@@ -65,13 +65,14 @@ bool Player::operator==(const Player& other)
 void Player::transferFirstPiece(Player& otherPlayer)
 {
 	if (!otherPlayer.pieces.empty()) {
-		Piece transferredPiece = otherPlayer.pieces.front(); // Ia prima pies?
+		Piece transferredPiece = std::move(otherPlayer.pieces.front()); // Mut? prima pies?
 		otherPlayer.pieces.erase(otherPlayer.pieces.begin()); // Elimin? prima pies? din vectorul curent
-		getPieces().push_back(transferredPiece); // Adaug? piesa în vectorul celuilalt juc?tor
+		getPieces().push_back(std::move(transferredPiece)); // Adaug? piesa în vectorul celui?lalt juc?tor
 	}
-	
-	Color tempColor = color; 
-	color = otherPlayer.getColor(); 
+
+	// Schimbarea culorii între juc?tori
+	Color tempColor = color;
+	color = otherPlayer.getColor();
 	otherPlayer.setColor(tempColor);
 }
 
