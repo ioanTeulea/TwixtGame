@@ -116,7 +116,7 @@ void Board::placeBridge(Piece newPiece, const std::vector<Piece>& existingPieces
         if ((abs(newPiece.getX() - existingPiece.getX()) == 1 && abs(newPiece.getY() - existingPiece.getY()) == 2) ||
             (abs(newPiece.getX() - existingPiece.getX()) == 2 && abs(newPiece.getY() - existingPiece.getY()) == 1)) 
         {
-            Bridge newBridge(newPiece, existingPiece);
+            Bridge newBridge(existingPiece,newPiece);
             newPiece.getOwner()->addBridge(newBridge);
         }
     }

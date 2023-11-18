@@ -43,12 +43,12 @@ Player* Piece::getOwner() const
     return owner;
 }
 
-const int& Piece::getX() const
+const uint16_t& Piece::getX() const
 {
     return x;
 }
 
-const int& Piece::getY() const
+const uint16_t& Piece::getY() const
 {
     return y;
 }

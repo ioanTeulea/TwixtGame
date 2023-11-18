@@ -14,8 +14,8 @@ public:
     Piece(Piece&& other) noexcept;
     Piece& operator=(Piece&& other) noexcept;
     Player* getOwner() const;
-    const int& getX()const;
-    const int& getY()const;
+    const uint16_t& getX()const;
+    const uint16_t& getY()const;
     bool operator==(const Piece& other) const;
 };
 
