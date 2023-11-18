@@ -16,14 +16,14 @@ class Player
     int maxPieces;
     std::vector<Piece> pieces;
     std::vector<Bridge> bridges;
-    //int score;
+    uint32_t score=0;
 public:
     // Constructor
     Player(const std::string& playerName, Color playerColor);
     std::string getName() const;
     const Color& getColor() const;
-    //const int& getScore() const;
-    //void increaseScore();
+    const uint32_t& getScore() const;
+    void increaseScore();
     void displayPlayerNumberPieces();
     const int& getNumberMaxPieces()const;
     const int& getNumberPieces()const;

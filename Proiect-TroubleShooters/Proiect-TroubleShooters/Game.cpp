@@ -28,7 +28,13 @@ void Game::sortBridges()
 
 bool Game::checkWinCondition(Player player)
 {
-    return isConnected(player);
+    if (isConnected(player) == true)
+    {
+        currentPlayer->increaseScore();
+        displayScore();
+        return true;
+    }
+    return false;
 }
 
 bool Game::isConnected(Player player)
@@ -111,6 +117,11 @@ bool Game::forfeitGame()
 {
     std::cout << "Player " << currentPlayer->getName() << " has forfeited!" << "\n";
     return false;
+}
+
+void Game::displayScore() const
+{
+    std::cout << "Player 1 Score: " << player1.getScore() << "\n" << "Player 2 Score: " << player2.getScore() << "\n";
 }
 
 
@@ -214,7 +225,9 @@ void Game::Play()
                 }
                 sortBridges();
                 if (checkGameResult(*this))
+                {
                     return;
+                }
                 switchPlayer();
                 break;
             }
@@ -240,6 +253,8 @@ void Game::Play()
                 forfeitGame();
                 switchPlayer();
                 std::cout << "Player" << currentPlayer->getName() << " has won!" << "\n";
+                currentPlayer->increaseScore();
+                displayScore();
                 return;
             default:
                 std::cout << "Actiune invalida. Alege 1, 2 sau 3.\n";

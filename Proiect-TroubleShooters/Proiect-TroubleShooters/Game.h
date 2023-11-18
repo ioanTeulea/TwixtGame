@@ -15,6 +15,7 @@ public:
     bool isConnected(Player player);
     bool checkGameResult(Game game);
     bool forfeitGame();
+    void displayScore() const;
     void Play();
     void sortBridges();
 };

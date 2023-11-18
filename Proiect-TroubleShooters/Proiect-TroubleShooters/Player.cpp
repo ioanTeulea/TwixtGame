@@ -20,14 +20,14 @@ const int& Player::getNumberMaxPieces() const
 {
 	return maxPieces;
 }
-//const int& Player::getScore() const
-//{
-//	return score;
-//}
-//void Player::increaseScore()
-//{
-//	score++;
-//}
+const uint32_t& Player::getScore() const
+{
+	return score;
+}
+void Player::increaseScore()
+{
+	score++;
+}
 const int& Player::getNumberPieces() const
 {
 	return pieces.size();
