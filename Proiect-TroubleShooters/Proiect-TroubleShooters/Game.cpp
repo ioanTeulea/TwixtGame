@@ -1,6 +1,6 @@
 #include "Game.h"
 #include<algorithm>
-#include<stack>
+#include<queue>
 Game::Game(Board& gameBoard, Player& p1, Player& p2) : board{ gameBoard }, player1{ p1 }, player2{ p2 }, currentPlayer{ &player1 }
 {
     // Initialize the game engine
@@ -39,63 +39,51 @@ bool Game::checkWinCondition(Player player)
 
 bool Game::isConnected(Player player)
 {
-    if (player.getNumberBridges() == 0)
-    {
+    if (player.getNumberBridges() < board.getSize() / 2 - (1 - board.getSize() % 2)) {
         return false;
     }
-        std::stack<Bridge> connected_bridges;
-        std::vector<bool>visited(player.getNumberBridges(), false);
-        std::vector<Bridge>bridges_connected;
-        Piece start1 = player.getBridges()[0].getPiece1();
-        Piece start2 = player.getBridges()[0].getPiece2();
-        if (player.getColor() == 1)
-        {
-            if (start1.getX() >1)
-                return false;
-        }
-        else
-        {
-            if (start1.getY() >1)
-                return false;
-        }
-        connected_bridges.push(player.getBridges()[0]);
-        visited[0] = true;
-        while (std::any_of(visited.begin(), visited.end(), [](bool value) { return !value; }))
-        {
-            while (!connected_bridges.empty())
-            {
-                bool found = false;
 
-                for (int i = 1; i < player.getNumberBridges()&&!found; i++)
-                {
-                    if (!visited[i] && player.getBridges()[i].getPiece1() == start2)
-                    {
-                        found = true;
-                        visited[i] = true;
-                        connected_bridges.push(player.getBridges()[i]);
-                        start2 = player.getBridges()[i].getPiece2();
-                    }
-                }
-                if (!found)
-                {
-                    bridges_connected.push_back(connected_bridges.top());
-                    connected_bridges.pop();
+    std::queue<Piece> road;
+    std::vector<Piece> visited_pieces;
+    std::vector<Piece> start_pieces;
+
+    if (player.getColor() == 1) {
+        for (Piece x : player.getPieces()) {
+            if (x.getX() == 0 || x.getX() == 1) {
+                start_pieces.push_back(x);
+            }
+        }
+    }
+    else {
+        for (Piece x : player.getPieces()) {
+            if (x.getY() == 0 || x.getY() == 1) {
+                start_pieces.push_back(x);
+            }
+        }
+    }
+
+    while (!start_pieces.empty()) {
+        if (std::find(visited_pieces.begin(), visited_pieces.end(), start_pieces.back())==visited_pieces.end()) {
+            road.push(start_pieces.back());
+        }
+        start_pieces.pop_back();
+        while (!road.empty()) {
+            bool isBridge = false;
+            for (Bridge x : player.getBridges()) {
+                if (x.getPiece1() == road.front() && std::find(visited_pieces.begin(), visited_pieces.end(), x.getPiece2()) == visited_pieces.end()) {
+                    road.push(x.getPiece2());
+                    isBridge = true;
                 }
             }
-            if (bridges_connected[0].getPiece2().getX() == board.getSize()-1 || bridges_connected[0].getPiece2().getX() == board.getSize()-2 && player.getColor()==1)
+            if (!isBridge && ((player.getColor() == 1 && road.front().getX() == board.getSize() - 1 || road.front().getX() == board.getSize() - 2) || 
+                (player.getColor() == 2 && road.front().getY() == board.getSize() - 1 || road.front().getY() == board.getSize() - 2))) {
                 return true;
-            if (bridges_connected[0].getPiece2().getY() == board.getSize() - 1 || bridges_connected[0].getPiece2().getY() == board.getSize() - 2 && player.getColor() == 2)
-                return true;
-            bridges_connected.clear();
-            for (int i = 1; i < player.getNumberBridges(); i++)
-                if (!visited[i])
-                {
-                    visited[i] = true;
-                    connected_bridges.push(player.getBridges()[i]);
-                }
+            }
+            road.pop();
         }
-        return false;
     }
+    return false;
+}
 
 bool Game::checkGameResult(Game game)
 {
@@ -227,7 +215,7 @@ void Game::Play()
                 {
                     std::cout << '\n';
                     board.displayBoard();
-                    return;
+                    return; 
                 }
                 switchPlayer();
                 break;
