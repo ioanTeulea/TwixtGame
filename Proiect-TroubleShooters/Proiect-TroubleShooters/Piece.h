@@ -7,7 +7,7 @@ class Piece
     uint16_t x, y; // Position on the board
 public:
     // Constructor
-    Piece(Player* player, uint16_t x, uint16_t y);
+    Piece(Player* player=nullptr, uint16_t x=0, uint16_t y=0);
     ~Piece();
     Piece(const Piece& other);
     Piece& operator=(const Piece& other);

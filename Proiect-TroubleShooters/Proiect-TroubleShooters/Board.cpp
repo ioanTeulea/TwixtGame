@@ -164,5 +164,19 @@ bool Board::isBridgeBetween(const Piece& piece1, const Piece& piece2) const
     return false;
 }
 
+bool Board::isBridgeBetween(const int& x1, const int& y1, const int& x2, const int& y2, Player& owner)
+{
+    Piece piece1, piece2;
+    for (Piece piece : owner.getPieces())
+    {
+        if (piece.getX() == x1 && piece.getY() == y1) { piece1 = piece; }
+        if (piece.getX() == x2 && piece.getY() == y2) { piece2 = piece; }
+    }
+    if (piece1.getOwner() && piece2.getOwner())
+        if (isBridgeBetween(piece1, piece2))
+            return true;
+    return false;
+}
+
 
 

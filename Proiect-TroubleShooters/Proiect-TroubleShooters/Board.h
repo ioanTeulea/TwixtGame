@@ -20,6 +20,7 @@ public:
     void displayBoard();
     void placeBridge(Piece newPiece, const std::vector<Piece>& existingPieces);
     bool isBridgeBetween(const Piece& piece1, const Piece& piece2) const;
+    bool isBridgeBetween(const int& x1, const int& y1, const int& x2, const int& y2, Player& owner);
     void deleteBridge(Piece p1,Piece p2);
 };
 

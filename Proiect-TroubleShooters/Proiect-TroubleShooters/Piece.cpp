@@ -1,7 +1,7 @@
 ﻿#include "Piece.h"
 #include "Player.h"
 class Player;
-Piece::Piece(Player* player, uint16_t coordX, uint16_t coordY) :owner{ player }, x{ coordX }, y{ coordY } {}
+Piece::Piece(Player* player=nullptr, uint16_t coordX=0, uint16_t coordY=0) :owner{ player }, x{ coordX }, y{ coordY } {}
 Piece::~Piece() {}
 Piece::Piece(const Piece& other) : owner{ other.owner }, x{ other.x }, y{ other.y } {}
 
