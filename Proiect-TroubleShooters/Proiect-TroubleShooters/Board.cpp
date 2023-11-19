@@ -151,19 +151,6 @@ bool Board::placePiece(Player& player, int x, int y)
     return false;
 }
 
-bool Board::isBridgeBetween(const Piece& piece1, const Piece& piece2) const
-{
-    if (piece1.getOwner() == piece2.getOwner())
-    {
-        for (auto bridge : piece1.getOwner()->getBridges())
-        {
-            if ((bridge.getPiece1() == piece1 || bridge.getPiece1() == piece2) && (bridge.getPiece2() == piece1 || bridge.getPiece2() == piece2))
-                return true;
-        }
-    }
-    return false;
-}
-
 bool Board::isBridgeBetween(const int& x1, const int& y1, const int& x2, const int& y2, Player& owner)
 {
     Piece piece1, piece2;
@@ -173,8 +160,11 @@ bool Board::isBridgeBetween(const int& x1, const int& y1, const int& x2, const i
         if (piece.getX() == x2 && piece.getY() == y2) { piece2 = piece; }
     }
     if (piece1.getOwner() && piece2.getOwner())
-        if (isBridgeBetween(piece1, piece2))
-            return true;
+        for (auto bridge : owner.getBridges())
+        {
+            if ((bridge.getPiece1() == piece1 || bridge.getPiece1() == piece2) && (bridge.getPiece2() == piece1 || bridge.getPiece2() == piece2))
+                return true;
+        }
     return false;
 }
 
