@@ -113,10 +113,9 @@ bool Game::checkGameResult(Game game)
     return false;
 }
 
-bool Game::forfeitGame()
+void Game::forfeitGame()
 {
     std::cout << "Player " << currentPlayer->getName() << " has forfeited!" << "\n";
-    return false;
 }
 
 void Game::displayScore() const
@@ -213,7 +212,7 @@ void Game::Play()
                 while (!piece_placed) {
                     std::cout << "Alege coordonatele pilonului: ";
                     std::cin >> x >> y;
-                    if ((*currentPlayer == player1 && (y == 0 || y == board.getSize() - 1)) || (*currentPlayer == player2 && (x == 0 || x == board.getSize() - 1))) {
+                    if ((currentPlayer->getColor() == 1 && (y == 0 || y == board.getSize() - 1)) || (currentPlayer->getColor() == 2 && (x == 0 || x == board.getSize() - 1))) {
                         std::cout << "Mutare nepermisa!\n";
                     }
                     else {
@@ -226,6 +225,8 @@ void Game::Play()
                 sortBridges();
                 if (checkGameResult(*this))
                 {
+                    std::cout << '\n';
+                    board.displayBoard();
                     return;
                 }
                 switchPlayer();

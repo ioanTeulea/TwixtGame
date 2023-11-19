@@ -14,7 +14,7 @@ public:
     bool checkWinCondition(Player player);
     bool isConnected(Player player);
     bool checkGameResult(Game game);
-    bool forfeitGame();
+    void forfeitGame();
     void displayScore() const;
     void Play();
     void sortBridges();
