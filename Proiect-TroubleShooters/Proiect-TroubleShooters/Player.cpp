@@ -62,7 +62,7 @@ bool Player::operator==(const Player& other)
 	return color == other.color;
 }
 
-void Player::transferFirstPiece(Player& otherPlayer)
+void Player::transferFirstPiece( Player& otherPlayer)
 {
 	if (!otherPlayer.pieces.empty()) {
 		Piece transferredPiece = std::move(otherPlayer.pieces.front()); // Mut? prima pies?
@@ -74,7 +74,7 @@ void Player::transferFirstPiece(Player& otherPlayer)
 	Color tempColor = color;
 	color = otherPlayer.getColor();
 	otherPlayer.setColor(tempColor);
-}
+} 
 
 void Player::addPiece(const Piece& piece)
 {

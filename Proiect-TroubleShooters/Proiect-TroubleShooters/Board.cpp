@@ -1,116 +1,64 @@
 #include "Board.h"
 
-Board::Board(int boardSize) :
-    size{ boardSize }
-{
-    // Alocare dinamic? pentru tabla de joc
-    board = new int* [size];
-    for (int i = 0; i < size; ++i) {
-        board[i] = new int[size];
-        for (int j = 0; j < size; ++j) {
-            board[i][j] = 0; // Ini?ializare cu valori implicite (0 = niciun juc?tor)
-        }
+// Constructor
+Board::Board(int boardSize) : size(boardSize), board(boardSize, std::vector<int>(boardSize, 0)) {}
+
+// Copy constructor
+Board::Board(const Board& other) : size(other.size), board(other.board) {}
+
+// Copy assignment operator
+Board& Board::operator=(const Board& other) {
+    if (this != &other) {
+        size = other.size;
+        board = other.board;
     }
-}
-
-Board::~Board()
-{
-    for (int i = 0; i < size; ++i) {
-        delete[] board[i];
-    }
-    delete[] board;
-
-}
-
-Board::Board(const Board& other)
-{
-    size = other.size;
-
-    // Alocare memorie pentru matricea nou?
-    board = new int* [size];
-    for (int i = 0; i < size; i++) {
-        board[i] = new int[size];
-        for (int j = 0; j < size; j++) {
-            board[i][j] = other.board[i][j];
-        }
-    }
-}
-
-Board& Board::operator=(const Board& other)
-{
-    if (this == &other) {
-        // Evitam auto-atribuirea
-        return *this;
-    }
-
-    // Dealocam memoria pentru matricea curenta
-    for (int i = 0; i < size; i++) {
-        delete[] board[i];
-    }
-    delete[] board;
-
-    // Copiem dimensiunea
-    size = other.size;
-
-    // Alocare memorie pentru matricea noua
-    board = new int* [size];
-    for (int i = 0; i < size; i++) {
-        board[i] = new int[size];
-        for (int j = 0; j < size; j++) {
-            board[i][j] = other.board[i][j];
-        }
-    }
-
     return *this;
 }
 
-const int& Board::getSize() const
-{
+// Getter pentru dimensiune
+int Board::getSize() const {
     return size;
 }
 
-int** Board::getBoard() const
-{
+// Getter pentru tabla de joc
+const std::vector<std::vector<int>>& Board::getBoard() const {
     return board;
 }
 
-bool Board::isValidLocation(int x, int y, int boardSize)
+bool Board::isValidLocation(int x, int y) const
 {
-    if ((x == boardSize - 1 || x == 0) && (y == boardSize - 1 || y == 0))
+    if ((x == size - 1 || x == 0) && (y == size - 1 || y == 0))
         return false;
-    return x >= 0 && x <= boardSize - 1 && y>=0 && y <= boardSize - 1;
+    return x >= 0 && x <= size - 1 && y>=0 && y <= size - 1;
 }
 
-bool Board::isOccupied(int x, int y, int** board)
-{
+bool Board::isOccupied(int x, int y) const {
     return board[x][y] != 0;
 }
 
-void Board::displayBoard()
-{
+void Board::displayBoard() const {
     for (int row = 0; row < size; row++) {
         if (row == 0 || row == size - 1) {
             std::cout << "  ";
         }
         for (int col = 0; col < size; col++) {
             if (!((row == size - 1 || row == 0) && (col == size - 1 || col == 0))) {
-                    if (board[row][col] == Color::Red) {
-                        std::cout << "R ";
-                    }
-                    else if (board[row][col] == Color::Black) {
-                        std::cout << "B ";
-                    }
-                    else {
-                        std::cout << "O ";
-                    }
-                
+                if (board[row][col] == static_cast<int>(Color::Red)) {
+                    std::cout << "R ";
+                }
+                else if (board[row][col] == static_cast<int>(Color::Black)) {
+                    std::cout << "B ";
+                }
+                else {
+                    std::cout << "O ";
+                }
             }
         }
         std::cout << '\n';
     }
 }
 
-void Board::placeBridge(Piece newPiece, const std::vector<Piece>& existingPieces) {
+void Board::placeBridge(const Piece& newPiece, const std::vector<Piece>& existingPieces) {
     for (const Piece& existingPiece : existingPieces) 
     {
         if ((abs(newPiece.getX() - existingPiece.getX()) == 1 && abs(newPiece.getY() - existingPiece.getY()) == 2) ||
@@ -122,7 +70,7 @@ void Board::placeBridge(Piece newPiece, const std::vector<Piece>& existingPieces
     }
 }
 
-void Board::deleteBridge(Piece p1, Piece p2)
+void Board::deleteBridge(const Piece& p1, const Piece& p2)
 {
     if (p1.getOwner() != p2.getOwner())
         return;
@@ -140,7 +88,7 @@ void Board::deleteBridge(Piece p1, Piece p2)
 
 bool Board::placePiece(Player& player, int x, int y)
 {
-    if (isValidLocation(x, y, size) && !isOccupied(x, y, board))
+    if (isValidLocation(x, y) && !isOccupied(x, y))
     {
       board[x][y] = player.getColor();
       Piece newPiece(&player, x, y);
