@@ -33,6 +33,9 @@ public:
 
     // Verifica daca exista poduri care s-ar intersecta cu cel care pleaca din (x,y)
     bool availableWay(const uint16_t& x, const uint16_t& y, const uint16_t& sign, const bool& vertical, Player& owner);
+
+    // Verifica daca poate fi plasat un pod intre doua piese
+    bool canPlaceBridge(const Piece& piece1, const Piece& piece2);
 };
 
 

@@ -64,8 +64,11 @@ void Board::placeBridge(const Piece& newPiece, const std::vector<Piece>& existin
         if ((abs(newPiece.getX() - existingPiece.getX()) == 1 && abs(newPiece.getY() - existingPiece.getY()) == 2) ||
             (abs(newPiece.getX() - existingPiece.getX()) == 2 && abs(newPiece.getY() - existingPiece.getY()) == 1)) 
         {
-            Bridge newBridge(existingPiece,newPiece);
-            newPiece.getOwner()->addBridge(newBridge);
+            if(canPlaceBridge(existingPiece,newPiece))
+            {
+                Bridge newBridge(existingPiece, newPiece);
+                newPiece.getOwner()->addBridge(newBridge);
+            }
         }
     }
 }
@@ -160,6 +163,60 @@ bool Board::availableWay(const uint16_t& x, const uint16_t& y, const uint16_t& s
             return false;
         if (isBridgeBetween(x, y + 2 * sign, x + 2, y + 1 * sign, owner))
             return false;
+    }
+    return true;
+}
+
+bool Board::canPlaceBridge(const Piece& piece1, const Piece& piece2)
+{
+    bool condX = piece1.getX() > piece2.getX();
+    bool condY = piece1.getY() > piece2.getY();
+    if (abs(piece1.getX() - piece2.getX()) > abs(piece1.getY() - piece2.getY()))
+    {
+        uint16_t x, y;
+        if (piece1.getX() < piece2.getX())
+            x = piece1.getX(), y = piece1.getY();
+        else
+            x = piece2.getX(), y = piece2.getY();
+        if (condX && condY || !condX && !condY)
+        {
+            if (!availableWay(x, y, -1, true, *piece1.getOwner()))
+                return false;
+        }
+        else //if (condX && !condY || !condX && condY)
+        {
+            if (!availableWay(x, y, 1, true, *piece1.getOwner()))
+                return false;
+        }
+    }
+    else //if (abs(piece1.getX() - piece2.getX()) < abs(piece1.getY() - piece2.getY()))
+    {
+        if (condX && condY || !condX && !condY)
+        {
+            if (piece1.getY() < piece2.getY())
+            {
+                if (!availableWay(piece1.getX(), piece1.getY(), -1, false, *piece1.getOwner()))
+                    return false;
+            }
+            else
+            {
+                if (!availableWay(piece2.getX(), piece2.getY(), -1, false, *piece1.getOwner()))
+                    return false;
+            }
+        }
+        else //if (condX && !condY || !condX && condY)
+        {
+            if (piece1.getY() > piece2.getY())
+            {
+                if (!availableWay(piece1.getX(), piece1.getY(), 1, false, *piece1.getOwner()))
+                    return false;
+            }
+            else
+            {
+                if (!availableWay(piece2.getX(), piece2.getY(), 1, false, *piece1.getOwner()))
+                    return false;
+            }
+        }
     }
     return true;
 }
