@@ -99,7 +99,7 @@ bool Board::placePiece(Player& player, uint16_t x, uint16_t y)
     return false;
 }
 
-bool Board::isBridgeBetween(const int& x1, const int& y1, const int& x2, const int& y2, Player& owner)
+bool Board::isBridgeBetween(const uint16_t& x1, const uint16_t& y1, const uint16_t& x2, const uint16_t& y2, Player& owner)
 {
     Piece piece1, piece2;
     for (Piece piece : owner.getPieces())
@@ -114,6 +114,54 @@ bool Board::isBridgeBetween(const int& x1, const int& y1, const int& x2, const i
                 return true;
         }
     return false;
+}
+
+
+bool Board::availableWay(const uint16_t& x, const uint16_t& y, const uint16_t& sign, const bool& vertical, Player& owner)
+{
+    if(vertical)
+    {
+        if (isBridgeBetween(x + 1, y, x - 1, y - 1 * sign, owner))
+            return false;
+        if (isBridgeBetween(x + 1, y, x, y - 2 * sign, owner))
+            return false;
+        if (isBridgeBetween(x + 1, y, x + 2, y - 2 * sign, owner))
+            return false;
+        if (isBridgeBetween(x + 1, y - 1 * sign, x, y + 1 * sign, owner))
+            return false;
+        if (isBridgeBetween(x + 1, y - 1 * sign, x + 2, y + 1 * sign, owner))
+            return false;
+        if (isBridgeBetween(x + 1, y - 1 * sign, x + 3, y, owner))
+            return false;
+        if (isBridgeBetween(x + 1, y + 1 * sign, x, y - 1 * sign, owner))
+            return false;
+        if (isBridgeBetween(x, y - 1 * sign, x + 2, y, owner))
+            return false;
+        if (isBridgeBetween(x + 2, y, x + 1, y - 2 * sign, owner))
+            return false;
+    }
+    else
+    {
+        if (isBridgeBetween(x, y + 1 * sign, x + 1, y - 1 * sign, owner))
+            return false;
+        if (isBridgeBetween(x, y + 1 * sign, x + 2, y, owner))
+            return false;
+        if (isBridgeBetween(x, y + 1 * sign, x + 2, y + 2 * sign, owner))
+            return false;
+        if (isBridgeBetween(x + 1, y + 1 * sign, x - 1, y, owner))
+            return false;
+        if (isBridgeBetween(x + 1, y + 1 * sign, x - 1, y + 2 * sign, owner))
+            return false;
+        if (isBridgeBetween(x + 1, y + 1 * sign, x, y + 3 * sign, owner))
+            return false;
+        if (isBridgeBetween(x - 1, y + 1 * sign, x + 1, y, owner))
+            return false;
+        if (isBridgeBetween(x + 1, y, x, y + 2 * sign, owner))
+            return false;
+        if (isBridgeBetween(x, y + 2 * sign, x + 2, y + 1 * sign, owner))
+            return false;
+    }
+    return true;
 }
 
 

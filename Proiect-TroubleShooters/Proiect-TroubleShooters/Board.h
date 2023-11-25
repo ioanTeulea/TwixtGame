@@ -29,7 +29,10 @@ public:
     void deleteBridge(const Piece& p1, const Piece& p2);
 
     // Verific? dac? exist? o punte între dou? pozi?ii pentru un juc?tor dat
-    bool isBridgeBetween(const int& x1, const int& y1, const int& x2, const int& y2, Player& owner);
+    bool isBridgeBetween(const uint16_t& x1, const uint16_t& y1, const uint16_t& x2, const uint16_t& y2, Player& owner);
+
+    // Verifica daca exista poduri care s-ar intersecta cu cel care pleaca din (x,y)
+    bool availableWay(const uint16_t& x, const uint16_t& y, const uint16_t& sign, const bool& vertical, Player& owner);
 };
 
 
