@@ -195,12 +195,12 @@ bool Board::canPlaceBridge(const Piece& piece1, const Piece& piece2)
         {
             if (piece1.getY() < piece2.getY())
             {
-                if (!availableWay(piece1.getX(), piece1.getY(), -1, false, *piece1.getOwner()))
+                if (!availableWay(piece1.getX(), piece1.getY(), 1, false, *piece1.getOwner()))
                     return false;
             }
             else
             {
-                if (!availableWay(piece2.getX(), piece2.getY(), -1, false, *piece1.getOwner()))
+                if (!availableWay(piece2.getX(), piece2.getY(), 1, false, *piece1.getOwner()))
                     return false;
             }
         }
@@ -208,12 +208,12 @@ bool Board::canPlaceBridge(const Piece& piece1, const Piece& piece2)
         {
             if (piece1.getY() > piece2.getY())
             {
-                if (!availableWay(piece1.getX(), piece1.getY(), 1, false, *piece1.getOwner()))
+                if (!availableWay(piece1.getX(), piece1.getY(), -1, false, *piece1.getOwner()))
                     return false;
             }
             else
             {
-                if (!availableWay(piece2.getX(), piece2.getY(), 1, false, *piece1.getOwner()))
+                if (!availableWay(piece2.getX(), piece2.getY(), -1, false, *piece1.getOwner()))
                     return false;
             }
         }

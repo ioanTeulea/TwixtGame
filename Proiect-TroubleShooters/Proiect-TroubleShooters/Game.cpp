@@ -115,7 +115,7 @@ void Game::displayScore() const
 void Game::Play()
 {
     std::cout << "Introduceti numarul maxim de piloni/jucator: ";
-    uint32_t maxPieces;
+    uint16_t maxPieces;
     std::cin >> maxPieces;
     player1.setMaxPieces(maxPieces);
     player2.setMaxPieces(maxPieces);
