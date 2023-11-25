@@ -1,7 +1,7 @@
 #include "Board.h"
 
 // Constructor
-Board::Board(int boardSize) : size(boardSize), board(boardSize, std::vector<int>(boardSize, 0)) {}
+Board::Board(uint16_t boardSize) : size(boardSize), board(boardSize, std::vector<int>(boardSize, 0)) {}
 
 // Copy constructor
 Board::Board(const Board& other) : size(other.size), board(other.board) {}
@@ -16,7 +16,7 @@ Board& Board::operator=(const Board& other) {
 }
 
 // Getter pentru dimensiune
-int Board::getSize() const {
+uint16_t Board::getSize() const {
     return size;
 }
 
@@ -25,23 +25,23 @@ const std::vector<std::vector<int>>& Board::getBoard() const {
     return board;
 }
 
-bool Board::isValidLocation(int x, int y) const
+bool Board::isValidLocation(uint16_t x, uint16_t y) const
 {
     if ((x == size - 1 || x == 0) && (y == size - 1 || y == 0))
         return false;
     return x >= 0 && x <= size - 1 && y>=0 && y <= size - 1;
 }
 
-bool Board::isOccupied(int x, int y) const {
+bool Board::isOccupied(uint16_t x, uint16_t y) const {
     return board[x][y] != 0;
 }
 
 void Board::displayBoard() const {
-    for (int row = 0; row < size; row++) {
+    for (uint16_t row = 0; row < size; row++) {
         if (row == 0 || row == size - 1) {
             std::cout << "  ";
         }
-        for (int col = 0; col < size; col++) {
+        for (uint16_t col = 0; col < size; col++) {
             if (!((row == size - 1 || row == 0) && (col == size - 1 || col == 0))) {
                 if (board[row][col] == static_cast<int>(Color::Red)) {
                     std::cout << "R ";
@@ -86,7 +86,7 @@ void Board::deleteBridge(const Piece& p1, const Piece& p2)
     }
 }
 
-bool Board::placePiece(Player& player, int x, int y)
+bool Board::placePiece(Player& player, uint16_t x, uint16_t y)
 {
     if (isValidLocation(x, y) && !isOccupied(x, y))
     {

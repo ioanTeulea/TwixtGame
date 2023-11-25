@@ -13,7 +13,7 @@ class Player
 {
     std::string name;
     Color color;
-    int maxPieces;
+    uint32_t maxPieces;
     std::vector<Piece> pieces;
     std::vector<Bridge> bridges;
     uint32_t score=0;
@@ -25,12 +25,12 @@ public:
     const uint32_t& getScore() const;
     void increaseScore();
     void displayPlayerNumberPieces();
-    const int& getNumberMaxPieces()const;
+    const uint32_t& getNumberMaxPieces()const;
     const int& getNumberPieces()const;
     const int& getNumberBridges()const;
     std::vector<Piece>& getPieces();
     std::vector<Bridge>& getBridges();
-    void setMaxPieces(const int& maxPieces);
+    void setMaxPieces(const uint32_t& maxPieces);
     void setColor(Color c);
     bool operator==(const Player& other);
     void transferFirstPiece(Player& otherPlayer);

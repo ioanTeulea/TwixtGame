@@ -16,7 +16,7 @@ void Player::displayPlayerNumberPieces()
 	std::cout << "Pieces: " << maxPieces - getNumberPieces() << '\n';
 	std::cout << "Bridges: " << maxPieces - getNumberBridges() << '\n';
 }
-const int& Player::getNumberMaxPieces() const
+const uint32_t& Player::getNumberMaxPieces() const
 {
 	return maxPieces;
 }
@@ -45,7 +45,7 @@ std::vector<Bridge>& Player::getBridges()
 	return bridges;
 }
 
-void Player::setMaxPieces(const int& maxPieces)
+void Player::setMaxPieces(const uint32_t& maxPieces)
 {
 	this->maxPieces = maxPieces;
 }

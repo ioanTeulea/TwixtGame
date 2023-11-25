@@ -8,16 +8,16 @@ class Board
     std::vector<std::vector<int>> board; // Vector de vector de întregi pentru reprezentarea tablei
 public:
     // Constructor
-    Board(int boardSize);
+    Board(uint16_t boardSize);
     Board(const Board& other);
     Board& operator=(const Board& other);
     std::uint16_t getSize() const;
     const std::vector<std::vector<int>>& getBoard() const;
-    bool isValidLocation(int x, int y) const;
-    bool isOccupied(int x, int y) const;
+    bool isValidLocation(uint16_t x, uint16_t y) const;
+    bool isOccupied(uint16_t x, uint16_t y) const;
 
     // Plaseaz? o pies? pe tabla de joc pentru un juc?tor dat
-    bool placePiece(Player& player, int x, int y);
+    bool placePiece(Player& player, uint16_t x, uint16_t y);
 
     // Afi?eaz? tabla de joc
     void displayBoard() const;

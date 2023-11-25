@@ -115,18 +115,18 @@ void Game::displayScore() const
 void Game::Play()
 {
     std::cout << "Introduceti numarul maxim de piloni/jucator: ";
-    int maxPieces;
+    uint32_t maxPieces;
     std::cin >> maxPieces;
     player1.setMaxPieces(maxPieces);
     player2.setMaxPieces(maxPieces);
     bool firstTurn = true;
     while (currentPlayer->getNumberPieces() <= maxPieces && !checkGameResult(*this)) {
-        int x, y;
+        uint16_t x, y;
         std::cout << '\n' << currentPlayer->getName()<< "'s turn\n";
         currentPlayer->displayPlayerNumberPieces();
         if (currentPlayer->getNumberPieces() == 0 && currentPlayer == &player2 && firstTurn == true) {
             std::cout << "Alege actiunea (1 - plaseaza pion, 2 - elimina poduri, 3 - preia prima piesa, 4 - renunta la joc): ";
-            int action;
+            uint16_t action;
             std::cin >> action;
 
             switch (action) {
@@ -190,7 +190,7 @@ void Game::Play()
         }
         else {
             std::cout << "Alege actiunea (1 - plaseaza pion, 2 - elimina poduri, 3 - renunta la joc): ";
-            int action;
+            uint32_t action;
             std::cin >> action;
 
             switch (action) {
