@@ -86,6 +86,16 @@ void Player::addBridge(const Bridge& bridge)
 	bridges.push_back(bridge);
 }
 
+void Player::deletePieces()
+{
+	pieces.clear();
+}
+
+void Player::deleteBridges()
+{
+	bridges.clear();
+}
+
 
 
 

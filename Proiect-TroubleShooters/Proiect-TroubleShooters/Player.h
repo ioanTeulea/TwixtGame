@@ -36,6 +36,8 @@ public:
     void transferFirstPiece(Player& otherPlayer);
     void addPiece(const Piece& piece);
     void addBridge(const Bridge& bridge);
+    void deletePieces();
+    void deleteBridges();
 };
 
 
