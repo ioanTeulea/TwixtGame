@@ -25,6 +25,19 @@ void Game::sortBridges()
         });
 }
 
+void Game::Setup()
+{
+    std::cout<<"Introduceti marimea tablei de joc: ";
+    uint16_t b_size;
+    std::cin >> b_size;
+    Board board(b_size);
+
+    std::cout << "Introduceti numarul maxim de piloni/jucator: ";
+    uint16_t maxPieces;
+    std::cin >> maxPieces;
+    player1.setMaxPieces(maxPieces);
+    player2.setMaxPieces(maxPieces);
+}
 
 bool Game::checkWinCondition(Player player)
 {
@@ -114,13 +127,8 @@ void Game::displayScore() const
 
 void Game::Play()
 {
-    std::cout << "Introduceti numarul maxim de piloni/jucator: ";
-    uint16_t maxPieces;
-    std::cin >> maxPieces;
-    player1.setMaxPieces(maxPieces);
-    player2.setMaxPieces(maxPieces);
     bool firstTurn = true;
-    while (currentPlayer->getNumberPieces() <= maxPieces && !checkGameResult(*this)) {
+    while (currentPlayer->getNumberPieces() <= currentPlayer->getNumberMaxPieces() && !checkGameResult(*this)) {
         uint16_t x, y;
         std::cout << '\n' << currentPlayer->getName()<< "'s turn\n";
         currentPlayer->displayPlayerNumberPieces();

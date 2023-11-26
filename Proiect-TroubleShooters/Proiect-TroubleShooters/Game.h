@@ -18,6 +18,7 @@ public:
     void displayScore() const;
     void Play();
     void sortBridges();
+    void Setup();
 };
 
 

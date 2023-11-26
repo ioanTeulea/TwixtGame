@@ -25,12 +25,6 @@ int main(int argc, char* argv[]) {
     // Player player1("Grig", Color::Red);
     // Player player2("Cernat", Color::Black);
 
-    //int b_size;
-    //std::cout << "Introduceti marimea tablei de joc: ";
-    //std::cin >> b_size;
-
-    // Board board(b_size);
-    //
     // Game Twixt(board, player1, player2);
     // board.displayBoard();
 
