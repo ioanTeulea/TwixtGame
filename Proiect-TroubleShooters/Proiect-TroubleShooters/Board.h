@@ -36,6 +36,8 @@ public:
 
     // Verifica daca poate fi plasat un pod intre doua piese
     bool canPlaceBridge(const Piece& piece1, const Piece& piece2);
+
+    void reset();
 };
 
 

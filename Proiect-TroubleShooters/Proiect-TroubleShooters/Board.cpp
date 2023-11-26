@@ -221,5 +221,14 @@ bool Board::canPlaceBridge(const Piece& piece1, const Piece& piece2)
     return true;
 }
 
+void Board::reset()
+{
+    for (int row = 0; row < size; row++) {
+        for (int col = 0; col < size; col++) {
+            board[row][col] = 0;
+        }
+    }
+}
+
 
 
