@@ -98,6 +98,7 @@
     <ClCompile Include="Player.cpp">
       <DebugInformationFormat Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">ProgramDatabase</DebugInformationFormat>
     </ClCompile>
+    <ClCompile Include="PlayerInputDialog.cpp" />
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="MyWindow.h" />
@@ -105,9 +106,10 @@
   <ItemGroup>
     <ClInclude Include="Board.h" />
     <ClInclude Include="Bridge.h" />
-    <ClInclude Include="Game.h" />
+    <QtMoc Include="Game.h" />
     <ClInclude Include="Piece.h" />
     <ClInclude Include="Player.h" />
+    <QtMoc Include="PlayerInputDialog.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.targets')">
