@@ -6,6 +6,7 @@
 
 enum Color
 {
+    None = 0,
     Red = 1,
     Black = 2
 };
@@ -16,11 +17,12 @@ class Player
     uint16_t maxPieces;
     std::vector<Piece> pieces;
     std::vector<Bridge> bridges;
-    uint16_t score=0;
+    uint16_t score = 0;
 public:
     // Constructor
-    Player(const std::string& playerName, Color playerColor);
+    Player(const std::string& playerName = "", Color playerColor = None);
     std::string getName() const;
+    void setName(const std::string& newName);
     const Color& getColor() const;
     const uint16_t& getScore() const;
     void increaseScore();
@@ -39,5 +41,3 @@ public:
     void deletePieces();
     void deleteBridges();
 };
-
-

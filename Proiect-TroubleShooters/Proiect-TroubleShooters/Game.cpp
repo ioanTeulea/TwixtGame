@@ -1,9 +1,17 @@
 #include "Game.h"
 #include<algorithm>
 #include<queue>
-Game::Game(Board& gameBoard, Player& p1, Player& p2) : board{ gameBoard }, player1{ p1 }, player2{ p2 }, currentPlayer{ &player1 }
-{
-    // Initialize the game engine
+
+Game::Game(Board& gameBoard) : board{ gameBoard }, player1{}, player2{}, currentPlayer{ &player1 } {
+    // Restul logicii de ini?ializare pentru joc
+}
+
+void Game::setPlayerNames(const QString& namePlayer1, const QString& namePlayer2) {
+    player1.setName(namePlayer1.toStdString());
+    player1.setColor(Color::Red);
+    player2.setName(namePlayer2.toStdString());
+    player2.setColor(Color::Black);
+
 }
 
 void Game::switchPlayer()
@@ -24,20 +32,21 @@ void Game::sortBridges()
         return bridge1.sortBridgesComparator(bridge2);
         });
 }
-
 void Game::Setup()
 {
-    std::cout<<"Introduceti marimea tablei de joc: ";
+    std::cout << "Introduceti marimea tablei de joc: ";
     uint16_t b_size;
     std::cin >> b_size;
-    Board board(b_size);
-
+    Board tempboard(b_size);
+    board = std::move(tempboard);
+    board.displayBoard();
     std::cout << "Introduceti numarul maxim de piloni/jucator: ";
     uint16_t maxPieces;
     std::cin >> maxPieces;
     player1.setMaxPieces(maxPieces);
     player2.setMaxPieces(maxPieces);
 }
+
 
 bool Game::checkWinCondition(Player player)
 {
@@ -98,7 +107,7 @@ bool Game::isConnected(Player player)
     return false;
 }
 
-bool Game::checkGameResult(Game game)
+bool Game::checkGameResult()
 {
     if (player1.getNumberMaxPieces() == player1.getNumberPieces() && player2.getNumberMaxPieces() == player2.getNumberPieces())
     {
@@ -106,7 +115,7 @@ bool Game::checkGameResult(Game game)
         return true;
     }
     else
-        if (game.checkWinCondition(*currentPlayer))
+        if (checkWinCondition(*currentPlayer))
         {
             std::cout << "Player " << currentPlayer->getName() << " has won!" << "\n";
             return true;
@@ -128,11 +137,12 @@ void Game::displayScore() const
 void Game::Play()
 {
     bool firstTurn = true;
-    while (currentPlayer->getNumberPieces() <= currentPlayer->getNumberMaxPieces() && !checkGameResult(*this)) {
+    while (currentPlayer->getNumberPieces() <= currentPlayer->getNumberMaxPieces() && !checkGameResult()) {
         uint16_t x, y;
         std::cout << '\n' << currentPlayer->getName()<< "'s turn\n";
         currentPlayer->displayPlayerNumberPieces();
-        if (currentPlayer->getNumberPieces() == 0 && currentPlayer == &player2 && firstTurn == true) {
+        if (currentPlayer->getNumberPieces() == 0 && currentPlayer == &player2 && firstTurn == true)
+        {
             std::cout << "Alege actiunea (1 - plaseaza pion, 2 - elimina poduri, 3 - preia prima piesa, 4 - renunta la joc): ";
             uint16_t action;
             std::cin >> action;
@@ -183,7 +193,7 @@ void Game::Play()
             }
             case 3:
                 player2.transferFirstPiece(player1);
-                firstTurn=false;
+                firstTurn = false;
                 switchPlayer();
                 break;
             case 4:
@@ -200,7 +210,6 @@ void Game::Play()
             std::cout << "Alege actiunea (1 - plaseaza pion, 2 - elimina poduri, 3 - renunta la joc): ";
             uint32_t action;
             std::cin >> action;
-
             switch (action) {
             case 1:
             {
@@ -219,11 +228,11 @@ void Game::Play()
                     }
                 }
                 sortBridges();
-                if (checkGameResult(*this))
+                if (checkGameResult())
                 {
                     std::cout << '\n';
                     board.displayBoard();
-                    return; 
+                    return;
                 }
                 switchPlayer();
                 break;
@@ -263,5 +272,4 @@ void Game::Play()
         board.displayBoard();
     }
 }
-
 

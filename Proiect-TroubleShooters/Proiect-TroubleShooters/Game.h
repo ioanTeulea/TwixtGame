@@ -2,23 +2,25 @@
 #include"Board.h"
 #include"Player.h"
 #include<iostream>
-class Game
-{
+#include <QObject>  
+
+class Game : public QObject {  // Mo?tene?te QObject
+    Q_OBJECT
+    Player player1;
+    Player player2;
 public:
     Board& board; // Referin?? la tabla de joc
-    Player& player1; // Referin?? la primul juc?tor
-    Player& player2; // Referin?? la al doilea juc?tor
     Player* currentPlayer; // Pointer c?tre juc?torul curent
-    Game(Board& gameBoard, Player& p1, Player& p2);
-    void switchPlayer(); 
+    Game(Board& gameBoard);
+    void switchPlayer();
     bool checkWinCondition(Player player);
     bool isConnected(Player player);
-    bool checkGameResult(Game game);
+    bool checkGameResult();
     void forfeitGame();
     void displayScore() const;
     void Play();
     void sortBridges();
     void Setup();
+public slots:
+    void setPlayerNames(const QString& namePlayer1, const QString& namePlayer2);
 };
-
-
