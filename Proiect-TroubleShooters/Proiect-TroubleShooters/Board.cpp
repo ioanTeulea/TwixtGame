@@ -1,7 +1,7 @@
 #include "Board.h"
 
 // Constructor
-Board::Board(uint16_t boardSize) : size(boardSize), board(boardSize, std::vector<int>(boardSize, 0)) {}
+Board::Board(uint16_t boardSize) : size{ boardSize }, board{ boardSize, std::vector<int>(boardSize, 0) } {}
 
 // Copy constructor
 Board::Board(const Board& other) : size(other.size), board(other.board) {}
@@ -11,6 +11,28 @@ Board& Board::operator=(const Board& other) {
     if (this != &other) {
         size = other.size;
         board = other.board;
+    }
+    return *this;
+}
+
+Board::Board(Board&& other) noexcept
+    : size{ std::move(other.size) }, board{ std::move(other.board) }
+{
+    // Dup? mutarea resurselor, cel?lalt obiect trebuie s? fie într-o stare valid?
+    other.size = 0;
+    other.board.clear();
+}
+
+Board& Board::operator=(Board&& other) noexcept
+{
+    if (this != &other)
+    {
+        size = other.size;
+        board = std::move(other.board);
+
+        // Dup? mutarea resurselor, cel?lalt obiect trebuie s? fie într-o stare valid?
+        other.size = 0;
+        other.board.clear();
     }
     return *this;
 }
