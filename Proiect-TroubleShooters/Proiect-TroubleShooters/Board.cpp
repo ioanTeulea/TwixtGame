@@ -80,8 +80,8 @@ void Board::displayBoard() const {
     }
 }
 
-void Board::placeBridge(const Piece& newPiece, const std::vector<Piece>& existingPieces) {
-    for (const Piece& existingPiece : existingPieces) 
+void Board::placeBridge(Piece& newPiece, std::vector<Piece>& existingPieces) {
+    for (Piece& existingPiece : existingPieces) 
     {
         if ((abs(newPiece.getX() - existingPiece.getX()) == 1 && abs(newPiece.getY() - existingPiece.getY()) == 2) ||
             (abs(newPiece.getX() - existingPiece.getX()) == 2 && abs(newPiece.getY() - existingPiece.getY()) == 1)) 
@@ -103,8 +103,8 @@ void Board::deleteBridge(const Piece& p1, const Piece& p2)
     {
         for (auto it = p1.getOwner()->getBridges().begin(); it != p1.getOwner()->getBridges().end(); ++it) {
             if ((it->getPiece1()==p1 && it->getPiece2()==p2) ||
-                (it->getPiece2() == p2 && it->getPiece1() == p1) ){
-                p1.getOwner()->getBridges().erase(it);
+                (it->getPiece2() == p1 && it->getPiece1() == p2) ){
+                //p1.getOwner()->getBridges().erase(it);
                 break;
             }
         }

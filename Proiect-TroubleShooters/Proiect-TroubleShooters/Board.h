@@ -30,7 +30,7 @@ public:
     void displayBoard() const;
 
    
-    void placeBridge(const Piece& newPiece, const std::vector<Piece>& existingPieces);
+    void placeBridge(Piece& newPiece, std::vector<Piece>& existingPieces);
 
    
     void deleteBridge(const Piece& p1, const Piece& p2);

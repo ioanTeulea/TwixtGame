@@ -26,12 +26,6 @@ void Game::switchPlayer()
     }
 }
 
-void Game::sortBridges()
-{
-    std::sort(currentPlayer->getBridges().begin(), currentPlayer->getBridges().end(), [](const Bridge& bridge1, const Bridge& bridge2) {
-        return bridge1.sortBridgesComparator(bridge2);
-        });
-}
 void Game::Setup()
 {
     std::cout << "Introduceti marimea tablei de joc: ";
@@ -66,8 +60,6 @@ void Game::action_addPawn()
                 std::cout << "Mutare nepermisa!\n";
         }
     }
-    sortBridges();
-
     switchPlayer();
 }
 
@@ -87,7 +79,6 @@ void Game::action_deleteBridge()
     std::cin >> x >> y;
     Piece p2(currentPlayer, x, y);
     board.deleteBridge(p1, p2);
-    sortBridges();
 }
 
 
