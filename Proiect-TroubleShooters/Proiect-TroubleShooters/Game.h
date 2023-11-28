@@ -21,6 +21,7 @@ public:
     void Play();
     void sortBridges();
     void Setup();
+    void action_addPawn();
 public slots:
     void setPlayerNames(const QString& namePlayer1, const QString& namePlayer2);
 };

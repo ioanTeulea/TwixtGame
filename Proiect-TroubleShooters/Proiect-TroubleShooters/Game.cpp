@@ -47,6 +47,30 @@ void Game::Setup()
     player2.setMaxPieces(maxPieces);
 }
 
+void Game::action_addPawn()
+{
+    uint16_t x, y;
+    bool piece_placed = false;
+    while (!piece_placed) {
+        std::cout << "Alege coordonatele pilonului: ";
+        std::cin >> x >> y;
+        if (*currentPlayer == player2 && (x == 0 || x == board.getSize() - 1)) {
+            std::cout << "Mutare nepermisa!\n";
+        }
+        else {
+            if (board.placePiece(*currentPlayer, x, y))
+            {
+                piece_placed = true;
+            }
+            else
+                std::cout << "Mutare nepermisa!\n";
+        }
+    }
+    sortBridges();
+
+    switchPlayer();
+}
+
 
 bool Game::checkWinCondition(Player player)
 {
@@ -143,34 +167,21 @@ void Game::Play()
         currentPlayer->displayPlayerNumberPieces();
         if (currentPlayer->getNumberPieces() == 0 && currentPlayer == &player2 && firstTurn == true)
         {
-            std::cout << "Alege actiunea (1 - plaseaza pion, 2 - elimina poduri, 3 - preia prima piesa, 4 - renunta la joc): ";
+            std::cout << "Alege actiunea (1 - plaseaza pion, 2 - elimina poduri,";
+            if (currentPlayer == &player2 && firstTurn == true) {
+                std::cout << "3 - preia prima piesa,";
+            }
+            std::cout<<"4 - renunta la joc): ";
             uint16_t action;
             std::cin >> action;
 
             switch (action) {
             case 1:
             {
-                bool piece_placed = false;
-                while (!piece_placed) {
-                    std::cout << "Alege coordonatele pilonului: ";
-                    std::cin >> x >> y;
-                    if (*currentPlayer == player2 && (x == 0 || x == board.getSize() - 1)) {
-                        std::cout << "Mutare nepermisa!\n";
-                    }
-                    else {
-                        if (board.placePiece(*currentPlayer, x, y))
-                        {
-                            piece_placed = true;
-                            firstTurn = false;
-                        }
-                        else
-                            std::cout << "Mutare nepermisa!\n";
-                    }
-                }
-                sortBridges();
-
-                switchPlayer();
+                action_addPawn();
                 break;
+                if (currentPlayer == &player2 && firstTurn == true)
+                    firstTurn = false;
             }
             case 2:
             {
@@ -187,8 +198,9 @@ void Game::Play()
                 std::cin >> x >> y;
                 Piece p2(currentPlayer, x, y);
                 board.deleteBridge(p1, p2);
-                firstTurn = false;
                 sortBridges();
+                if (currentPlayer == &player2 && firstTurn == true)
+                    firstTurn = false;
                 break;
             }
             case 3:
