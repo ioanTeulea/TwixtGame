@@ -22,6 +22,7 @@ public:
     void sortBridges();
     void Setup();
     void action_addPawn();
+    void action_deleteBridge();
 public slots:
     void setPlayerNames(const QString& namePlayer1, const QString& namePlayer2);
 };

@@ -71,6 +71,25 @@ void Game::action_addPawn()
     switchPlayer();
 }
 
+void Game::action_deleteBridge()
+{
+    uint16_t x, y;
+    if (currentPlayer->getBridges().empty())
+    {
+        std::cout << "Nu exista poduri";
+        return;
+    }
+    std::cout << "Alege coordonatele pilonilor intre care se afla un pod:\n";
+    std::cout << "pilonul1: ";
+    std::cin >> x >> y;
+    Piece p1(currentPlayer, x, y);
+    std::cout << "pilonul2: ";
+    std::cin >> x >> y;
+    Piece p2(currentPlayer, x, y);
+    board.deleteBridge(p1, p2);
+    sortBridges();
+}
+
 
 bool Game::checkWinCondition(Player player)
 {
@@ -165,48 +184,35 @@ void Game::Play()
         uint16_t x, y;
         std::cout << '\n' << currentPlayer->getName()<< "'s turn\n";
         currentPlayer->displayPlayerNumberPieces();
-        if (currentPlayer->getNumberPieces() == 0 && currentPlayer == &player2 && firstTurn == true)
-        {
-            std::cout << "Alege actiunea (1 - plaseaza pion, 2 - elimina poduri,";
-            if (currentPlayer == &player2 && firstTurn == true) {
-                std::cout << "3 - preia prima piesa,";
-            }
-            std::cout<<"4 - renunta la joc): ";
-            uint16_t action;
-            std::cin >> action;
+        std::cout << "Alege actiunea (1 - plaseaza pion, 2 - elimina poduri,";
+        if (currentPlayer == &player2 && firstTurn == true) {
+            std::cout << "3 - preia prima piesa,";
+        }
+        std::cout << "4 - renunta la joc): ";
+        uint16_t action;
+        std::cin >> action;
 
-            switch (action) {
+        switch (action) {
             case 1:
             {
                 action_addPawn();
-                break;
                 if (currentPlayer == &player2 && firstTurn == true)
                     firstTurn = false;
+                break;
             }
             case 2:
             {
-                if (currentPlayer->getBridges().empty())
-                {
-                    std::cout << "Nu exista poduri";
-                    break;
-                }
-                std::cout << "Alege coordonatele pilonilor intre care se afla un pod:\n";
-                std::cout << "pilonul1: ";
-                std::cin >> x >> y;
-                Piece p1(currentPlayer, x, y);
-                std::cout << "pilonul2: ";
-                std::cin >> x >> y;
-                Piece p2(currentPlayer, x, y);
-                board.deleteBridge(p1, p2);
-                sortBridges();
+                action_deleteBridge();
                 if (currentPlayer == &player2 && firstTurn == true)
                     firstTurn = false;
                 break;
             }
             case 3:
-                player2.transferFirstPiece(player1);
-                firstTurn = false;
-                switchPlayer();
+                if (currentPlayer == &player2 && firstTurn == true) {
+                    player2.transferFirstPiece(player1);
+                    firstTurn = false;
+                    switchPlayer();
+                }
                 break;
             case 4:
                 forfeitGame();
@@ -214,72 +220,12 @@ void Game::Play()
                 std::cout << "Player " << currentPlayer->getName() << " has won!" << "\n";
                 return;
             default:
-                std::cout << "Actiune invalida. Alege 1, 2, 3, 4.\n";
+                std::cout << "Actiune invalida. Alege 1, 2,";
+                std::cout << "3,";
+                std::cout<<"4.\n";
                 continue; // Continua bucla pentru a alege o actiune valida
-            }
         }
-        else {
-            std::cout << "Alege actiunea (1 - plaseaza pion, 2 - elimina poduri, 3 - renunta la joc): ";
-            uint32_t action;
-            std::cin >> action;
-            switch (action) {
-            case 1:
-            {
-                bool piece_placed = false;
-                while (!piece_placed) {
-                    std::cout << "Alege coordonatele pilonului: ";
-                    std::cin >> x >> y;
-                    if ((currentPlayer->getColor() == 1 && (y == 0 || y == board.getSize() - 1)) || (currentPlayer->getColor() == 2 && (x == 0 || x == board.getSize() - 1))) {
-                        std::cout << "Mutare nepermisa!\n";
-                    }
-                    else {
-                        if (board.placePiece(*currentPlayer, x, y))
-                            piece_placed = true;
-                        else
-                            std::cout << "Mutare nepermisa!\n";
-                    }
-                }
-                sortBridges();
-                if (checkGameResult())
-                {
-                    std::cout << '\n';
-                    board.displayBoard();
-                    return;
-                }
-                switchPlayer();
-                break;
-            }
-            case 2:
-            {
-                if (currentPlayer->getBridges().empty())
-                {
-                    std::cout << "Nu exista poduri";
-                    break;
-                }
-                std::cout << "Alege coordonatele pilonilor intre care se afla un pod:\n";
-                std::cout << "pilonul1: ";
-                std::cin >> x >> y;
-                Piece p1(currentPlayer, x, y);
-                std::cout << "pilonul2: ";
-                std::cin >> x >> y;
-                Piece p2(currentPlayer, x, y);
-                board.deleteBridge(p1, p2);
-                sortBridges();
-                break;
-            }
-            case 3:
-                forfeitGame();
-                switchPlayer();
-                std::cout << "Player" << currentPlayer->getName() << " has won!" << "\n";
-                currentPlayer->increaseScore();
-                displayScore();
-                return;
-            default:
-                std::cout << "Actiune invalida. Alege 1, 2 sau 3.\n";
-                continue; // Continua bucla pentru a alege o actiune valida
-            }
-        }
-
+        
         std::cout << '\n';
         board.displayBoard();
     }
