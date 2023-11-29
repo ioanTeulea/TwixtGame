@@ -74,11 +74,21 @@ void Game::action_deleteBridge()
     std::cout << "Alege coordonatele pilonilor intre care se afla un pod:\n";
     std::cout << "pilonul1: ";
     std::cin >> x >> y;
-    Piece p1(currentPlayer, x, y);
+    Piece p1(currentPlayer->getColor(), x, y);
     std::cout << "pilonul2: ";
     std::cin >> x >> y;
-    Piece p2(currentPlayer, x, y);
+    Piece p2(currentPlayer->getColor(), x, y);
     board.deleteBridge(p1, p2);
+    switchPlayer();
+}
+
+void Game::reset()
+{
+    board.reset();
+    player1.deleteBridges();
+    player1.deletePieces();
+    player2.deleteBridges();
+    player2.deletePieces();
 }
 
 
@@ -172,7 +182,6 @@ void Game::Play()
 {
     bool firstTurn = true;
     while (currentPlayer->getNumberPieces() <= currentPlayer->getNumberMaxPieces() && !checkGameResult()) {
-        uint16_t x, y;
         std::cout << '\n' << currentPlayer->getName()<< "'s turn\n";
         currentPlayer->displayPlayerNumberPieces();
         std::cout << "Alege actiunea (1 - plaseaza pion, 2 - elimina poduri,";
@@ -194,8 +203,6 @@ void Game::Play()
             case 2:
             {
                 action_deleteBridge();
-                if (currentPlayer == &player2 && firstTurn == true)
-                    firstTurn = false;
                 break;
             }
             case 3:
