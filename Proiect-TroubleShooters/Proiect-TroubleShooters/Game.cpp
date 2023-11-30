@@ -178,17 +178,17 @@ void Game::displayScore() const
 }
 
 
-void Game::Play()
+void Game::Play_menu()
 {
     bool firstTurn = true;
     while (currentPlayer->getNumberPieces() <= currentPlayer->getNumberMaxPieces() && !checkGameResult()) {
         std::cout << '\n' << currentPlayer->getName()<< "'s turn\n";
         currentPlayer->displayPlayerNumberPieces();
-        std::cout << "Alege actiunea (1 - plaseaza pion, 2 - elimina poduri,";
+        std::cout << "Choose an action (1 - place pawn, 2 - delete bridge,";
         if (currentPlayer == &player2 && firstTurn == true) {
-            std::cout << "3 - preia prima piesa,";
+            std::cout << "3 - take over the first piece,";
         }
-        std::cout << "4 - renunta la joc): ";
+        std::cout << "4 - forfeit): ";
         uint16_t action;
         std::cin >> action;
 
@@ -218,7 +218,7 @@ void Game::Play()
                 std::cout << "Player " << currentPlayer->getName() << " has won!" << "\n";
                 return;
             default:
-                std::cout << "Actiune invalida. Alege 1, 2,";
+                std::cout << "Action not available. Choose 1, 2,";
                 std::cout << "3,";
                 std::cout<<"4.\n";
                 continue; // Continua bucla pentru a alege o actiune valida
@@ -226,6 +226,56 @@ void Game::Play()
         
         std::cout << '\n';
         board.displayBoard();
+    }
+}
+
+void Game::Load_menu() {
+    std::cout << "Choose an action: (1 - Start a new game, 2 - Load an existing one): ";
+    while (1) {
+        uint16_t action;
+        std::cin >> action;
+
+        switch (action)
+        {
+        case 1:
+            return;
+        case 2:
+            //game = saved game
+            return;
+        default:
+            std::cout << "Action not available. Choose 1, 2.\n";
+            continue;
+        }
+    }
+}
+
+void Game::Restart_menu(bool& exit) {
+    std::cout << "Choose an action: (1 - Play again, 2 - Exit): ";
+    while (1) {
+        uint16_t action;
+        std::cin >> action;
+
+        switch (action)
+        {
+        case 1:
+            reset();
+            return;
+        case 2:
+            exit = true;
+            return;
+        default:
+            std::cout << "Action not available. Choose 1, 2.\n";
+            continue;
+        }
+    }
+}
+
+void Game::Play() {
+    bool exit = false;
+    while (!exit) {
+        Load_menu();
+        Play_menu();
+        Restart_menu(exit);
     }
 }
 
