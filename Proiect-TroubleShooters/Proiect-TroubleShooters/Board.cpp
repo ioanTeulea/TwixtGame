@@ -58,6 +58,11 @@ std::vector<Bridge>& Board::getBridges()
 {
     return bridges;
 }
+Player Board::getPieceOwner(Piece piece)
+{
+    if(piece.getColor()==1)
+    return Player.Color::Red;
+}
 const Piece& Board::operator()(uint16_t x, uint16_t y) const
 {
     // Presupunând c? x ?i y sunt indici valizi
@@ -113,10 +118,14 @@ void Board::placeBridge(const Piece& newPiece) {
         if ((abs(newPiece.getX() - existingPiece.getX()) == 1 && abs(newPiece.getY() - existingPiece.getY()) == 2) ||
             (abs(newPiece.getX() - existingPiece.getX()) == 2 && abs(newPiece.getY() - existingPiece.getY()) == 1)) 
         {
-            if(canPlaceBridge(existingPiece,newPiece))
+            if(canPlaceBridge(existingPiece,newPiece)&&existingPiece.getColor()==newPiece.getColor())
             {
                 Bridge newBridge(existingPiece, newPiece);
                 bridges.push_back(newBridge);
+               /* if (existingPiece.getColor() == player.getcolor)
+                {
+                    player->setRemainingBridges(currentPlayer->getRemainingBridges()-1);
+                }*/
             }
         }
     }

@@ -13,7 +13,6 @@ void Game::setPlayerNames(const QString& namePlayer1, const QString& namePlayer2
     player2.setColor(Color::Black);
 
 }
-
 void Game::switchPlayer()
 {
     if (currentPlayer == &player1)
@@ -68,6 +67,8 @@ void Game::action_addPawn ()
                 std::cout << "Mutare nepermisa!\n";
         }
     }
+    uint16_t pieces, bridges;
+    currentPlayer->setRemainingPieces(currentPlayer->getRemainingPieces() - 1);
     switchPlayer();
 }
 
@@ -87,16 +88,15 @@ void Game::action_deleteBridge()
     std::cin >> x >> y;
     Piece p2(currentPlayer->getColor(), x, y);
     board.deleteBridge(p1, p2);
+    currentPlayer->setRemainingBridges(currentPlayer->getRemainingBridges() + 1);
     switchPlayer();
 }
 
 void Game::reset()
 {
     board.reset();
-    player1.deleteBridges();
-    player1.deletePieces();
-    player2.deleteBridges();
-    player2.deletePieces();
+    board.deleteBridges();
+    board.deletePieces();
 }
 
 
@@ -240,7 +240,6 @@ void Game::Load_menu() {
     while (1) {
         uint16_t action;
         std::cin >> action;
-
         switch (action)
         {
         case 1:

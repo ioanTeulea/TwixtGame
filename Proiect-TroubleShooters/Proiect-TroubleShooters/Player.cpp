@@ -29,6 +29,16 @@ const uint16_t& Player::getRemainingBridges() const
 	return remainingBridges;
 }
 
+void Player::setRemainingPieces(uint16_t pieces)
+{
+	remainingPieces = pieces;
+}
+
+void Player::setRemainingBridges(uint16_t bridges)
+{
+	remainingBridges = bridges;
+}
+
 void Player::setColor(Color c)
 {
 	color = c;

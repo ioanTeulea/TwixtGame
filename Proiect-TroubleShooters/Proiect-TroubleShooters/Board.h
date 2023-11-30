@@ -24,6 +24,8 @@ public:
     std::vector<Piece>& getPieces();
     std::vector<Bridge>& getBridges();
 
+    Player getPieceOwner(Piece piece);
+
     const Piece& operator()(uint16_t x, uint16_t y) const; // Operatorul () pentru accesul la piese
 
 

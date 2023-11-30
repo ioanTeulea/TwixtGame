@@ -20,6 +20,9 @@ public:
     void displayPlayerNumberPieces();
     const uint16_t& getRemainingPieces()const;
     const uint16_t& getRemainingBridges()const;
+    
+    void setRemainingPieces(uint16_t pieces);
+    void setRemainingBridges(uint16_t bridges);
     void setColor(Color c);
     void setInitialValues(uint16_t max);
     bool operator==(const Player& other);

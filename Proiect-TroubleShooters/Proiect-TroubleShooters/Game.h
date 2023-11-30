@@ -24,6 +24,11 @@ public:
     void Setup();
     void action_addPawn();
     void action_deleteBridge();
+    void reset();
+private:
+    void Play_menu();
+    void Load_menu();
+    void Restart_menu(bool& exit);
 public slots:
     void setPlayerNames(const QString& namePlayer1, const QString& namePlayer2);
 };
