@@ -1,16 +1,20 @@
 #include "Board.h"
 
 // Constructor
-Board::Board(uint16_t boardSize) : size{ boardSize }, board{ boardSize, std::vector<int>(boardSize, 0) } {}
-
+Board::Board(uint16_t boardSize) : size(boardSize), board(boardSize, std::vector<Piece>(boardSize)), pieces(), bridges() {
+    
+}
 // Copy constructor
-Board::Board(const Board& other) : size(other.size), board(other.board) {}
+Board::Board(const Board& other) : size(other.size), board(other.board), pieces(other.pieces), bridges(other.bridges) {
+}
 
 // Copy assignment operator
 Board& Board::operator=(const Board& other) {
     if (this != &other) {
         size = other.size;
         board = other.board;
+        pieces = other.pieces;
+       // bridges = other.bridges;
     }
     return *this;
 }
@@ -43,8 +47,31 @@ uint16_t Board::getSize() const {
 }
 
 // Getter pentru tabla de joc
-const std::vector<std::vector<int>>& Board::getBoard() const {
+const std::vector<std::vector<Piece>>& Board::getBoard() const {
     return board;
+}
+std::vector<Piece>& Board::getPieces()
+{
+    return pieces;
+}
+std::vector<Bridge>& Board::getBridges()
+{
+    return bridges;
+}
+const Piece& Board::operator()(uint16_t x, uint16_t y) const
+{
+    // Presupunând c? x ?i y sunt indici valizi
+    return board[x][y];
+}
+
+void Board::deletePieces()
+{
+    pieces.clear();
+}
+
+void Board::deleteBridges()
+{
+    bridges.clear();
 }
 
 bool Board::isValidLocation(uint16_t x, uint16_t y) const
@@ -55,7 +82,7 @@ bool Board::isValidLocation(uint16_t x, uint16_t y) const
 }
 
 bool Board::isOccupied(uint16_t x, uint16_t y) const {
-    return board[x][y] != 0;
+    return board[x][y].getColor() != Color::None;
 }
 
 void Board::displayBoard() const {
@@ -65,10 +92,10 @@ void Board::displayBoard() const {
         }
         for (uint16_t col = 0; col < size; col++) {
             if (!((row == size - 1 || row == 0) && (col == size - 1 || col == 0))) {
-                if (board[row][col] == static_cast<int>(Color::Red)) {
+                if (board[row][col].getColor() == static_cast<int>(Color::Red)) {
                     std::cout << "R ";
                 }
-                else if (board[row][col] == static_cast<int>(Color::Black)) {
+                else if (board[row][col].getColor() == static_cast<int>(Color::Black)) {
                     std::cout << "B ";
                 }
                 else {
@@ -80,8 +107,8 @@ void Board::displayBoard() const {
     }
 }
 
-void Board::placeBridge(Piece& newPiece, std::vector<Piece>& existingPieces) {
-    for (Piece& existingPiece : existingPieces) 
+void Board::placeBridge(const Piece& newPiece) {
+    for (Piece& existingPiece : pieces) 
     {
         if ((abs(newPiece.getX() - existingPiece.getX()) == 1 && abs(newPiece.getY() - existingPiece.getY()) == 2) ||
             (abs(newPiece.getX() - existingPiece.getX()) == 2 && abs(newPiece.getY() - existingPiece.getY()) == 1)) 
@@ -89,7 +116,7 @@ void Board::placeBridge(Piece& newPiece, std::vector<Piece>& existingPieces) {
             if(canPlaceBridge(existingPiece,newPiece))
             {
                 Bridge newBridge(existingPiece, newPiece);
-                newPiece.getOwner()->addBridge(newBridge);
+                bridges.push_back(newBridge);
             }
         }
     }
@@ -97,43 +124,42 @@ void Board::placeBridge(Piece& newPiece, std::vector<Piece>& existingPieces) {
 
 void Board::deleteBridge(const Piece& p1, const Piece& p2)
 {
-    if (p1.getOwner() != p2.getOwner())
+    if (p1.getColor() != p2.getColor())
         return;
     else
     {
-        for (auto it = p1.getOwner()->getBridges().begin(); it != p1.getOwner()->getBridges().end(); ++it) {
+        for (auto it = getBridges().begin(); it !=getBridges().end(); ++it) {
             if ((it->getPiece1()==p1 && it->getPiece2()==p2) ||
                 (it->getPiece2() == p1 && it->getPiece1() == p2) ){
-                //p1.getOwner()->getBridges().erase(it);
+              //  bridges.erase(it);
                 break;
             }
         }
     }
 }
 
-bool Board::placePiece(Player& player, uint16_t x, uint16_t y)
+bool Board::placePiece(const Piece & newPiece)
 {
-    if (isValidLocation(x, y) && !isOccupied(x, y))
+    if (isValidLocation(newPiece.getX(),newPiece.getY()) && !isOccupied(newPiece.getX(), newPiece.getY()))
     {
-      board[x][y] = player.getColor();
-      Piece newPiece(&player, x, y);
-      player.addPiece(newPiece);
-      placeBridge(newPiece, player.getPieces());
+      board[newPiece.getX()][newPiece.getY()] = newPiece;
+      pieces.push_back(newPiece);
+      placeBridge(newPiece);
       return true;
     }
     return false;
 }
 
-bool Board::isBridgeBetween(const uint16_t& x1, const uint16_t& y1, const uint16_t& x2, const uint16_t& y2, Player& owner)
+bool Board::isBridgeBetween(const uint16_t& x1, const uint16_t& y1, const uint16_t& x2, const uint16_t& y2)
 {
     Piece piece1, piece2;
-    for (Piece piece : owner.getPieces())
+    for (Piece piece :pieces)
     {
         if (piece.getX() == x1 && piece.getY() == y1) { piece1 = piece; }
         if (piece.getX() == x2 && piece.getY() == y2) { piece2 = piece; }
     }
-    if (piece1.getOwner() && piece2.getOwner())
-        for (auto bridge : owner.getBridges())
+    if (piece1.getColor()== piece2.getColor())
+        for (auto bridge : bridges)
         {
             if ((bridge.getPiece1() == piece1 || bridge.getPiece1() == piece2) && (bridge.getPiece2() == piece1 || bridge.getPiece2() == piece2))
                 return true;
@@ -142,48 +168,48 @@ bool Board::isBridgeBetween(const uint16_t& x1, const uint16_t& y1, const uint16
 }
 
 
-bool Board::availableWay(const uint16_t& x, const uint16_t& y, const uint16_t& sign, const bool& vertical, Player& owner)
+bool Board::availableWay(const uint16_t& x, const uint16_t& y, const uint16_t& sign, const bool& vertical)
 {
     if(vertical)
     {
-        if (isBridgeBetween(x + 1, y, x - 1, y - 1 * sign, owner))
+        if (isBridgeBetween(x + 1, y, x - 1, y - 1 * sign))
             return false;
-        if (isBridgeBetween(x + 1, y, x, y - 2 * sign, owner))
+        if (isBridgeBetween(x + 1, y, x, y - 2 * sign))
             return false;
-        if (isBridgeBetween(x + 1, y, x + 2, y - 2 * sign, owner))
+        if (isBridgeBetween(x + 1, y, x + 2, y - 2 * sign))
             return false;
-        if (isBridgeBetween(x + 1, y - 1 * sign, x, y + 1 * sign, owner))
+        if (isBridgeBetween(x + 1, y - 1 * sign, x, y + 1 * sign))
             return false;
-        if (isBridgeBetween(x + 1, y - 1 * sign, x + 2, y + 1 * sign, owner))
+        if (isBridgeBetween(x + 1, y - 1 * sign, x + 2, y + 1 * sign))
             return false;
-        if (isBridgeBetween(x + 1, y - 1 * sign, x + 3, y, owner))
+        if (isBridgeBetween(x + 1, y - 1 * sign, x + 3, y))
             return false;
-        if (isBridgeBetween(x + 1, y + 1 * sign, x, y - 1 * sign, owner))
+        if (isBridgeBetween(x + 1, y + 1 * sign, x, y - 1 * sign))
             return false;
-        if (isBridgeBetween(x, y - 1 * sign, x + 2, y, owner))
+        if (isBridgeBetween(x, y - 1 * sign, x + 2, y))
             return false;
-        if (isBridgeBetween(x + 2, y, x + 1, y - 2 * sign, owner))
+        if (isBridgeBetween(x + 2, y, x + 1, y - 2 * sign))
             return false;
     }
     else
     {
-        if (isBridgeBetween(x, y + 1 * sign, x + 1, y - 1 * sign, owner))
+        if (isBridgeBetween(x, y + 1 * sign, x + 1, y - 1 * sign))
             return false;
-        if (isBridgeBetween(x, y + 1 * sign, x + 2, y, owner))
+        if (isBridgeBetween(x, y + 1 * sign, x + 2, y))
             return false;
-        if (isBridgeBetween(x, y + 1 * sign, x + 2, y + 2 * sign, owner))
+        if (isBridgeBetween(x, y + 1 * sign, x + 2, y + 2 * sign))
             return false;
-        if (isBridgeBetween(x + 1, y + 1 * sign, x - 1, y, owner))
+        if (isBridgeBetween(x + 1, y + 1 * sign, x - 1, y))
             return false;
-        if (isBridgeBetween(x + 1, y + 1 * sign, x - 1, y + 2 * sign, owner))
+        if (isBridgeBetween(x + 1, y + 1 * sign, x - 1, y + 2 * sign))
             return false;
-        if (isBridgeBetween(x + 1, y + 1 * sign, x, y + 3 * sign, owner))
+        if (isBridgeBetween(x + 1, y + 1 * sign, x, y + 3 * sign))
             return false;
-        if (isBridgeBetween(x - 1, y + 1 * sign, x + 1, y, owner))
+        if (isBridgeBetween(x - 1, y + 1 * sign, x + 1, y))
             return false;
-        if (isBridgeBetween(x + 1, y, x, y + 2 * sign, owner))
+        if (isBridgeBetween(x + 1, y, x, y + 2 * sign))
             return false;
-        if (isBridgeBetween(x, y + 2 * sign, x + 2, y + 1 * sign, owner))
+        if (isBridgeBetween(x, y + 2 * sign, x + 2, y + 1 * sign))
             return false;
     }
     return true;
@@ -202,12 +228,12 @@ bool Board::canPlaceBridge(const Piece& piece1, const Piece& piece2)
             x = piece2.getX(), y = piece2.getY();
         if (condX && condY || !condX && !condY)
         {
-            if (!availableWay(x, y, -1, true, *piece1.getOwner()))
+            if (!availableWay(x, y, -1, true))
                 return false;
         }
         else //if (condX && !condY || !condX && condY)
         {
-            if (!availableWay(x, y, 1, true, *piece1.getOwner()))
+            if (!availableWay(x, y, 1, true))
                 return false;
         }
     }
@@ -217,12 +243,12 @@ bool Board::canPlaceBridge(const Piece& piece1, const Piece& piece2)
         {
             if (piece1.getY() < piece2.getY())
             {
-                if (!availableWay(piece1.getX(), piece1.getY(), 1, false, *piece1.getOwner()))
+                if (!availableWay(piece1.getX(), piece1.getY(), 1, false))
                     return false;
             }
             else
             {
-                if (!availableWay(piece2.getX(), piece2.getY(), 1, false, *piece1.getOwner()))
+                if (!availableWay(piece2.getX(), piece2.getY(), 1, false))
                     return false;
             }
         }
@@ -230,12 +256,12 @@ bool Board::canPlaceBridge(const Piece& piece1, const Piece& piece2)
         {
             if (piece1.getY() > piece2.getY())
             {
-                if (!availableWay(piece1.getX(), piece1.getY(), -1, false, *piece1.getOwner()))
+                if (!availableWay(piece1.getX(), piece1.getY(), -1, false))
                     return false;
             }
             else
             {
-                if (!availableWay(piece2.getX(), piece2.getY(), -1, false, *piece1.getOwner()))
+                if (!availableWay(piece2.getX(), piece2.getY(), -1, false))
                     return false;
             }
         }
@@ -243,11 +269,13 @@ bool Board::canPlaceBridge(const Piece& piece1, const Piece& piece2)
     return true;
 }
 
+
+
 void Board::reset()
 {
     for (int row = 0; row < size; row++) {
         for (int col = 0; col < size; col++) {
-            board[row][col] = 0;
+            board[row][col] = Color::None;
         }
     }
 }

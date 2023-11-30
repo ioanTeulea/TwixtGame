@@ -26,6 +26,13 @@ void Game::switchPlayer()
     }
 }
 
+void Game::switchPlayerColors()
+{
+    Color temp = player1.getColor();
+    player1.setColor(player2.getColor());
+    player2.setColor(temp);
+}
+
 void Game::Setup()
 {
     std::cout << "Introduceti marimea tablei de joc: ";
@@ -37,11 +44,11 @@ void Game::Setup()
     std::cout << "Introduceti numarul maxim de piloni/jucator: ";
     uint16_t maxPieces;
     std::cin >> maxPieces;
-    player1.setMaxPieces(maxPieces);
-    player2.setMaxPieces(maxPieces);
+    player1.setInitialValues(maxPieces);
+    player2.setInitialValues(maxPieces);
 }
 
-void Game::action_addPawn()
+void Game::action_addPawn ()
 {
     uint16_t x, y;
     bool piece_placed = false;
@@ -52,7 +59,8 @@ void Game::action_addPawn()
             std::cout << "Mutare nepermisa!\n";
         }
         else {
-            if (board.placePiece(*currentPlayer, x, y))
+            Piece newPiece(currentPlayer->getColor(), x, y);
+            if (board.placePiece(newPiece))
             {
                 piece_placed = true;
             }
@@ -66,7 +74,7 @@ void Game::action_addPawn()
 void Game::action_deleteBridge()
 {
     uint16_t x, y;
-    if (currentPlayer->getBridges().empty())
+    if (board.getBridges().empty())
     {
         std::cout << "Nu exista poduri";
         return;
@@ -74,49 +82,43 @@ void Game::action_deleteBridge()
     std::cout << "Alege coordonatele pilonilor intre care se afla un pod:\n";
     std::cout << "pilonul1: ";
     std::cin >> x >> y;
-    Piece p1(currentPlayer, x, y);
+    Piece p1(currentPlayer->getColor(), x, y);
     std::cout << "pilonul2: ";
     std::cin >> x >> y;
-    Piece p2(currentPlayer, x, y);
+    Piece p2(currentPlayer->getColor(), x, y);
     board.deleteBridge(p1, p2);
 }
 
 
 bool Game::checkWinCondition(Player player)
 {
-    if (isConnected(player) == true)
+    if (isConnected(player.getColor()) == true)
     {
-        currentPlayer->increaseScore();
-        displayScore();
+        //currentPlayer->increaseScore();
+      //  displayScore();
         return true;
     }
     return false;
 }
 
-bool Game::isConnected(Player player)
+bool Game::isConnected(Color color)
 {
-    if (player.getNumberBridges() < board.getSize() / 2 - (1 - board.getSize() % 2)) {
-        return false;
-    }
+    //if (player.getNumberBridges() < board.getSize() / 2 - (1 - board.getSize() % 2)) {
+    //    return false;
+   // }
 
     std::queue<Piece> road;
     std::vector<Piece> visited_pieces;
     std::vector<Piece> start_pieces;
 
-    if (player.getColor() == 1) {
-        for (Piece x : player.getPieces()) {
-            if (x.getX() == 0 || x.getX() == 1) {
-                start_pieces.push_back(x);
-            }
+  
+    for (Piece x : board.getPieces()) {
+       if (x.getX() == 0 || x.getX() == 1) {
+              start_pieces.push_back(x);
         }
-    }
-    else {
-        for (Piece x : player.getPieces()) {
-            if (x.getY() == 0 || x.getY() == 1) {
-                start_pieces.push_back(x);
-            }
-        }
-    }
+  }
+    
+   
 
     while (!start_pieces.empty()) {
         if (std::find(visited_pieces.begin(), visited_pieces.end(), start_pieces.back())==visited_pieces.end()) {
@@ -125,14 +127,17 @@ bool Game::isConnected(Player player)
         start_pieces.pop_back();
         while (!road.empty()) {
             bool isBridge = false;
-            for (Bridge x : player.getBridges()) {
-                if (x.getPiece1() == road.front() && std::find(visited_pieces.begin(), visited_pieces.end(), x.getPiece2()) == visited_pieces.end()) {
-                    road.push(x.getPiece2());
-                    isBridge = true;
+            for (Bridge x : board.getBridges()) {
+                if (x.getPiece1().getColor() == color)
+                {
+                    if (x.getPiece1() == road.front() && std::find(visited_pieces.begin(), visited_pieces.end(), x.getPiece2()) == visited_pieces.end()) {
+                        road.push(x.getPiece2());
+                        isBridge = true;
+                    }
                 }
             }
-            if (!isBridge && ((player.getColor() == 1 && road.front().getX() == board.getSize() - 1 || road.front().getX() == board.getSize() - 2) || 
-                (player.getColor() == 2 && road.front().getY() == board.getSize() - 1 || road.front().getY() == board.getSize() - 2))) {
+            if (!isBridge && ((color == 1 && road.front().getX() == board.getSize() - 1 || road.front().getX() == board.getSize() - 2) || 
+                (color == 2 && road.front().getY() == board.getSize() - 1 || road.front().getY() == board.getSize() - 2))) {
                 return true;
             }
             road.pop();
@@ -143,7 +148,7 @@ bool Game::isConnected(Player player)
 
 bool Game::checkGameResult()
 {
-    if (player1.getNumberMaxPieces() == player1.getNumberPieces() && player2.getNumberMaxPieces() == player2.getNumberPieces())
+    if (player1.getRemainingPieces() ==0 && player2.getRemainingPieces() ==0)
     {
         std::cout << "It' s a draw! Both players are out of pieces!" << "\n";
         return true;
@@ -162,16 +167,16 @@ void Game::forfeitGame()
     std::cout << "Player " << currentPlayer->getName() << " has forfeited!" << "\n";
 }
 
-void Game::displayScore() const
-{
-    std::cout << "Player 1 Score: " << player1.getScore() << "\n" << "Player 2 Score: " << player2.getScore() << "\n";
-}
+//void Game::displayScore() const
+//{
+//    std::cout << "Player 1 Score: " << player1.getScore() << "\n" << "Player 2 Score: " << player2.getScore() << "\n";
+//}
 
 
 void Game::Play()
 {
     bool firstTurn = true;
-    while (currentPlayer->getNumberPieces() <= currentPlayer->getNumberMaxPieces() && !checkGameResult()) {
+    while (currentPlayer->getRemainingPieces() >=0   && !checkGameResult()) {
         uint16_t x, y;
         std::cout << '\n' << currentPlayer->getName()<< "'s turn\n";
         currentPlayer->displayPlayerNumberPieces();
@@ -200,7 +205,7 @@ void Game::Play()
             }
             case 3:
                 if (currentPlayer == &player2 && firstTurn == true) {
-                    player2.transferFirstPiece(player1);
+                    switchPlayerColors();
                     firstTurn = false;
                     switchPlayer();
                 }

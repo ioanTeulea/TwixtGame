@@ -1,8 +1,14 @@
 #pragma once
 #include <cstdint>
+enum Color
+{
+    None = 0,
+    Red = 1,
+    Black = 2
+};
 class Piece
 {
-    Color m_color;// Owner of the piece
+    Color m_color;// Color of the piece
     uint16_t x, y; // Position on the board
 public:
     // Constructor

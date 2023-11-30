@@ -13,8 +13,9 @@ public:
     Player* currentPlayer; // Pointer c?tre juc?torul curent
     Game(Board& gameBoard);
     void switchPlayer();
+    void switchPlayerColors();
     bool checkWinCondition(Player player);
-    bool isConnected(Player player);
+    bool isConnected(Color color);
     bool checkGameResult();
     void forfeitGame();
     void displayScore() const;

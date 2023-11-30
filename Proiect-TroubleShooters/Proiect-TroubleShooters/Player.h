@@ -4,40 +4,24 @@
 #include"Piece.h"
 #include"Bridge.h"
 
-enum Color
-{
-    None = 0,
-    Red = 1,
-    Black = 2
-};
+
 class Player
 {
     std::string name;
     Color color;
-    uint16_t maxPieces;
-    std::vector<Piece> pieces;
-    std::vector<Bridge> bridges;
-    uint16_t score = 0;
+    uint16_t remainingPieces;
+    uint16_t remainingBridges;
 public:
     // Constructor
     Player(const std::string& playerName = "", Color playerColor = None);
     std::string getName() const;
     void setName(const std::string& newName);
     const Color& getColor() const;
-    const uint16_t& getScore() const;
-    void increaseScore();
     void displayPlayerNumberPieces();
-    const uint16_t& getNumberMaxPieces()const;
-    const int& getNumberPieces()const;
-    const int& getNumberBridges()const;
-    std::vector<Piece>& getPieces();
-    std::vector<Bridge>& getBridges();
-    void setMaxPieces(const uint16_t& maxPieces);
+    const uint16_t& getRemainingPieces()const;
+    const uint16_t& getRemainingBridges()const;
     void setColor(Color c);
+    void setInitialValues(uint16_t max);
     bool operator==(const Player& other);
-    void transferFirstPiece(Player& otherPlayer);
-    void addPiece(const Piece& piece);
-    void addBridge(const Bridge& bridge);
-    void deletePieces();
-    void deleteBridges();
+   // void transferFirstPiece(Player& otherPlayer);
 };

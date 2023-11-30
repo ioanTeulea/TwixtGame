@@ -1,7 +1,7 @@
 #include "Bridge.h"
 
 
-Bridge::Bridge(Piece& piece1, Piece& piece2) :m_piece1{ piece1 }, m_piece2{ piece2 } {}
+Bridge::Bridge(const Piece& piece1, const Piece& piece2) :m_piece1{ piece1 }, m_piece2{ piece2 } {}
 
 
 const Piece& Bridge::getPiece1() const {
