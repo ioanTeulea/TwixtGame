@@ -47,7 +47,51 @@ void Game::Setup()
     player2.setInitialValues(maxPieces);
 }
 
-void Game::action_addPawn ()
+void Game::action_placeBridge()
+{
+    uint16_t x1, y1, x2, y2;
+    bool bridge_placed = false;
+    std::cout << "Alege coordonatele pilonului: ";
+    std::cin >> x1 >> y1;
+    std::cout << "\nAlege coordonatele pilonului: ";
+    std::cin >> x2 >> y2;
+    while (!board.isOccupied(x1, y1) || !board.isOccupied(x2, y2))
+    {
+        std::cout << "Locatie invalida\n";
+        if (!board.isOccupied(x1, y1))
+        {
+            std::cout << "Alege coordonatele pilonului:";
+            std::cin >> x1 >> y1;
+        }
+        if (!board.isOccupied(x2, y2))
+        {
+            std::cout << "\nAlege coordonatele pilonului: ";
+            std::cin >> x2 >> y2;
+
+        }
+    }
+    while (board(x1, y1).getColor()!=currentPlayer->getColor()|| board(x2, y2).getColor() != currentPlayer->getColor())
+    {
+        if(board(x1, y1).getColor() != currentPlayer->getColor())
+        { 
+            std::cout << "Different colors\n";
+            std::cout << "Alege coordonatele pilonului:";
+            std::cin >> x1 >> y1;
+        }
+        if (board(x2, y2).getColor() != currentPlayer->getColor())
+        {
+            std::cout << "Different colors\n";
+            std::cout << "Alege coordonatele pilonului:";
+            std::cin >> x2 >> y2;
+        }
+    }
+    if (board.placeBridge(board(x1, y1), board(x2, y2)))
+    {
+        currentPlayer->setRemainingBridges(currentPlayer->getRemainingBridges() - 1);
+    }
+}
+
+void Game::action_addPawn()
 {
     uint16_t x, y;
     bool piece_placed = false;
@@ -67,9 +111,7 @@ void Game::action_addPawn ()
                 std::cout << "Mutare nepermisa!\n";
         }
     }
-    uint16_t pieces, bridges;
     currentPlayer->setRemainingPieces(currentPlayer->getRemainingPieces() - 1);
-    switchPlayer();
 }
 
 void Game::action_deleteBridge()
@@ -89,7 +131,25 @@ void Game::action_deleteBridge()
     Piece p2(currentPlayer->getColor(), x, y);
     board.deleteBridge(p1, p2);
     currentPlayer->setRemainingBridges(currentPlayer->getRemainingBridges() + 1);
-    switchPlayer();
+}
+
+void Game::display_changingBridges()
+{
+    std::cout << "Do you want to place a bridge, to delete a bridge or neither of them?\n";
+    std::cout << "1 - Place a bridge, 2 - Delete a bridge, 3 - Go ahead\n";
+    uint16_t action1;
+    std::cin >> action1;
+   switch (action1)
+   {
+        case 1:
+            action_placeBridge();
+            break;
+        case 2:
+            action_deleteBridge();
+            break;
+        default:
+            break;
+    }
 }
 
 void Game::reset()
@@ -190,11 +250,11 @@ void Game::Play_menu()
         uint16_t x, y;
         std::cout << '\n' << currentPlayer->getName()<< "'s turn\n";
         currentPlayer->displayPlayerNumberPieces();
-        std::cout << "Choose an action (1 - place pawn, 2 - delete bridge,";
+        std::cout << "Choose an action (1 - place pawn, ";
         if (currentPlayer == &player2 && firstTurn == true) {
-            std::cout << "3 - take over the first piece,";
+            std::cout << "2 - take over the first piece,";
         }
-        std::cout << "4 - forfeit): ";
+        std::cout << "3 - forfeit): ";
         uint16_t action;
         std::cin >> action;
 
@@ -204,29 +264,25 @@ void Game::Play_menu()
                 action_addPawn();
                 if (currentPlayer == &player2 && firstTurn == true)
                     firstTurn = false;
+                display_changingBridges();
+                switchPlayer();
                 break;
             }
             case 2:
-            {
-                action_deleteBridge();
-                break;
-            }
-            case 3:
                 if (currentPlayer == &player2 && firstTurn == true) {
                     switchPlayerColors();
                     firstTurn = false;
                     switchPlayer();
                 }
                 break;
-            case 4:
+            case 3:
                 forfeitGame();
                 switchPlayer();
                 std::cout << "Player " << currentPlayer->getName() << " has won!" << "\n";
                 return;
             default:
                 std::cout << "Action not available. Choose 1, 2,";
-                std::cout << "3,";
-                std::cout<<"4.\n";
+                std::cout << "3\n";
                 continue; // Continua bucla pentru a alege o actiune valida
         }
         

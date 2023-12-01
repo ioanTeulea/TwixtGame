@@ -58,11 +58,6 @@ std::vector<Bridge>& Board::getBridges()
 {
     return bridges;
 }
-Player Board::getPieceOwner(Piece piece)
-{
-    if(piece.getColor()==1)
-    return Player.Color::Red;
-}
 const Piece& Board::operator()(uint16_t x, uint16_t y) const
 {
     // Presupunând c? x ?i y sunt indici valizi
@@ -112,23 +107,29 @@ void Board::displayBoard() const {
     }
 }
 
-void Board::placeBridge(const Piece& newPiece) {
-    for (Piece& existingPiece : pieces) 
-    {
-        if ((abs(newPiece.getX() - existingPiece.getX()) == 1 && abs(newPiece.getY() - existingPiece.getY()) == 2) ||
-            (abs(newPiece.getX() - existingPiece.getX()) == 2 && abs(newPiece.getY() - existingPiece.getY()) == 1)) 
+bool Board::placeBridge(const Piece& piece1,const Piece& piece2) 
+{
+        if ((abs(piece1.getX() - piece2.getX()) == 1 && abs(piece1.getY() - piece2.getY()) == 2) ||
+            (abs(piece1.getX() - piece2.getX()) == 2 && abs(piece1.getY() - piece2.getY()) == 1))
         {
-            if(canPlaceBridge(existingPiece,newPiece)&&existingPiece.getColor()==newPiece.getColor())
+            if (canPlaceBridge(piece1, piece2))
             {
-                Bridge newBridge(existingPiece, newPiece);
+                Bridge newBridge(piece1, piece2);
                 bridges.push_back(newBridge);
-               /* if (existingPiece.getColor() == player.getcolor)
-                {
-                    player->setRemainingBridges(currentPlayer->getRemainingBridges()-1);
-                }*/
+                return true;
+            }
+            else
+            {
+                std::cout << "The bridge can't be placed.";
+                return false;
             }
         }
-    }
+        else
+        {
+            std::cout << "The bridge can't be placed.";
+            return false;
+        }
+    
 }
 
 void Board::deleteBridge(const Piece& p1, const Piece& p2)
@@ -153,7 +154,6 @@ bool Board::placePiece(const Piece & newPiece)
     {
       board[newPiece.getX()][newPiece.getY()] = newPiece;
       pieces.push_back(newPiece);
-      placeBridge(newPiece);
       return true;
     }
     return false;

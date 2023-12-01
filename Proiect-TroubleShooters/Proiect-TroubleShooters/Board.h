@@ -24,7 +24,6 @@ public:
     std::vector<Piece>& getPieces();
     std::vector<Bridge>& getBridges();
 
-    Player getPieceOwner(Piece piece);
 
     const Piece& operator()(uint16_t x, uint16_t y) const; // Operatorul () pentru accesul la piese
 
@@ -38,7 +37,7 @@ public:
     bool placePiece(const Piece& newPiece);
 
     void displayBoard() const;
-    void placeBridge(const Piece& newPiece);
+    bool placeBridge(const Piece& piece1,const Piece& piece2);
     void deleteBridge(const Piece& p1, const Piece& p2);
     bool isBridgeBetween(const uint16_t& x1, const uint16_t& y1, const uint16_t& x2, const uint16_t& y2);
     bool availableWay(const uint16_t& x, const uint16_t& y, const uint16_t& sign, const bool& vertical);

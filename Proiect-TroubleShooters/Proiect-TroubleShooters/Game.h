@@ -23,7 +23,9 @@ public:
     void sortBridges();
     void Setup();
     void action_addPawn();
+    void action_placeBridge();
     void action_deleteBridge();
+    void display_changingBridges();
     void reset();
 private:
     void Play_menu();
