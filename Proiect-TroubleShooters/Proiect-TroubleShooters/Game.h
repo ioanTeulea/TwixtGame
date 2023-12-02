@@ -18,9 +18,7 @@ public:
     bool isConnected(Color color);
     bool checkGameResult();
     void forfeitGame();
-    void displayScore() const;
     void Play();
-    void sortBridges();
     void Setup();
     void action_addPawn();
     void action_placeBridge();

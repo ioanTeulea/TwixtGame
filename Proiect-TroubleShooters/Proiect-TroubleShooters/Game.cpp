@@ -34,13 +34,13 @@ void Game::switchPlayerColors()
 
 void Game::Setup()
 {
-    std::cout << "Introduceti marimea tablei de joc: ";
+    std::cout << "Type in the board size: ";
     uint16_t b_size;
     std::cin >> b_size;
     Board tempboard(b_size);
     board = std::move(tempboard);
     board.displayBoard();
-    std::cout << "Introduceti numarul maxim de piloni/jucator: ";
+    std::cout << "Type in the maximum number of pieces for each player: ";
     uint16_t maxPieces;
     std::cin >> maxPieces;
     player1.setInitialValues(maxPieces);
@@ -51,21 +51,21 @@ void Game::action_placeBridge()
 {
     uint16_t x1, y1, x2, y2;
     bool bridge_placed = false;
-    std::cout << "Alege coordonatele pilonului: ";
+    std::cout << "Choose the coordinates of the pilon: ";
     std::cin >> x1 >> y1;
-    std::cout << "\nAlege coordonatele pilonului: ";
+    std::cout << "\nChoose the coordinates of the pilon: ";
     std::cin >> x2 >> y2;
     while (!board.isOccupied(x1, y1) || !board.isOccupied(x2, y2))
     {
-        std::cout << "Locatie invalida\n";
+        std::cout << "Invalid location\n";
         if (!board.isOccupied(x1, y1))
         {
-            std::cout << "Alege coordonatele pilonului:";
+            std::cout << "Choose the coordinates of the pilon:";
             std::cin >> x1 >> y1;
         }
         if (!board.isOccupied(x2, y2))
         {
-            std::cout << "\nAlege coordonatele pilonului: ";
+            std::cout << "\nChoose the coordinates of the pilon: ";
             std::cin >> x2 >> y2;
 
         }
@@ -75,13 +75,13 @@ void Game::action_placeBridge()
         if(board(x1, y1).getColor() != currentPlayer->getColor())
         { 
             std::cout << "Different colors\n";
-            std::cout << "Alege coordonatele pilonului:";
+            std::cout << "Choose the coordinates of the pilon:";
             std::cin >> x1 >> y1;
         }
         if (board(x2, y2).getColor() != currentPlayer->getColor())
         {
             std::cout << "Different colors\n";
-            std::cout << "Alege coordonatele pilonului:";
+            std::cout << "Choose the coordinates of the pilon:";
             std::cin >> x2 >> y2;
         }
     }
@@ -96,10 +96,13 @@ void Game::action_addPawn()
     uint16_t x, y;
     bool piece_placed = false;
     while (!piece_placed) {
-        std::cout << "Alege coordonatele pilonului: ";
+        std::cout << "Choose the coordinates of the pilon: ";
         std::cin >> x >> y;
         if (*currentPlayer == player2 && (x == 0 || x == board.getSize() - 1)) {
-            std::cout << "Mutare nepermisa!\n";
+            std::cout << "Can't do that!\n";
+        }
+        else if (*currentPlayer == player1 && (y == 0 || y == board.getSize() - 1)) {
+            std::cout << "Can't do that!\n";
         }
         else {
             Piece newPiece(currentPlayer->getColor(), x, y);
@@ -108,7 +111,7 @@ void Game::action_addPawn()
                 piece_placed = true;
             }
             else
-                std::cout << "Mutare nepermisa!\n";
+                std::cout << "Can't do that!\n";
         }
     }
     currentPlayer->setRemainingPieces(currentPlayer->getRemainingPieces() - 1);
@@ -119,14 +122,14 @@ void Game::action_deleteBridge()
     uint16_t x, y;
     if (board.getBridges().empty())
     {
-        std::cout << "Nu exista poduri";
+        std::cout << "No bridges to delete!";
         return;
     }
-    std::cout << "Alege coordonatele pilonilor intre care se afla un pod:\n";
-    std::cout << "pilonul1: ";
+    std::cout << "Choose the coordinates of the pillars between which the bridge is:\n";
+    std::cout << "pilon1: ";
     std::cin >> x >> y;
     Piece p1(currentPlayer->getColor(), x, y);
-    std::cout << "pilonul2: ";
+    std::cout << "pilon2: ";
     std::cin >> x >> y;
     Piece p2(currentPlayer->getColor(), x, y);
     board.deleteBridge(p1, p2);
@@ -135,13 +138,15 @@ void Game::action_deleteBridge()
 
 void Game::display_changingBridges()
 {
-    std::cout << "Do you want to place a bridge, to delete a bridge or neither of them?\n";
-    std::cout << "1 - Place a bridge, 2 - Delete a bridge, 3 - Go ahead\n";
+    std::cout << "Move or delete a bridge.\n";
+    std::cout << "1 - Move a bridge, 2 - Delete a bridge\n";
     uint16_t action1;
     std::cin >> action1;
    switch (action1)
    {
         case 1:
+            action_deleteBridge();
+            std::cout << "Choose the new location:\n";
             action_placeBridge();
             break;
         case 2:
@@ -252,11 +257,11 @@ void Game::Play_menu()
         uint16_t x, y;
         std::cout << '\n' << currentPlayer->getName()<< "'s turn\n";
         currentPlayer->displayPlayerNumberPieces();
-        std::cout << "Choose an action (1 - place pawn, ";
+        std::cout << "Choose an action (1 - place pawn, 2 - modify bridge ";
         if (currentPlayer == &player2 && firstTurn == true) {
-            std::cout << "2 - take over the first piece,";
+            std::cout << "3 - take over the first piece,";
         }
-        std::cout << "3 - forfeit): ";
+        std::cout << "4 - forfeit): ";
         uint16_t action;
         std::cin >> action;
 
@@ -266,18 +271,21 @@ void Game::Play_menu()
                 action_addPawn();
                 if (currentPlayer == &player2 && firstTurn == true)
                     firstTurn = false;
-                display_changingBridges();
                 switchPlayer();
                 break;
             }
             case 2:
+            {
+                display_changingBridges();
+            }
+            case 3:
                 if (currentPlayer == &player2 && firstTurn == true) {
                     switchPlayerColors();
                     firstTurn = false;
                     switchPlayer();
                 }
                 break;
-            case 3:
+            case 4:
                 forfeitGame();
                 switchPlayer();
                 std::cout << "Player " << currentPlayer->getName() << " has won!" << "\n";
