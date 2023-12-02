@@ -98,10 +98,10 @@ void Game::action_addPawn()
     while (!piece_placed) {
         std::cout << "Choose the coordinates of the pilon: ";
         std::cin >> x >> y;
-        if (*currentPlayer == player2 && (x == 0 || x == board.getSize() - 1)) {
+        if (currentPlayer->getColor() == Red && (y == 0 || y == board.getSize() - 1)) {
             std::cout << "Can't do that!\n";
         }
-        else if (*currentPlayer == player1 && (y == 0 || y == board.getSize() - 1)) {
+        else if (currentPlayer->getColor() == Black && (x == 0 || x == board.getSize() - 1)) {
             std::cout << "Can't do that!\n";
         }
         else {
@@ -120,11 +120,6 @@ void Game::action_addPawn()
 void Game::action_deleteBridge()
 {
     uint16_t x, y;
-    if (board.getBridges().empty())
-    {
-        std::cout << "No bridges to delete!";
-        return;
-    }
     std::cout << "Choose the coordinates of the pillars between which the bridge is:\n";
     std::cout << "pilon1: ";
     std::cin >> x >> y;
@@ -138,6 +133,11 @@ void Game::action_deleteBridge()
 
 void Game::display_changingBridges()
 {
+    if (board.getBridges().empty())
+    {
+        std::cout << "No bridges to modify!";
+        return;
+    }
     std::cout << "Move or delete a bridge.\n";
     std::cout << "1 - Move a bridge, 2 - Delete a bridge\n";
     uint16_t action1;
@@ -257,9 +257,9 @@ void Game::Play_menu()
         uint16_t x, y;
         std::cout << '\n' << currentPlayer->getName()<< "'s turn\n";
         currentPlayer->displayPlayerNumberPieces();
-        std::cout << "Choose an action (1 - place pawn, 2 - modify bridge ";
+        std::cout << "Choose an action (1 - place pawn, 2 - modify bridge, ";
         if (currentPlayer == &player2 && firstTurn == true) {
-            std::cout << "3 - take over the first piece,";
+            std::cout << "3 - take over the first piece, ";
         }
         std::cout << "4 - forfeit): ";
         uint16_t action;
