@@ -182,14 +182,12 @@ bool Game::isConnected(Color color)
     std::vector<Piece> start_pieces;
 
   
-    for (Piece x : board.getPieces()) {
+    for (const Piece& x : board.getPieces()) {
        if (x.getX() == 0 || x.getX() == 1) {
               start_pieces.push_back(x);
-        }
-  }
+       }
+    }
     
-   
-
     while (!start_pieces.empty()) {
         if (std::find(visited_pieces.begin(), visited_pieces.end(), start_pieces.back())==visited_pieces.end()) {
             road.push(start_pieces.back());
@@ -197,11 +195,15 @@ bool Game::isConnected(Color color)
         start_pieces.pop_back();
         while (!road.empty()) {
             bool isBridge = false;
-            for (Bridge x : board.getBridges()) {
+            for (const Bridge& x : board.getBridges()) {
                 if (x.getPiece1().getColor() == color)
                 {
                     if (x.getPiece1() == road.front() && std::find(visited_pieces.begin(), visited_pieces.end(), x.getPiece2()) == visited_pieces.end()) {
                         road.push(x.getPiece2());
+                        isBridge = true;
+                    }
+                    else if (x.getPiece2() == road.front() && std::find(visited_pieces.begin(), visited_pieces.end(), x.getPiece1()) == visited_pieces.end()) {
+                        road.push(x.getPiece1());
                         isBridge = true;
                     }
                 }

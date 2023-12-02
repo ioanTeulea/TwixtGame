@@ -162,15 +162,15 @@ bool Board::placePiece(const Piece & newPiece)
 bool Board::isBridgeBetween(const uint16_t& x1, const uint16_t& y1, const uint16_t& x2, const uint16_t& y2)
 {
     Piece piece1, piece2;
-    for (Piece piece :pieces)
+    for (const Piece& piece :pieces)
     {
         if (piece.getX() == x1 && piece.getY() == y1) { piece1 = piece; }
         if (piece.getX() == x2 && piece.getY() == y2) { piece2 = piece; }
     }
     if (piece1.getColor()== piece2.getColor())
-        for (auto bridge : bridges)
+        for (const auto& bridge : bridges)
         {
-            if ((bridge.getPiece1() == piece1 || bridge.getPiece1() == piece2) && (bridge.getPiece2() == piece1 || bridge.getPiece2() == piece2))
+            if ((bridge.getPiece1() == piece1 && bridge.getPiece2() == piece2) || (bridge.getPiece2() == piece1 && bridge.getPiece1() == piece2))
                 return true;
         }
     return false;
