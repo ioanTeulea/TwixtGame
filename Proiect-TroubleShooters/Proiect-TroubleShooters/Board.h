@@ -2,13 +2,15 @@
 #include "Player.h"
 #include <iostream>
 #include <vector>
-#include<unordered_set>
+#include <unordered_set>
+#include <random>
 class Board
 {
     std::uint16_t size; // Dimensiunea tablei
     std::vector<std::vector<Piece>> board; // Vector de vector de întregi pentru reprezentarea tablei
     std::vector<Piece> pieces;
     std::vector<Bridge> bridges;
+
 public:
     Board(uint16_t boardSize = 0);
     Board(const Board& other);
@@ -23,10 +25,9 @@ public:
     const std::vector<std::vector<Piece>>& getBoard() const;
     std::vector<Piece>& getPieces();
     std::vector<Bridge>& getBridges();
-
+    std::pair<uint16_t, uint16_t> dozer;
 
     const Piece& operator()(uint16_t x, uint16_t y) const; // Operatorul () pentru accesul la piese
-
 
     void deletePieces();
     void deleteBridges();
@@ -42,6 +43,7 @@ public:
     bool isBridgeBetween(const uint16_t& x1, const uint16_t& y1, const uint16_t& x2, const uint16_t& y2);
     bool availableWay(const uint16_t& x, const uint16_t& y, const uint16_t& sign, const bool& vertical);
     bool canPlaceBridge(const Piece& piece1, const Piece& piece2);
+    void dozerTurn();
     void reset();
 };
 

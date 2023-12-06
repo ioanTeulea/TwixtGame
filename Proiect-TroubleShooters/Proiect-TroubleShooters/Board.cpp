@@ -2,10 +2,19 @@
 
 // Constructor
 Board::Board(uint16_t boardSize) : size(boardSize), board(boardSize, std::vector<Piece>(boardSize)), pieces(), bridges() {
-    
+    if (boardSize != 0)
+    {
+        std::uniform_int_distribution<int> distribution(1, boardSize - 2);
+        std::random_device rd1;
+        std::mt19937 x(rd1());
+        dozer.first = distribution(x);
+        std::random_device rd2;
+        std::mt19937 y(rd2());
+        dozer.second = distribution(y);
+    }
 }
 // Copy constructor
-Board::Board(const Board& other) : size(other.size), board(other.board), pieces(other.pieces), bridges(other.bridges) {
+Board::Board(const Board& other) : size(other.size), board(other.board), pieces(other.pieces), bridges(other.bridges), dozer(other.dozer) {
 }
 
 // Copy assignment operator
@@ -14,6 +23,7 @@ Board& Board::operator=(const Board& other) {
         size = other.size;
         board = other.board;
         pieces = other.pieces;
+        dozer = other.dozer;
        // bridges = other.bridges;
     }
     return *this;
@@ -82,7 +92,7 @@ bool Board::isValidLocation(uint16_t x, uint16_t y) const
 }
 
 bool Board::isOccupied(uint16_t x, uint16_t y) const {
-    return board[x][y].getColor() != Color::None;
+    return board[x][y].getColor() != Color::None || (x == dozer.first && y == dozer.second);
 }
 
 void Board::displayBoard() const {
