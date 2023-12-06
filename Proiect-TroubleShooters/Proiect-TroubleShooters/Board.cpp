@@ -30,7 +30,7 @@ Board& Board::operator=(const Board& other) {
 }
 
 Board::Board(Board&& other) noexcept
-    : size{ std::move(other.size) }, board{ std::move(other.board) }
+    : size{ std::move(other.size) }, board{ std::move(other.board) }, dozer{ std::move(other.dozer) }
 {
     // Dup? mutarea resurselor, cel?lalt obiect trebuie s? fie într-o stare valid?
     other.size = 0;
@@ -43,6 +43,7 @@ Board& Board::operator=(Board&& other) noexcept
     {
         size = other.size;
         board = std::move(other.board);
+        dozer = other.dozer;
 
         // Dup? mutarea resurselor, cel?lalt obiect trebuie s? fie într-o stare valid?
         other.size = 0;
@@ -108,6 +109,8 @@ void Board::displayBoard() const {
                 else if (board[row][col].getColor() == static_cast<int>(Color::Black)) {
                     std::cout << "B ";
                 }
+                else if (row == dozer.first && col == dozer.second)
+                    std::cout << "D ";
                 else {
                     std::cout << "O ";
                 }
@@ -286,6 +289,47 @@ bool Board::canPlaceBridge(const Piece& piece1, const Piece& piece2)
         }
     }
     return true;
+}
+
+void Board::dozerTurn()
+{
+    int dozer_action;
+    {
+        std::uniform_int_distribution<int> distribution(1, 2);
+        std::random_device rd;
+        std::mt19937 engine(rd());
+        dozer_action = distribution(engine);
+    }
+    if (dozer_action == 1)
+    {
+        std::uniform_int_distribution<int> distribution(0, pieces.size() - 1);
+        std::random_device rd;
+        std::mt19937 engine(rd());
+        int piece_location = distribution(engine);
+        Piece& chosen_piece = pieces[piece_location];
+        for (int i=0; i<bridges.size()-1; i++)
+        {
+           // if (bridges[i].getPiece1() == chosen_piece || bridges[i].getPiece2() == chosen_piece)
+           //     bridges.erase(bridges.begin() + i);
+        }
+        dozer = { chosen_piece.getX(),chosen_piece.getY() };
+        pieces.erase(pieces.begin() + piece_location);
+    }
+    else
+    {
+        uint16_t x, y;
+        do
+        {
+            std::uniform_int_distribution<int> distribution(1, size - 2);
+            std::random_device rd1;
+            std::mt19937 eng1(rd1());
+            x = distribution(eng1);
+            std::random_device rd2;
+            std::mt19937 eng2(rd2());
+            y = distribution(eng2);
+        } while (isOccupied(x, y));
+        dozer = { x,y };
+    }
 }
 
 

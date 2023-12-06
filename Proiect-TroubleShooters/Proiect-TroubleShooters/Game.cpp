@@ -271,6 +271,8 @@ void Game::Play_menu()
                 action_addPawn();
                 if (currentPlayer == &player2 && firstTurn == true)
                     firstTurn = false;
+                board.dozerTurn();
+                board.displayBoard();
                 switchPlayer();
                 break;
             }
@@ -282,6 +284,8 @@ void Game::Play_menu()
                 if (currentPlayer == &player2 && firstTurn == true) {
                     switchPlayerColors();
                     firstTurn = false;
+                    board.dozerTurn();
+                    board.displayBoard();
                     switchPlayer();
                 }
                 break;
