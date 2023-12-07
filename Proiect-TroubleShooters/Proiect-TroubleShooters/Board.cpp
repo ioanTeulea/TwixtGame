@@ -69,7 +69,7 @@ std::vector<Bridge>& Board::getBridges()
 {
     return bridges;
 }
-const Piece& Board::operator()(uint16_t x, uint16_t y) const
+Piece& Board::operator()(uint16_t x, uint16_t y)
 {
     // Presupunând c? x ?i y sunt indici valizi
     return board[x][y];
@@ -120,7 +120,7 @@ void Board::displayBoard() const {
     }
 }
 
-bool Board::placeBridge(const Piece& piece1,const Piece& piece2) 
+bool Board::placeBridge(Piece& piece1,Piece& piece2) 
 {
         if ((abs(piece1.getX() - piece2.getX()) == 1 && abs(piece1.getY() - piece2.getY()) == 2) ||
             (abs(piece1.getX() - piece2.getX()) == 2 && abs(piece1.getY() - piece2.getY()) == 1))
@@ -293,27 +293,31 @@ bool Board::canPlaceBridge(const Piece& piece1, const Piece& piece2)
 
 void Board::dozerTurn()
 {
+    std::cout << '\n';
     int dozer_action;
     {
-        std::uniform_int_distribution<int> distribution(1, 2);
+        std::uniform_int_distribution<int> distribution(1, 100);
         std::random_device rd;
         std::mt19937 engine(rd());
         dozer_action = distribution(engine);
     }
-    if (dozer_action == 1)
+    if (dozer_action <= 40)
     {
         std::uniform_int_distribution<int> distribution(0, pieces.size() - 1);
         std::random_device rd;
         std::mt19937 engine(rd());
         int piece_location = distribution(engine);
         Piece& chosen_piece = pieces[piece_location];
-        for (int i=0; i<bridges.size()-1; i++)
+        for (int i=0; i<bridges.size(); i++)
         {
-           // if (bridges[i].getPiece1() == chosen_piece || bridges[i].getPiece2() == chosen_piece)
-           //     bridges.erase(bridges.begin() + i);
+            if (bridges[i].getPiece1() == chosen_piece || bridges[i].getPiece2() == chosen_piece)
+                bridges.erase(bridges.begin() + i);
         }
         dozer = { chosen_piece.getX(),chosen_piece.getY() };
+        Piece empty;
+        board[dozer.first][dozer.second] = empty;
         pieces.erase(pieces.begin() + piece_location);
+        std::cout << "The dozer detroyed the piece at: " << dozer.first << " " << dozer.second << '\n';
     }
     else
     {
@@ -329,7 +333,9 @@ void Board::dozerTurn()
             y = distribution(eng2);
         } while (isOccupied(x, y));
         dozer = { x,y };
+        std::cout << "The dozer moved to an empty position.\n";
     }
+    displayBoard();
 }
 
 

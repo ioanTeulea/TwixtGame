@@ -27,7 +27,7 @@ public:
     std::vector<Bridge>& getBridges();
     std::pair<uint16_t, uint16_t> dozer;
 
-    const Piece& operator()(uint16_t x, uint16_t y) const; // Operatorul () pentru accesul la piese
+    Piece& operator()(uint16_t x, uint16_t y); // Operatorul () pentru accesul la piese
 
     void deletePieces();
     void deleteBridges();
@@ -38,7 +38,7 @@ public:
     bool placePiece(const Piece& newPiece);
 
     void displayBoard() const;
-    bool placeBridge(const Piece& piece1,const Piece& piece2);
+    bool placeBridge(Piece& piece1,Piece& piece2);
     void deleteBridge(const Piece& p1, const Piece& p2);
     bool isBridgeBetween(const uint16_t& x1, const uint16_t& y1, const uint16_t& x2, const uint16_t& y2);
     bool availableWay(const uint16_t& x, const uint16_t& y, const uint16_t& sign, const bool& vertical);

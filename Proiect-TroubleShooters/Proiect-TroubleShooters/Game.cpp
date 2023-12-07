@@ -271,21 +271,25 @@ void Game::Play_menu()
                 action_addPawn();
                 if (currentPlayer == &player2 && firstTurn == true)
                     firstTurn = false;
-                board.dozerTurn();
+                std::cout << '\n';
                 board.displayBoard();
+                board.dozerTurn();
                 switchPlayer();
                 break;
             }
             case 2:
             {
                 display_changingBridges();
+                std::cout << '\n';
+                board.displayBoard();
             }
             case 3:
                 if (currentPlayer == &player2 && firstTurn == true) {
                     switchPlayerColors();
                     firstTurn = false;
-                    board.dozerTurn();
+                    std::cout << '\n';
                     board.displayBoard();
+                    board.dozerTurn();
                     switchPlayer();
                 }
                 break;
@@ -300,8 +304,6 @@ void Game::Play_menu()
                 continue; // Continua bucla pentru a alege o actiune valida
         }
         
-        std::cout << '\n';
-        board.displayBoard();
     }
 }
 
