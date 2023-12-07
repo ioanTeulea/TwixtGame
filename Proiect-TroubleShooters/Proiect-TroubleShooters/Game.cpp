@@ -45,6 +45,14 @@ void Game::Setup()
     std::cin >> maxPieces;
     player1.setInitialValues(maxPieces);
     player2.setInitialValues(maxPieces);
+    std::cout << "Type in the number of mines: ";
+    uint16_t nr_mines;
+    std::cin >> nr_mines;
+    while (nr_mines > b_size / 3) {
+        std::cout << "Too many mines. Type in a smaller number: ";
+        std::cin >> nr_mines;
+    }
+    board.SetMines_nr(nr_mines);
 }
 
 void Game::action_placeBridge()

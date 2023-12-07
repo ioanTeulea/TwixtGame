@@ -69,6 +69,11 @@ std::vector<Bridge>& Board::getBridges()
 {
     return bridges;
 }
+void Board::SetMines_nr(uint16_t nr)
+{
+    mines_nr = nr;
+}
+
 Piece& Board::operator()(uint16_t x, uint16_t y)
 {
     // Presupunând c? x ?i y sunt indici valizi
@@ -338,7 +343,9 @@ void Board::dozerTurn()
     displayBoard();
 }
 
-
+void Board::generateMines()
+{
+}
 
 void Board::reset()
 {
