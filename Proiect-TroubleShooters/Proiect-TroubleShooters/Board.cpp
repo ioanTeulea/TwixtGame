@@ -300,7 +300,7 @@ bool Board::canPlaceBridge(const Piece& piece1, const Piece& piece2)
     return true;
 }
 
-void Board::dozerTurn()
+Piece& Board::dozerTurn()
 {
     std::cout << '\n';
     int dozer_action;
@@ -327,6 +327,8 @@ void Board::dozerTurn()
         board[dozer.first][dozer.second] = empty;
         pieces.erase(pieces.begin() + piece_location);
         std::cout << "The dozer detroyed the piece at: " << dozer.first << " " << dozer.second << '\n';
+        displayBoard();
+        return chosen_piece;
     }
     else
     {
@@ -343,8 +345,25 @@ void Board::dozerTurn()
         } while (isOccupied(x, y));
         dozer = { x,y };
         std::cout << "The dozer moved to an empty position.\n";
+        displayBoard();
+        Piece emptyPiece;
+        return emptyPiece;
     }
-    displayBoard();
+}
+
+const uint16_t& Board::delete_DozerBridges(Piece random_piece)
+{
+    uint16_t numberBridges = 0;
+    for (int i = 0; i < bridges.size(); i++)
+    {
+        if (bridges[i].getPiece1() == random_piece || bridges[i].getPiece2() == random_piece)
+        {
+            bridges.erase(bridges.begin() + i);
+            numberBridges++;
+        }
+    }
+    std::cout << numberBridges << "\n";
+    return numberBridges;
 }
 
 void Board::generateMines(const uint16_t& mines_nr)

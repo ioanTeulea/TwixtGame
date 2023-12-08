@@ -174,6 +174,7 @@ void Game::reset()
     currentPlayer = &player1;
 }
 
+
 bool Game::checkWin(Color color)
 {
     //if (player.getNumberBridges() < board.getSize() / 2 - (1 - board.getSize() % 2)) {
@@ -184,18 +185,18 @@ bool Game::checkWin(Color color)
     std::vector<Piece> visited_pieces;
     std::vector<Piece> start_pieces;
 
-  
+
     for (const Piece& x : board.getPieces()) {
-       if (color==Red&&(x.getX() == 0 || x.getX() == 1)) {
-              start_pieces.push_back(x);
-       }
-       if (color == Black && (x.getY() == 0 || x.getY() == 1)) {
-           start_pieces.push_back(x);
-       }
+        if (color == Red && (x.getX() == 0 || x.getX() == 1)) {
+            start_pieces.push_back(x);
+        }
+        if (color == Black && (x.getY() == 0 || x.getY() == 1)) {
+            start_pieces.push_back(x);
+        }
     }
-    
+
     while (!start_pieces.empty()) {
-        if (std::find(visited_pieces.begin(), visited_pieces.end(), start_pieces.back())==visited_pieces.end()) {
+        if (std::find(visited_pieces.begin(), visited_pieces.end(), start_pieces.back()) == visited_pieces.end()) {
             road.push(start_pieces.back());
         }
         start_pieces.pop_back();
@@ -214,7 +215,7 @@ bool Game::checkWin(Color color)
                     }
                 }
             }
-            if (!isBridge && ((color == 1 && road.front().getX() == board.getSize() - 1 || road.front().getX() == board.getSize() - 2) || 
+            if (!isBridge && ((color == 1 && road.front().getX() == board.getSize() - 1 || road.front().getX() == board.getSize() - 2) ||
                 (color == 2 && road.front().getY() == board.getSize() - 1 || road.front().getY() == board.getSize() - 2))) {
                 return true;
             }
@@ -226,17 +227,17 @@ bool Game::checkWin(Color color)
 
 bool Game::checkGameResult()
 {
-    if (player1.getRemainingPieces() ==0 && player2.getRemainingPieces() ==0)
+    /*if (player1.getRemainingPieces() ==0 && player2.getRemainingPieces() ==0)
     {
         std::cout << "It' s a draw! Both players are out of pieces!" << "\n";
         return true;
     }
     else
-        if (checkWin(currentPlayer->getColor()))
+        if (checkWinCondition(*currentPlayer))
         {
             std::cout << "Player " << currentPlayer->getName() << " has won!" << "\n";
             return true;
-        }
+        }*/
     return false;
 }
 
@@ -285,8 +286,21 @@ void Game::Play_menu()
                         firstTurn = false;
                     std::cout << '\n';
                     board.displayBoard();
-                    board.dozerTurn();
+                    Piece& random_piece=board.dozerTurn();
                     placed_piece = true;
+                    if (random_piece.getColor() == Red)
+                    {
+                        player1.setRemainingPieces(player1.getRemainingPieces() + 1);
+                        player1.setRemainingBridges(player1.getRemainingBridges() + board.delete_DozerBridges(random_piece));
+                    }
+                    if (random_piece.getColor() == Black)
+                        {
+                            player2.setRemainingPieces(player2.getRemainingPieces() + 1);
+                            player2.setRemainingBridges(player2.getRemainingBridges() + board.delete_DozerBridges(random_piece));
+                        }
+                    if (random_piece.getColor() == None)
+                            break;
+                    currentPlayer->displayPlayerNumberPieces();
                 }
                 else
                     std::cout << "The piece is already added for this time.\n";
@@ -296,6 +310,7 @@ void Game::Play_menu()
                 display_changingBridges();
                 std::cout << '\n';
                 board.displayBoard();
+                currentPlayer->displayPlayerNumberPieces();
                 break;
             case 3:
                 if (currentPlayer == &player2 && firstTurn == true) {
