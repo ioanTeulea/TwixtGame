@@ -12,6 +12,7 @@ class Player
     uint16_t remainingPieces;
     uint16_t remainingBridges;
 public:
+    bool advantage = false;
     // Constructor
     Player(const std::string& playerName = "", Color playerColor = None);
     std::string getName() const;

@@ -167,6 +167,13 @@ bool Board::placePiece(const Piece & newPiece)
 
     if (isValidLocation(newPiece.getX(),newPiece.getY()) && !isOccupied(newPiece.getX(), newPiece.getY()))
     {
+        for (int i = 0; i < mines.size();i++) {
+            if (newPiece.getX() == std::get<0>(mines[i]) && newPiece.getY() == std::get<1>(mines[i])) {
+                explode(mines[i]);
+                mines.erase(mines.begin() + i);
+                return true;
+            }
+        }
       board[newPiece.getX()][newPiece.getY()] = newPiece;
       pieces.push_back(newPiece);
       return true;

@@ -52,7 +52,7 @@ void Game::Setup()
         std::cout << "Too many mines. Type in a smaller number: ";
         std::cin >> nr_mines;
     }
-    board.SetMines_nr(nr_mines);
+    board.generateMines(nr_mines);
 }
 
 void Game::action_placeBridge()
@@ -117,6 +117,8 @@ void Game::action_addPawn()
             if (board.placePiece(newPiece))
             {
                 piece_placed = true;
+                if (board(x, y).getColor() == None)
+                    currentPlayer->advantage = true;
             }
             else
                 std::cout << "Can't do that!\n";
@@ -282,6 +284,11 @@ void Game::Play_menu()
 
                 if (!placed_piece)
                 {
+                    if (currentPlayer->advantage)
+                    {
+                        action_addPawn();
+                        currentPlayer->advantage = false;
+                    }
                     action_addPawn();
                     if (currentPlayer == &player2 && firstTurn == true)
                         firstTurn = false;
