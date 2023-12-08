@@ -13,7 +13,6 @@ class Board
     std::vector<Bridge> bridges;
     std::pair<uint16_t, uint16_t> dozer;
     std::vector<std::tuple<uint16_t, uint16_t, uint16_t>> mines; // Vector de mine care detine coordonatele si tipul minei
-    uint16_t mines_nr;
 
 public:
     Board(uint16_t boardSize = 0);
@@ -29,8 +28,6 @@ public:
     const std::vector<std::vector<Piece>>& getBoard() const;
     std::vector<Piece>& getPieces();
     std::vector<Bridge>& getBridges();
-
-    void SetMines_nr(uint16_t nr);
 
     Piece& operator()(uint16_t x, uint16_t y); // Operatorul () pentru accesul la piese
 
@@ -49,7 +46,8 @@ public:
     bool availableWay(const uint16_t& x, const uint16_t& y, const uint16_t& sign, const bool& vertical);
     bool canPlaceBridge(const Piece& piece1, const Piece& piece2);
     void dozerTurn();
-    void generateMines();
+    void generateMines(const uint16_t& mines_nr);
+    void explode(const std::tuple<uint16_t, uint16_t, uint16_t>& mine);
     void reset();
 };
 

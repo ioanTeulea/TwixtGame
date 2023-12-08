@@ -69,10 +69,6 @@ std::vector<Bridge>& Board::getBridges()
 {
     return bridges;
 }
-void Board::SetMines_nr(uint16_t nr)
-{
-    mines_nr = nr;
-}
 
 Piece& Board::operator()(uint16_t x, uint16_t y)
 {
@@ -168,6 +164,7 @@ void Board::deleteBridge(const Piece& p1, const Piece& p2)
 
 bool Board::placePiece(const Piece & newPiece)
 {
+
     if (isValidLocation(newPiece.getX(),newPiece.getY()) && !isOccupied(newPiece.getX(), newPiece.getY()))
     {
       board[newPiece.getX()][newPiece.getY()] = newPiece;
@@ -343,8 +340,82 @@ void Board::dozerTurn()
     displayBoard();
 }
 
-void Board::generateMines()
+void Board::generateMines(const uint16_t& mines_nr)
 {
+    for (int i{ 0 }; i < mines_nr; i++) {
+        uint16_t x, y, type;
+        std::uniform_int_distribution<int> distribution1(1, size - 2);
+        std::random_device rd1;
+        std::mt19937 eng1(rd1());
+        x = distribution1(eng1);
+
+        std::random_device rd2;
+        std::mt19937 eng2(rd2());
+        y = distribution1(eng2);
+
+        std::uniform_int_distribution<int> distribution2(1, 3);
+        std::random_device rd3;
+        std::mt19937 eng3(rd3());
+        type = distribution2(eng3);
+
+        mines.push_back(std::make_tuple(x, y, type));
+    }
+}
+
+void Board::explode(const std::tuple<uint16_t, uint16_t, uint16_t>& mine)
+{
+    switch (std::get<2>(mine))
+    {
+    case 1:
+        for (int i{ std::get<0>(mine) - 1 }; i < std::get<0>(mine) + 1; i++)
+            for (int j{ std::get<1>(mine) - 1 }; j < std::get<1>(mine) + 1; j++) {
+                if (board[i][j].getColor() != None) {
+                    for (int t = 0; t < bridges.size(); t++)
+                    {
+                        if (bridges[t].getPiece1() == board[i][j] || bridges[t].getPiece2() == board[i][j])
+                            bridges.erase(bridges.begin() + t);
+                    }
+                }
+                for (int t = 0; t < pieces.size(); t++)
+                    if (pieces[t] == board[i][j])
+                        pieces.erase(pieces.begin()+t);
+                Piece empty;
+                board[i][j] = empty;
+            }
+        break;
+    case 2:
+        for (int j{ 0 }; j < size - 1; j++)
+        {
+            if (board[std::get<0>(mine)][j].getColor() != None) {
+                for (int t = 0; t < bridges.size(); t++)
+                    if (bridges[t].getPiece1() == board[std::get<0>(mine)][j] || bridges[t].getPiece2() == board[std::get<0>(mine)][j])
+                       bridges.erase(bridges.begin() + t);
+            }
+            for (int t = 0; t < pieces.size(); t++)
+                if (pieces[t] == board[std::get<0>(mine)][j])
+                    pieces.erase(pieces.begin() + t);
+            Piece empty;
+            board[std::get<0>(mine)][j] = empty;
+        }
+        break;
+    case 3:
+        for (int i{ 0 }; i < size - 1; i++)
+        {
+            if (board[i][std::get<1>(mine)].getColor() != None) {
+                for (int t = 0; t < bridges.size(); t++)
+                    if (bridges[t].getPiece1() == board[i][std::get<1>(mine)] || bridges[t].getPiece2() == board[i][std::get<1>(mine)])
+                        bridges.erase(bridges.begin() + t);
+            }
+            for (int t = 0; t < pieces.size(); t++)
+                if (pieces[t] == board[i][std::get<1>(mine)])
+                    pieces.erase(pieces.begin() + t);
+            Piece empty;
+            board[i][std::get<1>(mine)] = empty;
+        }
+        break;
+    default:
+        break;
+    }
 }
 
 void Board::reset()
