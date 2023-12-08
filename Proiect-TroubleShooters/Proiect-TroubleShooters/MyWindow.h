@@ -1,25 +1,20 @@
 #pragma once
+#include <QGraphicsScene>
+#include <QGraphicsSceneMouseEvent>
 
-#include <QMainWindow>
-#include <QVector>
-#include <QPoint>
-#include<iostream>
-
-class MyWindow : public QWidget {
+class CustomGraphicsScene : public QGraphicsScene
+{
     Q_OBJECT
 
 public:
-    MyWindow(QWidget* parent = nullptr);
-    ~MyWindow();
-    int boardSize = 24;
-    int cellSize = 20;
+    CustomGraphicsScene(QObject* parent = nullptr);
+    void showCoordinates(qreal x, qreal y);
+
 protected:
-    void paintEvent(QPaintEvent* event) override;
+    // void drawBackground(QPainter* painter, const QRectF& rect) override;
+    void mousePressEvent(QGraphicsSceneMouseEvent* event) override;
 
-
-    //public slots:
+private:
+    qreal cellSize = 50;
+    qint32 boardSize = 10;
 };
-
-
-
-

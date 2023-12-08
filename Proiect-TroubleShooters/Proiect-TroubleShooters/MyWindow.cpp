@@ -2,36 +2,92 @@
 #include <QPainter>
 #include <QMouseEvent>
 
-MyWindow::MyWindow(QWidget* parent) : QWidget(parent) {
-    // Initializeaza dimensiunile tablei
-    boardSize = 24;
-    cellSize = 20;  // Marimea fiecarei celule în pixeli
-    setFixedSize(24 * cellSize, 24 * cellSize);
-}
-MyWindow::~MyWindow() {
-    // Destructorul clasei
-}
+#include <QGraphicsScene>
+#include <QGraphicsLineItem>
+#include <QGraphicsRectItem>
+#include <QGraphicsSceneMouseEvent>
+#include <QDebug>
 
-void MyWindow::paintEvent(QPaintEvent* event) {
-    QPainter painter(this);
 
-    painter.setPen(Qt::red);
-    // Deseneaz? liniile orizontale si verticale
-    painter.drawLine(0, cellSize, boardSize * cellSize, cellSize); // Linia între linia 0 ?i 1
-    painter.drawLine(0, (boardSize - 1) * cellSize, boardSize * cellSize, (boardSize - 1) * cellSize); // Linia între penultima si ultima linie
 
-    painter.setPen(Qt::black);
-    // Deseneaza liniile suplimentare între coloana 0 si 1 si între penultima si ultima coloana
-    painter.drawLine(cellSize, 0, cellSize, boardSize * cellSize); // Linia între coloana 0 si 1
-    painter.drawLine((boardSize - 1) * cellSize, 0, (boardSize - 1) * cellSize, boardSize * cellSize); // Linia între penultima si ultima coloana
+CustomGraphicsScene::CustomGraphicsScene(QObject* parent) : QGraphicsScene(parent)
+{
 
-    // Deseneaza punctele
-    painter.setPen(Qt::NoPen);  // Elimina conturul punctelor
-    painter.setBrush(Qt::gray);  // Seteaza culoarea de umplere a punctelor
-    for (int i = 0; i < boardSize; ++i) {
-        for (int j = 0; j < boardSize; ++j) {
-            painter.drawEllipse(i * cellSize + cellSize / 4, j * cellSize + cellSize / 4, cellSize / 2, cellSize / 2);
+    qreal radius = cellSize / 4.0; // raza cercului
+    qreal distance = 1.0 * cellSize; // distan?a între cercuri
+
+    // Ini?ializarea dimensiunilor ?i coordonatelor scenei
+    qreal sceneWidth = boardSize * distance;
+    qreal sceneHeight = boardSize * distance;
+    qreal xOffset = -sceneWidth / 2.0;
+    qreal yOffset = -sceneHeight / 2.0;
+
+    // Setarea scenei
+    setSceneRect(xOffset, yOffset, sceneWidth, sceneHeight);
+
+    for (qreal i = 0; i < boardSize; ++i) {
+        for (qreal j = 0; j < boardSize; ++j) {
+            QGraphicsEllipseItem* circle = new QGraphicsEllipseItem(i * distance + xOffset, j * distance + yOffset, radius, radius);
+            circle->setPen(QPen(Qt::black));
+            circle->setBrush(QBrush(Qt::gray));
+            circle->setFlag(QGraphicsItem::ItemIsSelectable);
+            addItem(circle);
         }
     }
+
+    qreal lineHeight = 2.0; // Grosimea liniei
+    QPen redPen(Qt::red), blackPen(Qt::black);
+    redPen.setWidthF(lineHeight);
+    blackPen.setWidthF(lineHeight);
+
+    qreal middle = yOffset + distance * 0.6;
+    addLine(xOffset, middle, xOffset + sceneWidth, middle, redPen);
+    middle = yOffset + sceneHeight - distance * 1.3;
+    addLine(xOffset, middle, xOffset + sceneWidth, middle, redPen);
+    middle = xOffset + sceneWidth - distance * 1.3;
+    addLine(middle, yOffset, middle, yOffset + sceneHeight, blackPen);
+    middle = xOffset + distance * 0.6;
+    addLine(middle, yOffset, middle, yOffset + sceneHeight, blackPen);
+
 }
 
+
+void CustomGraphicsScene::showCoordinates(qreal x, qreal y)
+{
+    int X = static_cast<int>(x);
+    int Y = static_cast<int>(y);
+
+    qDebug() << "x= " << X << " y=: " << Y;
+}
+
+void CustomGraphicsScene::mousePressEvent(QGraphicsSceneMouseEvent* event)
+{
+    // Tratarea evenimentului de click pe un cerc
+    QGraphicsItem* item = itemAt(event->scenePos(), QTransform());
+    if (item)
+    {
+        qDebug() << "Tipul obiectului: " << item->type();
+
+        if (item->type() == QGraphicsEllipseItem::Type)
+        {
+            // Schimbare culoare cerc
+            QGraphicsEllipseItem* ellipseItem = qgraphicsitem_cast<QGraphicsEllipseItem*>(item);
+            if (ellipseItem)
+            {
+                ellipseItem->setBrush(QBrush(Qt::red)); // Schimba?i culoarea la cea dorit?
+            }
+
+            qreal centerX = event->scenePos().x();
+            qreal centerY = event->scenePos().y();
+
+            // Afi?a?i coordonatele cercului ap?sat
+            showCoordinates(centerX, centerY);
+        }
+    }
+    else
+    {
+        qDebug() << "Nu s-a gasit niciun cerc la pozitia data.";
+    }
+
+    QGraphicsScene::mousePressEvent(event);
+}

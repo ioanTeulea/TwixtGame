@@ -1,25 +1,26 @@
 #include <QApplication>
-#include <QMenuBar>
-#include<QMenu>
+#include <QMainWindow>
+#include <QVBoxLayout>
 #include <QInputDialog>
 #include <QString>
-
-#include <QVBoxLayout>
-#include<iostream>
-#include"MyWindow.h"
-#include"Game.h"
+#include <QGraphicsView>
+#include "MyWindow.h"  // Ad?uga?i header-ul pentru clasa CustomGraphicsScene
+#include "Game.h"
 #include "PlayerInputDialog.h"
 
-
 int main(int argc, char* argv[]) {
-   
+
     QApplication app(argc, argv);
     QMainWindow mainWindow;
 
-    // Adauga MyWindow în cadrul unui QVBoxLayout pentru a îl mentine centrat
+    // Adaug? CustomGraphicsScene în cadrul unui QVBoxLayout pentru a îl men?ine centrat
     QWidget* centralWidget = new QWidget(&mainWindow);
     QVBoxLayout* centralLayout = new QVBoxLayout(centralWidget);
-    centralLayout->addWidget(new MyWindow(&mainWindow));
+
+    CustomGraphicsScene* customScene = new CustomGraphicsScene(&mainWindow);
+
+    QGraphicsView* graphicsView = new QGraphicsView(customScene);
+    centralLayout->addWidget(graphicsView);
     centralLayout->setAlignment(Qt::AlignCenter);
 
     mainWindow.setCentralWidget(centralWidget);
@@ -29,10 +30,8 @@ int main(int argc, char* argv[]) {
     // Creeaza fereastra de dialog personalizat
     PlayerInputDialog playerDialog(&mainWindow);
 
-  
+    // Ad?uga?i o instan?? a clasei CustomGraphicsScene în Game
     Board board;
-
-    // Conecteaza semnalul emis de fereastra de dialog la slot-ul din clasa Game
     Game Twixt(board);
     //Twixt.Setup();
 
