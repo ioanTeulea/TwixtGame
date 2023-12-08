@@ -34,7 +34,7 @@ int main(int argc, char* argv[]) {
 
     // Conecteaza semnalul emis de fereastra de dialog la slot-ul din clasa Game
     Game Twixt(board);
-    Twixt.Setup();
+    //Twixt.Setup();
 
     QObject::connect(&playerDialog, &PlayerInputDialog::acceptedWithNames, &Twixt, &Game::setPlayerNames);
 

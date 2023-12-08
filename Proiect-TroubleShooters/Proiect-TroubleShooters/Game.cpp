@@ -141,23 +141,22 @@ void Game::action_deleteBridge()
 
 void Game::display_changingBridges()
 {
-    if (board.getBridges().empty())
-    {
-        std::cout << "No bridges to modify!";
-        return;
-    }
-    std::cout << "Move or delete a bridge.\n";
-    std::cout << "1 - Move a bridge, 2 - Delete a bridge\n";
+   
+    std::cout << "Add or delete a bridge.\n";
+    std::cout << "1 - Add a bridge, 2 - Delete a bridge\n";
     uint16_t action1;
     std::cin >> action1;
    switch (action1)
    {
         case 1:
-            action_deleteBridge();
-            std::cout << "Choose the new location:\n";
             action_placeBridge();
             break;
         case 2:
+            if (board.getBridges().empty())
+            {
+                std::cout << "No bridges to modify!";
+                return;
+            }
             action_deleteBridge();
             break;
         default:
@@ -170,6 +169,7 @@ void Game::reset()
     board.reset();
     board.deleteBridges();
     board.deletePieces();
+    currentPlayer = &player1;
 }
 
 
@@ -263,34 +263,42 @@ void Game::Play_menu()
     bool firstTurn = true;
     while (currentPlayer->getRemainingPieces() >=0   && !checkGameResult()) {
         uint16_t x, y;
+        bool placed_piece = false;
+        bool moveOn = false;
         std::cout << '\n' << currentPlayer->getName()<< "'s turn\n";
         currentPlayer->displayPlayerNumberPieces();
-        std::cout << "Choose an action (1 - place pawn, 2 - modify bridge, ";
-        if (currentPlayer == &player2 && firstTurn == true) {
-            std::cout << "3 - take over the first piece, ";
-        }
-        std::cout << "4 - forfeit): ";
-        uint16_t action;
-        std::cin >> action;
-
-        switch (action) {
-            case 1:
-            {
-                action_addPawn();
-                if (currentPlayer == &player2 && firstTurn == true)
-                    firstTurn = false;
-                std::cout << '\n';
-                board.displayBoard();
-                board.dozerTurn();
-                switchPlayer();
-                break;
+        while (!moveOn)
+        {
+            std::cout << "Choose an action (1 - place pawn, 2 - modify bridge, ";
+            if (currentPlayer == &player2 && firstTurn == true) {
+                std::cout << "3 - take over the first piece, ";
             }
+            std::cout << "4 - forfeit, ";
+            std::cout << "5 - next player): ";
+            uint16_t action;
+            std::cin >> action;
+            switch (action) {
+            case 1:
+
+                if (!placed_piece)
+                {
+                    action_addPawn();
+                    if (currentPlayer == &player2 && firstTurn == true)
+                        firstTurn = false;
+                    std::cout << '\n';
+                    board.displayBoard();
+                    board.dozerTurn();
+                    placed_piece = true;
+                }
+                else
+                    std::cout << "The piece is already added for this time.\n";
+                break;
+
             case 2:
-            {
                 display_changingBridges();
                 std::cout << '\n';
                 board.displayBoard();
-            }
+                break;
             case 3:
                 if (currentPlayer == &player2 && firstTurn == true) {
                     switchPlayerColors();
@@ -298,7 +306,6 @@ void Game::Play_menu()
                     std::cout << '\n';
                     board.displayBoard();
                     board.dozerTurn();
-                    switchPlayer();
                 }
                 break;
             case 4:
@@ -306,12 +313,22 @@ void Game::Play_menu()
                 switchPlayer();
                 std::cout << "Player " << currentPlayer->getName() << " has won!" << "\n";
                 return;
+                break;
+            case 5:
+                if (placed_piece)
+                {
+                    moveOn = true;
+                    switchPlayer();
+                }
+                else
+                    std::cout << "You must place a piece.\n";
+                break;
             default:
                 std::cout << "Action not available. Choose 1, 2,";
                 std::cout << "3\n";
                 continue; // Continua bucla pentru a alege o actiune valida
+            }
         }
-        
     }
 }
 
@@ -359,6 +376,7 @@ void Game::Play() {
     bool exit = false;
     while (!exit) {
         Load_menu();
+        Setup();
         Play_menu();
         Restart_menu(exit);
     }
