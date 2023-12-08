@@ -14,8 +14,7 @@ public:
     Game(Board& gameBoard);
     void switchPlayer();
     void switchPlayerColors();
-    bool checkWinCondition(Player player);
-    bool isConnected(Color color);
+    bool checkWin(Color color);
     bool checkGameResult();
     void forfeitGame();
     void Play();

@@ -174,19 +174,7 @@ void Game::reset()
     currentPlayer = &player1;
 }
 
-
-bool Game::checkWinCondition(Player player)
-{
-    if (isConnected(player.getColor()) == true)
-    {
-        //currentPlayer->increaseScore();
-      //  displayScore();
-        return true;
-    }
-    return false;
-}
-
-bool Game::isConnected(Color color)
+bool Game::checkWin(Color color)
 {
     //if (player.getNumberBridges() < board.getSize() / 2 - (1 - board.getSize() % 2)) {
     //    return false;
@@ -198,8 +186,11 @@ bool Game::isConnected(Color color)
 
   
     for (const Piece& x : board.getPieces()) {
-       if (x.getX() == 0 || x.getX() == 1) {
+       if (color==Red&&(x.getX() == 0 || x.getX() == 1)) {
               start_pieces.push_back(x);
+       }
+       if (color == Black && (x.getY() == 0 || x.getY() == 1)) {
+           start_pieces.push_back(x);
        }
     }
     
@@ -241,7 +232,7 @@ bool Game::checkGameResult()
         return true;
     }
     else
-        if (checkWinCondition(*currentPlayer))
+        if (checkWin(currentPlayer->getColor()))
         {
             std::cout << "Player " << currentPlayer->getName() << " has won!" << "\n";
             return true;
