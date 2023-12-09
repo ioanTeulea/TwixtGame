@@ -5,8 +5,11 @@ Bridge::Bridge(Piece& piece1, Piece& piece2) :m_piece1{ piece1 }, m_piece2{ piec
 
 Bridge& Bridge::operator=(const Bridge& other)
 {
-    m_piece1 = other.m_piece1;
-    m_piece2 = other.m_piece2;
+    if (this != &other)
+    {
+        m_piece1 = other.m_piece1;
+        m_piece2 = other.m_piece2;
+    }
     return *this;
 }
 
@@ -18,4 +21,11 @@ const Piece& Bridge::getPiece1() const {
 const Piece& Bridge::getPiece2() const {
     return m_piece2;
 }
+
+bool Bridge::operator==(const Bridge& other) const
+{
+    return (m_piece1 == other.m_piece1 && m_piece2 == other.m_piece2) || (m_piece1 == other.m_piece2 && m_piece2 == other.m_piece1);
+    
+}
+
 

@@ -255,11 +255,13 @@ void Game::forfeitGame()
 void Game::Play_menu()
 {
     bool firstTurn = true;
+    Piece random_piece;
+    int location;
     while (currentPlayer->getRemainingPieces() >=0   && !checkGameResult()) {
         uint16_t x, y;
         bool placed_piece = false;
         bool moveOn = false;
-        std::cout << '\n' << currentPlayer->getName()<< "'s turn\n";
+        std::cout << '\n' << currentPlayer->getColor()<< "'s turn\n";
         currentPlayer->displayPlayerNumberPieces();
         while (!moveOn)
         {
@@ -276,29 +278,35 @@ void Game::Play_menu()
 
                 if (!placed_piece)
                 {
-                    if (currentPlayer->advantage)
+                    /*if (currentPlayer->advantage)
                     {
                         action_addPawn();
                         currentPlayer->advantage = false;
-                    }
+                    }*/
                     action_addPawn();
                     if (currentPlayer == &player2 && firstTurn == true)
                         firstTurn = false;
                     std::cout << '\n';
                     board.displayBoard();
-                    Piece& random_piece=board.dozerTurn();
+                    random_piece=board.dozerTurn(location);
                     placed_piece = true;
-                    if (random_piece.getColor() == Red)
+                    if (random_piece.getColor() == Color::Red)
                     {
                         player1.setRemainingPieces(player1.getRemainingPieces() + 1);
                         player1.setRemainingBridges(player1.getRemainingBridges() + board.delete_DozerBridges(random_piece));
+                        board.deletePiece(random_piece, location);
+                        board.displayBoard();
                     }
-                    if (random_piece.getColor() == Black)
+                    else
+                    if (random_piece.getColor() ==Color::Black)
                         {
                             player2.setRemainingPieces(player2.getRemainingPieces() + 1);
                             player2.setRemainingBridges(player2.getRemainingBridges() + board.delete_DozerBridges(random_piece));
-                        }
-                    if (random_piece.getColor() == None)
+                            board.deletePiece(random_piece, location);
+                            board.displayBoard();
+                    }
+                    else
+                    if (random_piece.getColor() ==Color::None)
                             break;
                     currentPlayer->displayPlayerNumberPieces();
                 }
@@ -318,7 +326,7 @@ void Game::Play_menu()
                     firstTurn = false;
                     std::cout << '\n';
                     board.displayBoard();
-                    board.dozerTurn();
+                    board.dozerTurn(location);
                 }
                 break;
             case 4:

@@ -15,5 +15,6 @@ public:
 	Bridge& operator=(Bridge&& other)=default;
 	const Piece& getPiece1() const;
 	const Piece& getPiece2() const;
+	bool operator==(const Bridge& other) const;
 };
 

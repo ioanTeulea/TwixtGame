@@ -19,8 +19,7 @@ const uint16_t& Piece::getY() const
 
 bool Piece::operator==(const Piece& other) const
 {
-    if (m_color == other.m_color) {}
-    else
+    if (m_color != other.m_color)
         return false;
     if (x != other.getX())
         return false;

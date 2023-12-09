@@ -130,6 +130,7 @@ bool Board::placeBridge(Piece& piece1,Piece& piece2)
             {
                 Bridge newBridge(piece1, piece2);
                 bridges.push_back(newBridge);
+                std::cout << bridges.size() << "\n";
                 return true;
             }
             else
@@ -146,7 +147,7 @@ bool Board::placeBridge(Piece& piece1,Piece& piece2)
     
 }
 
-void Board::deleteBridge(const Piece& p1, const Piece& p2)
+void Board::deleteBridge(Piece p1,Piece p2)
 {
     if (p1.getColor() != p2.getColor())
         return;
@@ -155,10 +156,12 @@ void Board::deleteBridge(const Piece& p1, const Piece& p2)
         for (auto it = getBridges().begin(); it !=getBridges().end(); ++it) {
             if ((it->getPiece1()==p1 && it->getPiece2()==p2) ||
                 (it->getPiece2() == p1 && it->getPiece1() == p2) ){
-              //  bridges.erase(it);
+                getBridges().erase(it);
                 break;
             }
         }
+        board[p1.getX()][p1.getY()] = Piece(p1.getColor(), p1.getX(), p1.getY());
+        board[p2.getX()][p2.getY()] = Piece(p2.getColor(), p2.getX(), p2.getY());
     }
 }
 
@@ -300,7 +303,7 @@ bool Board::canPlaceBridge(const Piece& piece1, const Piece& piece2)
     return true;
 }
 
-Piece& Board::dozerTurn()
+Piece Board::dozerTurn(int& piece_location)
 {
     std::cout << '\n';
     int dozer_action;
@@ -310,23 +313,14 @@ Piece& Board::dozerTurn()
         std::mt19937 engine(rd());
         dozer_action = distribution(engine);
     }
-    if (dozer_action <= 40)
+    if (dozer_action <= 4)
     {
         std::uniform_int_distribution<int> distribution(0, pieces.size() - 1);
         std::random_device rd;
         std::mt19937 engine(rd());
-        int piece_location = distribution(engine);
+        piece_location = distribution(engine);
         Piece& chosen_piece = pieces[piece_location];
-        for (int i=0; i<bridges.size(); i++)
-        {
-            if (bridges[i].getPiece1() == chosen_piece || bridges[i].getPiece2() == chosen_piece)
-                bridges.erase(bridges.begin() + i);
-        }
         dozer = { chosen_piece.getX(),chosen_piece.getY() };
-        Piece empty;
-        board[dozer.first][dozer.second] = empty;
-        pieces.erase(pieces.begin() + piece_location);
-        std::cout << "The dozer detroyed the piece at: " << dozer.first << " " << dozer.second << '\n';
         displayBoard();
         return chosen_piece;
     }
@@ -351,19 +345,34 @@ Piece& Board::dozerTurn()
     }
 }
 
-const uint16_t& Board::delete_DozerBridges(Piece random_piece)
+uint16_t Board::delete_DozerBridges(Piece random_piece)
 {
     uint16_t numberBridges = 0;
     for (int i = 0; i < bridges.size(); i++)
     {
         if (bridges[i].getPiece1() == random_piece || bridges[i].getPiece2() == random_piece)
         {
-            bridges.erase(bridges.begin() + i);
+            if (bridges[i].getPiece1() == random_piece)
+            {
+                deleteBridge(random_piece, bridges[i].getPiece2());
+
+            }
+            else if (bridges[i].getPiece2() == random_piece)
+            {
+                deleteBridge(bridges[i].getPiece1(), random_piece);
+            }
             numberBridges++;
         }
     }
-    std::cout << numberBridges << "\n";
     return numberBridges;
+}
+
+void Board::deletePiece(Piece chosen_piece,int piece_location)
+{
+    Piece empty;
+    board[dozer.first][dozer.second] = empty;
+    pieces.erase(pieces.begin() + piece_location);
+    std::cout << "The dozer detroyed the piece at: " << dozer.first << " " << dozer.second << '\n';
 }
 
 void Board::generateMines(const uint16_t& mines_nr)
@@ -441,6 +450,7 @@ void Board::explode(const std::tuple<uint16_t, uint16_t, uint16_t>& mine)
         break;
     default:
         break;
+        std::cout << "The mine has exploded!";
     }
 }
 

@@ -41,12 +41,13 @@ public:
 
     void displayBoard() const;
     bool placeBridge(Piece& piece1,Piece& piece2);
-    void deleteBridge(const Piece& p1, const Piece& p2);
+    void deleteBridge(Piece p1, Piece p2);
     bool isBridgeBetween(const uint16_t& x1, const uint16_t& y1, const uint16_t& x2, const uint16_t& y2);
     bool availableWay(const uint16_t& x, const uint16_t& y, const uint16_t& sign, const bool& vertical);
     bool canPlaceBridge(const Piece& piece1, const Piece& piece2);
-    Piece& dozerTurn();
-    const uint16_t& delete_DozerBridges(Piece random_piece);
+    Piece dozerTurn(int& piece_location);
+    uint16_t delete_DozerBridges(Piece random_piece);
+    void deletePiece(Piece chosen_piece, int piece_location);
     void generateMines(const uint16_t& mines_nr);
     void explode(const std::tuple<uint16_t, uint16_t, uint16_t>& mine);
     void reset();
