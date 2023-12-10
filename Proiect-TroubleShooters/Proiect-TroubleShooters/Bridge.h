@@ -1,8 +1,6 @@
 #pragma once
 #include "Piece.h"
-//#include "Player.h"
 
-//class Player;
 class Bridge
 {
     Piece& m_piece1; 

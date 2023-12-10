@@ -1,13 +1,14 @@
 #pragma once
 #include"Board.h"
 #include"Player.h"
-#include<iostream>
+#include"ConsoleDisplay.h";
 #include <QObject>  
 
 class Game : public QObject {  // Mo?tene?te QObject
     Q_OBJECT
     Player player1;
     Player player2;
+    ConsoleDisplay consoleDisplay;
 public:
     Board& board; // Referin?? la tabla de joc
     Player* currentPlayer; // Pointer c?tre juc?torul curent

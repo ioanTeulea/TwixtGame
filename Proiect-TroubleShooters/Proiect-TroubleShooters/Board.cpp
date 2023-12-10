@@ -70,7 +70,7 @@ std::vector<Bridge>& Board::getBridges()
     return bridges;
 }
 
-Piece& Board::operator()(uint16_t x, uint16_t y)
+ Piece& Board::operator()(uint16_t x, uint16_t y)
 {
     // Presupunând c? x ?i y sunt indici valizi
     return board[x][y];
@@ -97,30 +97,6 @@ bool Board::isOccupied(uint16_t x, uint16_t y) const {
     return board[x][y].getColor() != Color::None || (x == dozer.first && y == dozer.second);
 }
 
-void Board::displayBoard() const {
-    for (uint16_t row = 0; row < size; row++) {
-        if (row == 0 || row == size - 1) {
-            std::cout << "  ";
-        }
-        for (uint16_t col = 0; col < size; col++) {
-            if (!((row == size - 1 || row == 0) && (col == size - 1 || col == 0))) {
-                if (board[row][col].getColor() == static_cast<int>(Color::Red)) {
-                    std::cout << "R ";
-                }
-                else if (board[row][col].getColor() == static_cast<int>(Color::Black)) {
-                    std::cout << "B ";
-                }
-                else if (row == dozer.first && col == dozer.second)
-                    std::cout << "D ";
-                else {
-                    std::cout << "O ";
-                }
-            }
-        }
-        std::cout << '\n';
-    }
-}
-
 bool Board::placeBridge(Piece& piece1,Piece& piece2) 
 {
         if ((abs(piece1.getX() - piece2.getX()) == 1 && abs(piece1.getY() - piece2.getY()) == 2) ||
@@ -130,18 +106,15 @@ bool Board::placeBridge(Piece& piece1,Piece& piece2)
             {
                 Bridge newBridge(piece1, piece2);
                 bridges.push_back(newBridge);
-                std::cout << bridges.size() << "\n";
                 return true;
             }
             else
             {
-                std::cout << "The bridge can't be placed.";
                 return false;
             }
         }
         else
         {
-            std::cout << "The bridge can't be placed.";
             return false;
         }
     
@@ -305,7 +278,6 @@ bool Board::canPlaceBridge(const Piece& piece1, const Piece& piece2)
 
 Piece Board::dozerTurn(int& piece_location)
 {
-    std::cout << '\n';
     int dozer_action;
     {
         std::uniform_int_distribution<int> distribution(1, 100);
@@ -321,7 +293,6 @@ Piece Board::dozerTurn(int& piece_location)
         piece_location = distribution(engine);
         Piece& chosen_piece = pieces[piece_location];
         dozer = { chosen_piece.getX(),chosen_piece.getY() };
-        displayBoard();
         return chosen_piece;
     }
     else
@@ -338,8 +309,6 @@ Piece Board::dozerTurn(int& piece_location)
             y = distribution(eng2);
         } while (isOccupied(x, y));
         dozer = { x,y };
-        std::cout << "The dozer moved to an empty position.\n";
-        displayBoard();
         Piece emptyPiece;
         return emptyPiece;
     }
@@ -372,7 +341,7 @@ void Board::deletePiece(Piece chosen_piece,int piece_location)
     Piece empty;
     board[dozer.first][dozer.second] = empty;
     pieces.erase(pieces.begin() + piece_location);
-    std::cout << "The dozer detroyed the piece at: " << dozer.first << " " << dozer.second << '\n';
+   
 }
 
 void Board::generateMines(const uint16_t& mines_nr)
@@ -450,7 +419,6 @@ void Board::explode(const std::tuple<uint16_t, uint16_t, uint16_t>& mine)
         break;
     default:
         break;
-        std::cout << "The mine has exploded!";
     }
 }
 

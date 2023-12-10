@@ -18,7 +18,6 @@ public:
     std::string getName() const;
     void setName(const std::string& newName);
     const Color& getColor() const;
-    void displayPlayerNumberPieces();
     const uint16_t& getRemainingPieces()const;
     const uint16_t& getRemainingBridges()const;
     

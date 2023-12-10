@@ -1,6 +1,5 @@
 #include "Player.h"
 #include"Piece.h"
-#include<iostream>
 Player::Player(const std::string& playerName, Color playerColor) :name{ playerName }, color{ playerColor } {}
 std::string Player::getName() const
 {
@@ -13,12 +12,6 @@ void Player::setName(const std::string& newName)
 const Color& Player::getColor() const
 {
 	return color;
-}
-void Player::displayPlayerNumberPieces()
-{
-	std::cout << "Remaining pieces for " << getName() << '\n';
-	std::cout << "Pieces: " << remainingPieces << '\n';
-	std::cout << "Bridges: " << remainingBridges << '\n';
 }
 const uint16_t& Player::getRemainingPieces() const
 {

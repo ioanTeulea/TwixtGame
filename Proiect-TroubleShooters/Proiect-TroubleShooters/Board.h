@@ -1,6 +1,5 @@
 #pragma once
 #include "Player.h"
-#include <iostream>
 #include <vector>
 #include <unordered_set>
 #include <random>
@@ -8,13 +7,14 @@
 class Board
 {
     std::uint16_t size; // Dimensiunea tablei
-    std::vector<std::vector<Piece>> board; // Vector de vector de întregi pentru reprezentarea tablei
+  
     std::vector<Piece> pieces;
     std::vector<Bridge> bridges;
-    std::pair<uint16_t, uint16_t> dozer;
     std::vector<std::tuple<uint16_t, uint16_t, uint16_t>> mines; // Vector de mine care detine coordonatele si tipul minei
 
 public:
+    std::vector<std::vector<Piece>> board; // Vector de vector de întregi pentru reprezentarea tablei
+    std::pair<uint16_t, uint16_t> dozer;
     Board(uint16_t boardSize = 0);
     Board(const Board& other);
     Board& operator=(const Board& other);
@@ -29,7 +29,7 @@ public:
     std::vector<Piece>& getPieces();
     std::vector<Bridge>& getBridges();
 
-    Piece& operator()(uint16_t x, uint16_t y); // Operatorul () pentru accesul la piese
+     Piece& operator()(uint16_t x, uint16_t y); // Operatorul () pentru accesul la piese
 
     void deletePieces();
     void deleteBridges();
@@ -39,7 +39,6 @@ public:
 
     bool placePiece(const Piece& newPiece);
 
-    void displayBoard() const;
     bool placeBridge(Piece& piece1,Piece& piece2);
     void deleteBridge(Piece p1, Piece p2);
     bool isBridgeBetween(const uint16_t& x1, const uint16_t& y1, const uint16_t& x2, const uint16_t& y2);
