@@ -1,20 +1,25 @@
-#pragma once
-#include <QGraphicsScene>
-#include <QGraphicsSceneMouseEvent>
+#ifndef MYWINDOW_H
+#define MYWINDOW_H
 
-class CustomGraphicsScene : public QGraphicsScene
+#include <QObject>
+#include "MenuScene.h"
+#include "GameScene.h"
+#include <QGraphicsView>
+
+class MyWindow : public QObject
 {
     Q_OBJECT
 
 public:
-    CustomGraphicsScene(QObject* parent = nullptr);
-    void showCoordinates(qreal x, qreal y);
+    MyWindow();
 
-protected:
-    // void drawBackground(QPainter* painter, const QRectF& rect) override;
-    void mousePressEvent(QGraphicsSceneMouseEvent* event) override;
+public slots:
+    void switchToGameScene();
 
 private:
-    qreal cellSize = 50;
-    qint32 boardSize = 10;
+    MenuScene* menuScene;
+    GameScene* gameScene;
+    QGraphicsView* graphicsView;
 };
+
+#endif // MYWINDOW_H
