@@ -17,6 +17,7 @@ private slots:
     void focusNextLineEdit();
 signals:
     void acceptedWithNames(const QString& player1Name, const QString& player2Name);
+    void acceptedWithBoardSize(const int boardSize);
 
 private:
     QLineEdit* m_player1NameEdit;

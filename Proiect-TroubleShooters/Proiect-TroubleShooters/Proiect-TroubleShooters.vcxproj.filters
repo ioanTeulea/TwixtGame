@@ -50,6 +50,12 @@
     <ClCompile Include="ConsoleDisplay.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="MenuScene.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GameScene.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="MyWindow.h">
@@ -59,6 +65,12 @@
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="PlayerInputDialog.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="GameScene.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="MenuScene.h">
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>

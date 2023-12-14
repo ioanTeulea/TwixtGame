@@ -34,10 +34,8 @@ void Game::switchPlayerColors()
 
 void Game::Setup()
 {
-    consoleDisplay.displayMessage( "Type in the board size: ");
-    uint16_t b_size;
-    std::cin >> b_size;
-    Board tempboard(b_size);
+    
+    Board tempboard(board.getSize());
     board = std::move(tempboard);
     consoleDisplay.displayBoard(board);
      consoleDisplay.displayMessage (("Type in the maximum number of pieces for each player: "));
@@ -48,7 +46,7 @@ void Game::Setup()
      consoleDisplay.displayMessage( "Type in the number of mines: ");
     uint16_t nr_mines;
     std::cin >> nr_mines;
-    while (nr_mines > b_size / 3) {
+    while (nr_mines > board.getSize() / 3) {
          consoleDisplay.displayMessage (("Too many mines. Type in a smaller number: "));
         std::cin >> nr_mines;
     }
@@ -397,6 +395,11 @@ void Game::Restart_menu(bool& exit) {
             continue;
         }
     }
+}
+
+void Game::setBoardSize(const int boardSize)
+{
+    board.setSize(boardSize); 
 }
 
 void Game::Play() {

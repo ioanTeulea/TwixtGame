@@ -93,7 +93,9 @@
     <ClCompile Include="Bridge.cpp" />
     <ClCompile Include="ConsoleDisplay.cpp" />
     <ClCompile Include="Game.cpp" />
+    <ClCompile Include="GameScene.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="MenuScene.cpp" />
     <ClCompile Include="MyWindow.cpp" />
     <ClCompile Include="Piece.cpp" />
     <ClCompile Include="Player.cpp">
@@ -109,6 +111,8 @@
     <ClInclude Include="Bridge.h" />
     <QtMoc Include="Game.h" />
     <ClInclude Include="ConsoleDisplay.h" />
+    <QtMoc Include="GameScene.h" />
+    <QtMoc Include="MenuScene.h" />
     <ClInclude Include="Piece.h" />
     <ClInclude Include="Player.h" />
     <QtMoc Include="PlayerInputDialog.h" />

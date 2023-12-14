@@ -31,4 +31,5 @@ private:
     void Restart_menu(bool& exit);
 public slots:
     void setPlayerNames(const QString& namePlayer1, const QString& namePlayer2);
+    void setBoardSize(const int boardSize);
 };

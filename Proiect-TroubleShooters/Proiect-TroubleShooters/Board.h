@@ -25,6 +25,8 @@ public:
     Board& operator=(Board&& other) noexcept;
 
     std::uint16_t getSize() const;
+    void setSize(std::uint16_t newSize);
+
     const std::vector<std::vector<Piece>>& getBoard() const;
     std::vector<Piece>& getPieces();
     std::vector<Bridge>& getBridges();

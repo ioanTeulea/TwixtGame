@@ -57,6 +57,19 @@ uint16_t Board::getSize() const {
     return size;
 }
 
+void Board::setSize(std::uint16_t newSize)
+{
+    if (newSize != size) {
+        size = newSize;
+
+        // Reset?m ?i ajust?m structurile de date în consecin??
+        board.clear();
+        board.resize(size, std::vector<Piece>(size, Piece())); // Reinitializ?m tabla cu dimensiunea nou?
+
+        
+    }
+}
+
 // Getter pentru tabla de joc
 const std::vector<std::vector<Piece>>& Board::getBoard() const {
     return board;

@@ -71,6 +71,7 @@ void PlayerInputDialog::validateForm() {
 
     // Emite semnalul acceptedWithNames cu numele jucatorilor
     emit acceptedWithNames(m_player1NameEdit->text(), m_player2NameEdit->text());
+    emit acceptedWithBoardSize(m_boardSizeSpinBox->value());
     accept();
 }
 void PlayerInputDialog::focusNextLineEdit() {
@@ -83,3 +84,6 @@ void PlayerInputDialog::focusNextLineEdit() {
         m_boardSizeSpinBox->setFocus();
     }
 }
+
+
+ 
