@@ -298,7 +298,7 @@ Piece Board::dozerTurn(int& piece_location)
         std::mt19937 engine(rd());
         dozer_action = distribution(engine);
     }
-    if (dozer_action <= 4)
+    if (dozer_action <= 40)
     {
         std::uniform_int_distribution<int> distribution(0, pieces.size() - 1);
         std::random_device rd;

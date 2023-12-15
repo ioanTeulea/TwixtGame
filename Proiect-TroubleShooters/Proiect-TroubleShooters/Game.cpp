@@ -57,21 +57,21 @@ void Game::action_placeBridge()
 {
     uint16_t x1, y1, x2, y2;
     bool bridge_placed = false;
-     consoleDisplay.displayMessage (("Choose the coordinates of the pilon: "));
+     consoleDisplay.displayMessage (("Choose the coordinates of the pillar1: "));
     std::cin >> x1 >> y1;
-     consoleDisplay.displayMessage (("\nChoose the coordinates of the pilon: "));
+     consoleDisplay.displayMessage (("\nChoose the coordinates of the pillar2: "));
     std::cin >> x2 >> y2;
     while (!board.isOccupied(x1, y1) || !board.isOccupied(x2, y2))
     {
          consoleDisplay.displayMessage ("Invalid location\n");
         if (!board.isOccupied(x1, y1))
         {
-             consoleDisplay.displayMessage ("Choose the coordinates of the pilon:");
+             consoleDisplay.displayMessage ("Choose the coordinates of the pillar1:");
             std::cin >> x1 >> y1;
         }
         if (!board.isOccupied(x2, y2))
         {
-             consoleDisplay.displayMessage ("\nChoose the coordinates of the pilon: ");
+             consoleDisplay.displayMessage ("\nChoose the coordinates of the pillar2: ");
             std::cin >> x2 >> y2;
 
         }
@@ -81,13 +81,13 @@ void Game::action_placeBridge()
         if(board(x1, y1).getColor() != currentPlayer->getColor())
         { 
              consoleDisplay.displayMessage ("Different colors\n");
-             consoleDisplay.displayMessage ("Choose the coordinates of the pilon:");
+             consoleDisplay.displayMessage ("Choose the coordinates of the pillar1:");
             std::cin >> x1 >> y1;
         }
         if (board(x2, y2).getColor() != currentPlayer->getColor())
         {
              consoleDisplay.displayMessage ("Different colors\n");
-             consoleDisplay.displayMessage ("Choose the coordinates of the pilon:");
+             consoleDisplay.displayMessage ("Choose the coordinates of the pillar2:");
             std::cin >> x2 >> y2;
         }
     }
@@ -106,7 +106,7 @@ void Game::action_addPawn()
     uint16_t x, y;
     bool piece_placed = false;
     while (!piece_placed) {
-         consoleDisplay.displayMessage ("Choose the coordinates of the pilon: ");
+         consoleDisplay.displayMessage ("Choose the coordinates of the pillar: ");
         std::cin >> x >> y;
         if (currentPlayer->getColor() == Red && (y == 0 || y == board.getSize() - 1)) {
              consoleDisplay.displayMessage ("Can't do that!\n");
@@ -229,17 +229,17 @@ bool Game::checkWin(Color color)
 
 bool Game::checkGameResult()
 {
-    /*if (player1.getRemainingPieces() ==0 && player2.getRemainingPieces() ==0)
+    if (player1.getRemainingPieces() ==0 && player2.getRemainingPieces() ==0)
     {
-         consoleDisplay.displayMessage ("It' s a draw! Both players are out of pieces!" << "\n");
+         consoleDisplay.displayMessage ("It' s a draw! Both players are out of pieces!\n");
         return true;
     }
     else
-        if (checkWinCondition(*currentPlayer))
+        if (checkWin(currentPlayer->getColor()))
         {
-             consoleDisplay.displayMessage ("Player " << currentPlayer->getName() << " has won!" << "\n");
+             consoleDisplay.displayMessage ("Player " + currentPlayer->getName() + " has won!" + "\n");
             return true;
-        }*/
+        }
     return false;
 }
 
@@ -263,7 +263,7 @@ void Game::Play_menu()
         uint16_t x, y;
         bool placed_piece = false;
         bool moveOn = false;
-         consoleDisplay.displayMessage ('\n' + currentPlayer->getColor()+ "'s turn\n");
+        consoleDisplay.displayMessage ('\n' + currentPlayer->getColor()+ "'s turn\n");
         consoleDisplay.displayPlayerInfo(*currentPlayer);
         while (!moveOn)
         {
@@ -280,11 +280,11 @@ void Game::Play_menu()
 
                 if (!placed_piece)
                 {
-                    /*if (currentPlayer->advantage)
+                    if (currentPlayer->advantage)
                     {
                         action_addPawn();
                         currentPlayer->advantage = false;
-                    }*/
+                    }
                     action_addPawn();
                     if (currentPlayer == &player2 && firstTurn == true)
                         firstTurn = false;
@@ -298,6 +298,7 @@ void Game::Play_menu()
                         player1.setRemainingBridges(player1.getRemainingBridges() + board.delete_DozerBridges(random_piece));
                         board.deletePiece(random_piece, location);
                         //un mesaj
+                        consoleDisplay.displayMessage("The dozer had destroyed the pillar from coordinates " + std::to_string(random_piece.getX()) + " " + std::to_string(random_piece.getY()) + "\n");
                         consoleDisplay.displayBoard(board);
                     }
                     else
@@ -307,6 +308,7 @@ void Game::Play_menu()
                             player2.setRemainingBridges(player2.getRemainingBridges() + board.delete_DozerBridges(random_piece));
                             board.deletePiece(random_piece, location);
                             //un mesaj
+                            consoleDisplay.displayMessage("The dozer had destroyed the pillar from coordinates " + std::to_string(random_piece.getX()) + " " + std::to_string(random_piece.getY()) + "\n");
                             consoleDisplay.displayBoard(board);
                     }
                     else
@@ -319,10 +321,15 @@ void Game::Play_menu()
                 break;
 
             case 2:
-                display_changingBridges();
-                 consoleDisplay.displayMessage ("\n");
-                consoleDisplay.displayBoard(board);
-                consoleDisplay.displayPlayerInfo(*currentPlayer);
+                if (placed_piece)
+                {
+                    display_changingBridges();
+                    consoleDisplay.displayMessage("\n");
+                    consoleDisplay.displayBoard(board);
+                    consoleDisplay.displayPlayerInfo(*currentPlayer);
+                }
+                else
+                    consoleDisplay.displayMessage("You must place a piece!\n");
                 break;
             case 3:
                 if (currentPlayer == &player2 && firstTurn == true) {
