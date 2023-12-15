@@ -1,5 +1,6 @@
 #pragma once
 #include <cstdint>
+#include<iostream>
 enum Color
 {
     None = 0,
@@ -22,6 +23,7 @@ public:
     const uint16_t& getX()const;
     const uint16_t& getY()const;
     bool operator==(const Piece& other) const;
+    friend std::ostream& operator<<(std::ostream& out, const Piece& piece);
 };
 
 

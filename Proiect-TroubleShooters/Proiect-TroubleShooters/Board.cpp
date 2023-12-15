@@ -444,5 +444,18 @@ void Board::reset()
     }
 }
 
-
-
+std::ostream& operator<<(std::ostream& out, const Board& B)
+{
+    out << B.size << '\n';
+    out << B.pieces.size() << '\n';
+    for (int i = 0; i < B.pieces.size(); i++)
+        out << B.pieces[i] << '\n';
+    out << B.bridges.size() << '\n';
+    for (int i = 0; i < B.bridges.size(); i++)
+        out << B.bridges[i] << '\n';
+    out << B.mines.size()<<'\n';
+    for (int i = 0; i < B.mines.size(); i++)
+        out << std::get<0>(B.mines[i]) << " " << std::get<1>(B.mines[i]) << " " << std::get<2>(B.mines[i])<<'\n';
+    out << B.dozer.first << " " << B.dozer.second;
+    return out;
+}

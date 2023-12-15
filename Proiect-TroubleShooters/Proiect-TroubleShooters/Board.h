@@ -52,6 +52,7 @@ public:
     void generateMines(const uint16_t& mines_nr);
     void explode(const std::tuple<uint16_t, uint16_t, uint16_t>& mine);
     void reset();
+    friend std::ostream& operator<<(std::ostream& out, const Board& B);
 };
 
 

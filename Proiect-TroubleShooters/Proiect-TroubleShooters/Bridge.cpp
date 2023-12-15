@@ -28,4 +28,9 @@ bool Bridge::operator==(const Bridge& other) const
     
 }
 
-
+std::ostream& operator<<(std::ostream& out, const Bridge& bridge)
+{
+    out << bridge.m_piece1 << '\n';
+    out << bridge.m_piece2;
+    return out;
+}

@@ -28,8 +28,9 @@ bool Piece::operator==(const Piece& other) const
     return true;
 }
 
-
-
-
-
-
+std::ostream& operator<<(std::ostream& out, const Piece& piece)
+{
+    out << piece.m_color << '\n';
+    out << piece.x << " " << piece.y;
+    return out;
+}

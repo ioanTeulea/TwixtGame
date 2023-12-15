@@ -14,5 +14,6 @@ public:
 	const Piece& getPiece1() const;
 	const Piece& getPiece2() const;
 	bool operator==(const Bridge& other) const;
+	friend std::ostream& operator<<(std::ostream& out, const Bridge& bridge);
 };
 
