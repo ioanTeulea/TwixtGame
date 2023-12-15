@@ -28,4 +28,5 @@ public:
     bool operator==(const Player& other);
    // void transferFirstPiece(Player& otherPlayer);
     friend std::ostream& operator<<(std::ostream& out, const Player& player);
+    friend std::istream& operator>>(std::istream& in, Player& player);
 };

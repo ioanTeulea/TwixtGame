@@ -59,3 +59,15 @@ std::ostream& operator<<(std::ostream& out, const Player& player)
 	out << player.advantage;
 	return out;
 }
+
+std::istream& operator>>(std::istream& in, Player& player)
+{
+	in >> player.name;
+	int c;
+	in >> c;
+	player.color = static_cast<Color>(c);
+	in >> player.remainingPieces;
+	in >> player.remainingBridges;
+	in >> player.advantage;
+	return in;
+}
