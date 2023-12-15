@@ -34,3 +34,9 @@ std::ostream& operator<<(std::ostream& out, const Bridge& bridge)
     out << bridge.m_piece2;
     return out;
 }
+
+std::istream& operator>>(std::istream& in, Bridge& bridge)
+{
+    in >> bridge.m_piece1 >> bridge.m_piece2;
+    return in;
+}

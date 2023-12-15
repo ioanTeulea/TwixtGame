@@ -24,6 +24,7 @@ public:
     const uint16_t& getY()const;
     bool operator==(const Piece& other) const;
     friend std::ostream& operator<<(std::ostream& out, const Piece& piece);
+    friend std::istream& operator>>(std::istream& in, Piece& piece);
 };
 
 

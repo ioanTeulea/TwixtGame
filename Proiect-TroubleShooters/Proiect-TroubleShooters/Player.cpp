@@ -63,7 +63,7 @@ std::ostream& operator<<(std::ostream& out, const Player& player)
 std::istream& operator>>(std::istream& in, Player& player)
 {
 	in >> player.name;
-	int c;
+	uint16_t c;
 	in >> c;
 	player.color = static_cast<Color>(c);
 	in >> player.remainingPieces;

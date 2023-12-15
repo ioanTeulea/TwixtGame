@@ -34,3 +34,12 @@ std::ostream& operator<<(std::ostream& out, const Piece& piece)
     out << piece.x << " " << piece.y;
     return out;
 }
+
+std::istream& operator>>(std::istream& in, Piece& piece)
+{
+    uint16_t color;
+    in >> color;
+    piece.m_color = static_cast<Color>(color);
+    in >> piece.x >> piece.y;
+    return in;
+}
