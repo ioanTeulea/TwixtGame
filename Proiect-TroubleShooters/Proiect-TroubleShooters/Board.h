@@ -53,6 +53,7 @@ public:
     void explode(const std::tuple<uint16_t, uint16_t, uint16_t>& mine);
     void reset();
     friend std::ostream& operator<<(std::ostream& out, const Board& B);
+    friend std::istream& operator>>(std::istream& in, Board& B);
 };
 
 

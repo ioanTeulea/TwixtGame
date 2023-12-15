@@ -427,3 +427,17 @@ std::ostream& operator<<(std::ostream& out, const Game& game)
     out << game.currentPlayer->getColor();
     return out;
 }
+
+std::istream& operator>>(std::istream& in, Game& game)
+{
+    in >> game.player1;
+    in >> game.player2;
+    in >> game.board;
+    uint16_t color;
+    in >> color;
+    if (static_cast<Color>(color) == game.player1.getColor())
+        game.currentPlayer = &game.player1;
+    else
+        game.currentPlayer = &game.player2;
+    return in;
+}

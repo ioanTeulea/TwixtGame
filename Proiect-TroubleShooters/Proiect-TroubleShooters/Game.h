@@ -26,6 +26,7 @@ public:
     void display_changingBridges();
     void reset();
     friend std::ostream& operator<<(std::ostream& out, const Game& game);
+    friend std::istream& operator>>(std::istream& in, Game& game);
 private:
     void Play_menu();
     void Load_menu();

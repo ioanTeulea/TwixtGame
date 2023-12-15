@@ -459,3 +459,32 @@ std::ostream& operator<<(std::ostream& out, const Board& B)
     out << B.dozer.first << " " << B.dozer.second;
     return out;
 }
+
+std::istream& operator>>(std::istream& in, Board& B)
+{
+    uint16_t size;
+    in >> size;
+    Board aux(size);
+    uint16_t piecesSize;
+    in >> piecesSize;
+    for (uint16_t i{ 0 }; i < piecesSize; i++) {
+        in >> aux.pieces[i];
+        aux(aux.pieces[i].getX(), aux.pieces[i].getY()) = aux.pieces[i];
+    }
+    uint16_t bridgesSize;
+    in >> bridgesSize;
+    for (uint16_t i{ 0 }; i < bridgesSize; i++) {
+        in >> aux.bridges[i];
+    }
+    uint16_t minesSize;
+    in >> minesSize;
+    for (uint16_t i{ 0 }; i < minesSize; i++) {
+        uint16_t mineX, mineY, type;
+        in >> mineX, mineY, type;
+        aux.mines[i] = std::make_tuple(mineX, mineY, type);
+    }
+    in >> aux.dozer.first >> aux.dozer.second;
+    B = aux;
+
+    return in;
+}
