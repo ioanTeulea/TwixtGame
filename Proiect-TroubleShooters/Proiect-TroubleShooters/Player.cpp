@@ -50,4 +50,12 @@ bool Player::operator==(const Player& other)
 	return color == other.color;
 }
 
-
+std::ostream& operator<<(std::ostream& out, const Player& player)
+{
+	out << player.name << '\n';
+	out << player.color << '\n';
+	out << player.remainingPieces << '\n';
+	out << player.remainingBridges << '\n';
+	out << player.advantage;
+	return out;
+}

@@ -412,3 +412,11 @@ void Game::Play() {
     }
 }
 
+std::ostream& operator<<(std::ostream& out, const Game& game)
+{
+    out << game.player1 << '\n';
+    out << game.player2 << '\n';
+    out << game.board << '\n';
+    out << game.currentPlayer->getColor();
+    return out;
+}

@@ -27,4 +27,5 @@ public:
     void setInitialValues(uint16_t max);
     bool operator==(const Player& other);
    // void transferFirstPiece(Player& otherPlayer);
+    friend std::ostream& operator<<(std::ostream& out, const Player& player);
 };
