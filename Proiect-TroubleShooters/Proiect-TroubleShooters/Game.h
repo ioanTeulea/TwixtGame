@@ -3,6 +3,8 @@
 #include"Player.h"
 #include"ConsoleDisplay.h";
 #include <QObject>  
+#include <fstream>
+
 class Game : public QObject {  // Mo?tene?te QObject
     Q_OBJECT
     Player player1;
@@ -25,6 +27,8 @@ public:
     void action_deleteBridge();
     void display_changingBridges();
     void reset();
+    void Load(const std::string& filename);
+    void Save(const std::string& filename);
     friend std::ostream& operator<<(std::ostream& out, const Game& game);
     friend std::istream& operator>>(std::istream& in, Game& game);
 private:

@@ -183,6 +183,31 @@ void Game::reset()
     currentPlayer = &player1;
 }
 
+void Game::Load(const std::string& filename)
+{
+    std::ifstream in(filename);
+    Player p1, p2;
+    in >> p1;
+    this->player1 = p1;
+    in >> p2;
+    this->player2 = p2;
+    Board board;
+    in >> board;
+    this->board = board;
+    uint16_t color;
+    in >> color;
+    if (static_cast<Color>(color) == p1.getColor())
+        this->currentPlayer = &p1;
+    else
+        this->currentPlayer = &p2;
+}
+
+void Game::Save(const std::string& filename)
+{
+    std::ofstream out(filename);
+    out << this;
+}
+
 
 bool Game::checkWin(Color color)
 {
@@ -392,7 +417,7 @@ void Game::Load_menu() {
         case 1:
             return;
         case 2:
-            //game = saved game
+            Load("in.txt");
             return;
         default:
              consoleDisplay.displayMessage ("Action not available. Choose 1, 2.\n");
