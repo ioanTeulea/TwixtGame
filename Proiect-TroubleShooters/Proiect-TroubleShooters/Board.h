@@ -46,7 +46,7 @@ public:
     bool isBridgeBetween(const uint16_t& x1, const uint16_t& y1, const uint16_t& x2, const uint16_t& y2);
     bool availableWay(const uint16_t& x, const uint16_t& y, const uint16_t& sign, const bool& vertical);
     bool canPlaceBridge(const Piece& piece1, const Piece& piece2);
-    Piece dozerTurn(int& piece_location);
+    Piece dozerTurn(int& piece_location, const std::uint16_t& percentage);
     uint16_t delete_DozerBridges(Piece random_piece);
     std::pair<std::uint16_t, std::uint16_t> generateRandomPiece();
     void deletePiece(Piece chosen_piece, int piece_location);

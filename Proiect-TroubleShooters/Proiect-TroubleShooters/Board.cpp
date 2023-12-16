@@ -280,7 +280,7 @@ bool Board::canPlaceBridge(const Piece& piece1, const Piece& piece2)
     return true;
 }
 
-Piece Board::dozerTurn(int& piece_location)
+Piece Board::dozerTurn(int& piece_location,const std::uint16_t& percentage)
 {
     int dozer_action;
     {
@@ -289,7 +289,7 @@ Piece Board::dozerTurn(int& piece_location)
         std::mt19937 engine(rd());
         dozer_action = distribution(engine);
     }
-    if (dozer_action <= 80)
+    if (dozer_action <= percentage)
     {
         std::uniform_int_distribution<int> distribution(0, pieces.size() - 1);
         std::random_device rd;

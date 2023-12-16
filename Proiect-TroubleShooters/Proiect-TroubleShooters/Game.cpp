@@ -39,17 +39,25 @@ void Game::Setup()
     Board tempboard(board.getSize());
     board = std::move(tempboard);
     consoleDisplay.displayBoard(board);
-    uint16_t maxPieces;
+    uint16_t maxPieces = (board.getSize() * board.getSize() / 2);
+    if (difficulty == "Medium")
+        maxPieces *= 0.8;
+    else
+        if (difficulty == "Hard")
+            maxPieces *= 0.6;
     player1.setInitialValues(maxPieces);
     player2.setInitialValues(maxPieces);
-     consoleDisplay.displayMessage( "Type in the number of mines: ");
-    uint16_t nr_mines;
-    std::cin >> nr_mines;
-    while (nr_mines > board.getSize() / 3) {
-         consoleDisplay.displayMessage (("Too many mines. Type in a smaller number: "));
+    if (difficulty == "Hard")
+    {
+        consoleDisplay.displayMessage("Type in the number of mines: ");
+        uint16_t nr_mines;
         std::cin >> nr_mines;
+        while (nr_mines > board.getSize() / 3) {
+            consoleDisplay.displayMessage(("Too many mines. Type in a smaller number: "));
+            std::cin >> nr_mines;
+        }
+        board.generateMines(nr_mines);
     }
-    board.generateMines(nr_mines);
 }
 
 void Game::action_placeBridge()
@@ -258,23 +266,31 @@ void Game::Play_menu()
     bool firstTurn = true;
     Piece random_piece;
     int location;
+    std::uint16_t percentage;
     board.generateRandomPiece();
     consoleDisplay.displayBoard(board);
-    while (currentPlayer->getRemainingPieces() >= 0 && !checkGameResult()) {
+    if (difficulty == "Easy")
+        percentage = 10;
+    else
+        if (difficulty == "Medium")
+            percentage = 30;
+        else
+            percentage = 50;
+    while (currentPlayer->getRemainingPieces() >=0   && !checkGameResult()) {
         uint16_t x, y;
         bool placed_piece = false;
         bool moveOn = false;
-        consoleDisplay.displayMessage('\n' + currentPlayer->getColor() + "'s turn\n");
+        consoleDisplay.displayMessage ('\n' + currentPlayer->getColor()+ "'s turn\n");
         consoleDisplay.displayPlayerInfo(*currentPlayer);
         while (!moveOn)
         {
-            consoleDisplay.displayMessage("Choose an action (1 - place pawn, 2 - modify bridge, ");
+             consoleDisplay.displayMessage ("Choose an action (1 - place pawn, 2 - modify bridge, ");
             if (currentPlayer == &player2 && firstTurn == true) {
-                consoleDisplay.displayMessage("3 - take over the first piece, ");
+                 consoleDisplay.displayMessage ("3 - take over the first piece, ");
             }
-            consoleDisplay.displayMessage("4 - forfeit, ");
-            consoleDisplay.displayMessage("5 - next player): ");
-
+             consoleDisplay.displayMessage ("4 - forfeit, ");
+             consoleDisplay.displayMessage ("5 - next player): ");
+            
             uint16_t action;
             std::cin >> action;
             switch (action) {
@@ -290,36 +306,36 @@ void Game::Play_menu()
                     action_addPawn();
                     if (currentPlayer == &player2 && firstTurn == true)
                         firstTurn = false;
-                    consoleDisplay.displayMessage("\n");
+                     consoleDisplay.displayMessage ("\n");
                     consoleDisplay.displayBoard(board);
                     placed_piece = true;
-                    random_piece = board.dozerTurn(location);
-                    if (random_piece.getColor() == Color::Red)
-                    {
-                        player1.setRemainingPieces(player1.getRemainingPieces() + 1);
-                        player1.setRemainingBridges(player1.getRemainingBridges() + board.delete_DozerBridges(random_piece));
-                        board.deletePiece(random_piece, location);
-                        //un mesaj
-                        consoleDisplay.displayMessage("The dozer had destroyed the pillar from coordinates " + std::to_string(random_piece.getX()) + " " + std::to_string(random_piece.getY()) + "\n");
-                        consoleDisplay.displayBoard(board);
-                    }
-                    else
-                        if (random_piece.getColor() == Color::Black)
+                    random_piece = board.dozerTurn(location,percentage);
+                        if (random_piece.getColor() == Color::Red)
                         {
-                            player2.setRemainingPieces(player2.getRemainingPieces() + 1);
-                            player2.setRemainingBridges(player2.getRemainingBridges() + board.delete_DozerBridges(random_piece));
+                            player1.setRemainingPieces(player1.getRemainingPieces() + 1);
+                            player1.setRemainingBridges(player1.getRemainingBridges() + board.delete_DozerBridges(random_piece));
                             board.deletePiece(random_piece, location);
                             //un mesaj
                             consoleDisplay.displayMessage("The dozer had destroyed the pillar from coordinates " + std::to_string(random_piece.getX()) + " " + std::to_string(random_piece.getY()) + "\n");
                             consoleDisplay.displayBoard(board);
                         }
                         else
-                            if (random_piece.getColor() == Color::None)
-                                break;
+                            if (random_piece.getColor() == Color::Black)
+                            {
+                                player2.setRemainingPieces(player2.getRemainingPieces() + 1);
+                                player2.setRemainingBridges(player2.getRemainingBridges() + board.delete_DozerBridges(random_piece));
+                                board.deletePiece(random_piece, location);
+                                //un mesaj
+                                consoleDisplay.displayMessage("The dozer had destroyed the pillar from coordinates " + std::to_string(random_piece.getX()) + " " + std::to_string(random_piece.getY()) + "\n");
+                                consoleDisplay.displayBoard(board);
+                            }
+                            else
+                                if (random_piece.getColor() == Color::None)
+                                    break;
                     consoleDisplay.displayPlayerInfo(*currentPlayer);
                 }
                 else
-                    consoleDisplay.displayMessage("The piece is already added for this time.\n");
+                     consoleDisplay.displayMessage ("The piece is already added for this time.\n");
                 break;
 
             case 2:
@@ -337,15 +353,15 @@ void Game::Play_menu()
                 if (currentPlayer == &player2 && firstTurn == true) {
                     switchPlayerColors();
                     firstTurn = false;
-                    consoleDisplay.displayMessage("\n");
+                     consoleDisplay.displayMessage ("\n");
                     consoleDisplay.displayBoard(board);
-                    board.dozerTurn(location);
+                    board.dozerTurn(location,percentage);
                 }
                 break;
             case 4:
                 forfeitGame();
                 switchPlayer();
-                consoleDisplay.displayMessage("Player " + currentPlayer->getName() + " has won!" + "\n");
+                 consoleDisplay.displayMessage ("Player " + currentPlayer->getName() + " has won!" + "\n");
                 return;
                 break;
             case 5:
@@ -355,11 +371,11 @@ void Game::Play_menu()
                     switchPlayer();
                 }
                 else
-                    consoleDisplay.displayMessage("You must place a piece.\n");
+                     consoleDisplay.displayMessage ("You must place a piece.\n");
                 break;
             default:
-                consoleDisplay.displayMessage("Action not available. Choose 1, 2,");
-                consoleDisplay.displayMessage("3, 4, 5\n");
+                 consoleDisplay.displayMessage ("Action not available. Choose 1, 2,");
+                 consoleDisplay.displayMessage ("3, 4, 5\n");
                 continue; // Continua bucla pentru a alege o actiune valida
             }
         }
