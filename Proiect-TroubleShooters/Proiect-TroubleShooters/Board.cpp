@@ -2,16 +2,7 @@
 
 // Constructor
 Board::Board(uint16_t boardSize) : size(boardSize), board(boardSize, std::vector<Piece>(boardSize)), pieces(), bridges() {
-    if (boardSize != 0)
-    {
-        std::uniform_int_distribution<int> distribution(1, boardSize - 2);
-        std::random_device rd1;
-        std::mt19937 x(rd1());
-        dozer.first = distribution(x);
-        std::random_device rd2;
-        std::mt19937 y(rd2());
-        dozer.second = distribution(y);
-    }
+    
 }
 // Copy constructor
 Board::Board(const Board& other) : size(other.size), board(other.board), pieces(other.pieces), bridges(other.bridges), dozer(other.dozer) {
@@ -298,7 +289,7 @@ Piece Board::dozerTurn(int& piece_location)
         std::mt19937 engine(rd());
         dozer_action = distribution(engine);
     }
-    if (dozer_action <= 40)
+    if (dozer_action <= 80)
     {
         std::uniform_int_distribution<int> distribution(0, pieces.size() - 1);
         std::random_device rd;
@@ -310,18 +301,7 @@ Piece Board::dozerTurn(int& piece_location)
     }
     else
     {
-        uint16_t x, y;
-        do
-        {
-            std::uniform_int_distribution<int> distribution(1, size - 2);
-            std::random_device rd1;
-            std::mt19937 eng1(rd1());
-            x = distribution(eng1);
-            std::random_device rd2;
-            std::mt19937 eng2(rd2());
-            y = distribution(eng2);
-        } while (isOccupied(x, y));
-        dozer = { x,y };
+        generateRandomPiece();
         Piece emptyPiece;
         return emptyPiece;
     }
@@ -347,6 +327,26 @@ uint16_t Board::delete_DozerBridges(Piece random_piece)
         }
     }
     return numberBridges;
+}
+
+std::pair<std::uint16_t, std::uint16_t> Board::generateRandomPiece()
+{
+    if (getSize() != 0)
+    {
+        uint16_t x, y;
+        do
+        {
+            std::uniform_int_distribution<int> distribution(1, getSize() - 2);
+            std::random_device rd1;
+            std::mt19937 eng1(rd1());
+            x = distribution(eng1);
+            std::random_device rd2;
+            std::mt19937 eng2(rd2());
+            y = distribution(eng2);
+        } while (isOccupied(x, y));
+        dozer = { x,y };
+    }
+    return dozer;
 }
 
 void Board::deletePiece(Piece chosen_piece,int piece_location)

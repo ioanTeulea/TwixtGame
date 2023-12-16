@@ -24,7 +24,8 @@ int main(int argc, char* argv[]) {
    // Twixt.Setup();
 
     QObject::connect(&playerDialog, &PlayerInputDialog::acceptedWithNames, &Twixt, &Game::setPlayerNames);
-    QObject::connect(&playerDialog, &PlayerInputDialog::acceptedWithBoardSize, &Twixt, &Game::setBoardSize);  
+    QObject::connect(&playerDialog, &PlayerInputDialog::acceptedWithBoardSize, &Twixt, &Game::setBoardSize); 
+    QObject::connect(&playerDialog, &PlayerInputDialog::acceptedWithDifficulty, &Twixt, &Game::setDifficulty);
     playerDialog.exec();
     
     // Începe jocul

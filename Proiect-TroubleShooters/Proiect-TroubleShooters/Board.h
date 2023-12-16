@@ -48,6 +48,7 @@ public:
     bool canPlaceBridge(const Piece& piece1, const Piece& piece2);
     Piece dozerTurn(int& piece_location);
     uint16_t delete_DozerBridges(Piece random_piece);
+    std::pair<std::uint16_t, std::uint16_t> generateRandomPiece();
     void deletePiece(Piece chosen_piece, int piece_location);
     void generateMines(const uint16_t& mines_nr);
     void explode(const std::tuple<uint16_t, uint16_t, uint16_t>& mine);

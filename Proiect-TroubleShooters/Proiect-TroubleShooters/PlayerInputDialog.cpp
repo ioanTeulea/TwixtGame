@@ -1,16 +1,20 @@
-#include "PlayerInputDialog.h"
+﻿#include "PlayerInputDialog.h"
 #include <QFormLayout>
 #include <QPixmap>
 PlayerInputDialog::PlayerInputDialog(QWidget* parent) : QDialog(parent) {
     setWindowTitle("Completati formularul pentru a incepe jocul:");
-
-
 
     // Creeaza casetele de text pentru nume
     m_player1NameEdit = new QLineEdit;
     m_player2NameEdit = new QLineEdit;
     m_boardSizeSpinBox = new QSpinBox;
     m_boardSizeSpinBox->setRange(5, 100);
+
+    m_difficultyComboBox = new QComboBox;
+    m_difficultyComboBox->addItem("Easy");
+    m_difficultyComboBox->addItem("Medium");
+    m_difficultyComboBox->addItem("Hard");
+
 
     // Creeaza butoanele OK si Anulare
     QPushButton* okButton = new QPushButton("OK", this);
@@ -43,6 +47,8 @@ PlayerInputDialog::PlayerInputDialog(QWidget* parent) : QDialog(parent) {
     layout->addWidget(m_player2NameEdit);
     layout->addWidget(new QLabel("Board Size:"));
     layout->addWidget(m_boardSizeSpinBox);
+    layout->addWidget(new QLabel("Difficulty:"));
+    layout->addWidget(m_difficultyComboBox);
     layout->addWidget(okButton);
     layout->addWidget(cancelButton);
 
@@ -52,7 +58,7 @@ PlayerInputDialog::PlayerInputDialog(QWidget* parent) : QDialog(parent) {
     // Conecteaza butonul OK la slot-ul custom validateForm
     connect(okButton, &QPushButton::clicked, this, &PlayerInputDialog::validateForm);
 
-    // Conecteaza butonul Anulare la �nchiderea ferestrei
+    // Conecteaza butonul Anulare la închiderea ferestrei
     connect(cancelButton, &QPushButton::clicked, this, &PlayerInputDialog::reject);
 
     // Conecteaza un slot pentru a trata evenimentul de ap?sare a tastei Enter
@@ -72,6 +78,7 @@ void PlayerInputDialog::validateForm() {
     // Emite semnalul acceptedWithNames cu numele jucatorilor
     emit acceptedWithNames(m_player1NameEdit->text(), m_player2NameEdit->text());
     emit acceptedWithBoardSize(m_boardSizeSpinBox->value());
+    emit acceptedWithDifficulty(m_difficultyComboBox->currentText());
     accept();
 }
 void PlayerInputDialog::focusNextLineEdit() {
@@ -84,6 +91,5 @@ void PlayerInputDialog::focusNextLineEdit() {
         m_boardSizeSpinBox->setFocus();
     }
 }
-
 
  

@@ -3,12 +3,12 @@
 #include"Player.h"
 #include"ConsoleDisplay.h";
 #include <QObject>  
-
 class Game : public QObject {  // Mo?tene?te QObject
     Q_OBJECT
     Player player1;
     Player player2;
     ConsoleDisplay consoleDisplay;
+    std::string difficulty;
 public:
     Board& board; // Referin?? la tabla de joc
     Player* currentPlayer; // Pointer c?tre juc?torul curent
@@ -32,6 +32,7 @@ private:
     void Load_menu();
     void Restart_menu(bool& exit);
 public slots:
+    void setDifficulty(const QString& difficulty);
     void setPlayerNames(const QString& namePlayer1, const QString& namePlayer2);
     void setBoardSize(const int boardSize);
 };

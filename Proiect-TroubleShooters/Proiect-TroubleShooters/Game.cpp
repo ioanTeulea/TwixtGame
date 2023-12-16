@@ -2,6 +2,7 @@
 #include<algorithm>
 #include<queue>
 
+
 Game::Game(Board& gameBoard) : board{ gameBoard }, player1{}, player2{}, currentPlayer{ &player1 } {
     // Restul logicii de ini?ializare pentru joc
 }
@@ -38,9 +39,7 @@ void Game::Setup()
     Board tempboard(board.getSize());
     board = std::move(tempboard);
     consoleDisplay.displayBoard(board);
-     consoleDisplay.displayMessage (("Type in the maximum number of pieces for each player: "));
     uint16_t maxPieces;
-    std::cin >> maxPieces;
     player1.setInitialValues(maxPieces);
     player2.setInitialValues(maxPieces);
      consoleDisplay.displayMessage( "Type in the number of mines: ");
@@ -259,20 +258,23 @@ void Game::Play_menu()
     bool firstTurn = true;
     Piece random_piece;
     int location;
-    while (currentPlayer->getRemainingPieces() >=0   && !checkGameResult()) {
+    board.generateRandomPiece();
+    consoleDisplay.displayBoard(board);
+    while (currentPlayer->getRemainingPieces() >= 0 && !checkGameResult()) {
         uint16_t x, y;
         bool placed_piece = false;
         bool moveOn = false;
-        consoleDisplay.displayMessage ('\n' + currentPlayer->getColor()+ "'s turn\n");
+        consoleDisplay.displayMessage('\n' + currentPlayer->getColor() + "'s turn\n");
         consoleDisplay.displayPlayerInfo(*currentPlayer);
         while (!moveOn)
         {
-             consoleDisplay.displayMessage ("Choose an action (1 - place pawn, 2 - modify bridge, ");
+            consoleDisplay.displayMessage("Choose an action (1 - place pawn, 2 - modify bridge, ");
             if (currentPlayer == &player2 && firstTurn == true) {
-                 consoleDisplay.displayMessage ("3 - take over the first piece, ");
+                consoleDisplay.displayMessage("3 - take over the first piece, ");
             }
-             consoleDisplay.displayMessage ("4 - forfeit, ");
-             consoleDisplay.displayMessage ("5 - next player): ");
+            consoleDisplay.displayMessage("4 - forfeit, ");
+            consoleDisplay.displayMessage("5 - next player): ");
+
             uint16_t action;
             std::cin >> action;
             switch (action) {
@@ -288,10 +290,10 @@ void Game::Play_menu()
                     action_addPawn();
                     if (currentPlayer == &player2 && firstTurn == true)
                         firstTurn = false;
-                     consoleDisplay.displayMessage ("\n");
+                    consoleDisplay.displayMessage("\n");
                     consoleDisplay.displayBoard(board);
-                    random_piece=board.dozerTurn(location);
                     placed_piece = true;
+                    random_piece = board.dozerTurn(location);
                     if (random_piece.getColor() == Color::Red)
                     {
                         player1.setRemainingPieces(player1.getRemainingPieces() + 1);
@@ -302,7 +304,7 @@ void Game::Play_menu()
                         consoleDisplay.displayBoard(board);
                     }
                     else
-                    if (random_piece.getColor() ==Color::Black)
+                        if (random_piece.getColor() == Color::Black)
                         {
                             player2.setRemainingPieces(player2.getRemainingPieces() + 1);
                             player2.setRemainingBridges(player2.getRemainingBridges() + board.delete_DozerBridges(random_piece));
@@ -310,14 +312,14 @@ void Game::Play_menu()
                             //un mesaj
                             consoleDisplay.displayMessage("The dozer had destroyed the pillar from coordinates " + std::to_string(random_piece.getX()) + " " + std::to_string(random_piece.getY()) + "\n");
                             consoleDisplay.displayBoard(board);
-                    }
-                    else
-                    if (random_piece.getColor() ==Color::None)
-                            break;
+                        }
+                        else
+                            if (random_piece.getColor() == Color::None)
+                                break;
                     consoleDisplay.displayPlayerInfo(*currentPlayer);
                 }
                 else
-                     consoleDisplay.displayMessage ("The piece is already added for this time.\n");
+                    consoleDisplay.displayMessage("The piece is already added for this time.\n");
                 break;
 
             case 2:
@@ -335,7 +337,7 @@ void Game::Play_menu()
                 if (currentPlayer == &player2 && firstTurn == true) {
                     switchPlayerColors();
                     firstTurn = false;
-                     consoleDisplay.displayMessage ("\n");
+                    consoleDisplay.displayMessage("\n");
                     consoleDisplay.displayBoard(board);
                     board.dozerTurn(location);
                 }
@@ -343,7 +345,7 @@ void Game::Play_menu()
             case 4:
                 forfeitGame();
                 switchPlayer();
-                 consoleDisplay.displayMessage ("Player " + currentPlayer->getName() + " has won!" + "\n");
+                consoleDisplay.displayMessage("Player " + currentPlayer->getName() + " has won!" + "\n");
                 return;
                 break;
             case 5:
@@ -353,11 +355,11 @@ void Game::Play_menu()
                     switchPlayer();
                 }
                 else
-                     consoleDisplay.displayMessage ("You must place a piece.\n");
+                    consoleDisplay.displayMessage("You must place a piece.\n");
                 break;
             default:
-                 consoleDisplay.displayMessage ("Action not available. Choose 1, 2,");
-                 consoleDisplay.displayMessage ("3\n");
+                consoleDisplay.displayMessage("Action not available. Choose 1, 2,");
+                consoleDisplay.displayMessage("3, 4, 5\n");
                 continue; // Continua bucla pentru a alege o actiune valida
             }
         }
@@ -407,6 +409,10 @@ void Game::Restart_menu(bool& exit) {
 void Game::setBoardSize(const int boardSize)
 {
     board.setSize(boardSize); 
+}
+void Game::setDifficulty(const QString& diff)
+{
+    difficulty = diff.toStdString();
 }
 
 void Game::Play() {
