@@ -91,6 +91,7 @@
   <ItemGroup>
     <ClCompile Include="Board.cpp" />
     <ClCompile Include="Bridge.cpp" />
+    <ClCompile Include="ClickableButton.cpp" />
     <ClCompile Include="ConsoleDisplay.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameScene.cpp" />
@@ -110,6 +111,7 @@
     <ClInclude Include="Board.h" />
     <ClInclude Include="Bridge.h" />
     <QtMoc Include="Game.h" />
+    <QtMoc Include="ClickableButton.h" />
     <ClInclude Include="ConsoleDisplay.h" />
     <QtMoc Include="GameScene.h" />
     <QtMoc Include="MenuScene.h" />

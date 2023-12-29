@@ -1,28 +1,32 @@
 #include "MyWindow.h"
 #include "PlayerInputDialog.h"
-#include <QMainWindow>
+#include <QDebug>
+#define INITIAL_WIDTH 800
+#define INITIAL_HEIGHT 600
 MyWindow::MyWindow()
     : QObject(nullptr)
 {
     menuScene = new MenuScene(this);
     gameScene = new GameScene(this);
-
-    // Folosim QMainWindow ca o fereastr? principal?
-    QMainWindow* mainWindow = new QMainWindow();
+    menuScene->setSceneRect(0, 0, INITIAL_WIDTH, INITIAL_HEIGHT);
+    // Use QMainWindow as the main window
+    mainWindow = new QMainWindow();
 
     graphicsView = new QGraphicsView();
     graphicsView->setScene(menuScene);
 
     mainWindow->setCentralWidget(graphicsView);
     mainWindow->setWindowTitle("Fereastra mea");
-    mainWindow->setMinimumSize(800, 600);
+    mainWindow->setMinimumSize(INITIAL_WIDTH, INITIAL_HEIGHT);
+
 
     connect(menuScene, &MenuScene::playClicked, this, &MyWindow::switchToGameScene);
 
-    // Alte conexiuni pentru alte ac?iuni din meniu
+
+    // Other connections for other menu actions
     // ...
 
-    // Afi??m fereastra principal?
+    // Show the main window
     mainWindow->show();
 }
 
