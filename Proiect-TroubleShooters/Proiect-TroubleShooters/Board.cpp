@@ -165,7 +165,6 @@ bool Board::isBridgeBetween(const uint16_t& x1, const uint16_t& y1, const uint16
     return false;
 }
 
-
 bool Board::availableWay(const uint16_t& x, const uint16_t& y, const uint16_t& sign, const bool& vertical)
 {
     if(vertical)
@@ -416,9 +415,16 @@ void Board::reset()
 std::ostream& operator<<(std::ostream& out, const Board& B)
 {
     out << B.size << '\n';
-    out << B.pieces.size() << '\n';
-    for (int i = 0; i < B.pieces.size(); i++)
-        out << B.pieces[i] << '\n';
+    uint16_t pieces = 0;
+    for (uint16_t i = 0; i < B.size; i++)
+        for (uint16_t j = 0; j < B.size; j++)
+            if (B.board[i][j].getColor() != None)
+                pieces++;
+    out << pieces << '\n';
+    for (uint16_t i = 0; i < B.size; i++)
+        for (uint16_t j = 0; j < B.size; j++)
+            if (B.board[i][j].getColor() != None)
+                out << B.board[i][j] << '\n';
     out << B.bridges.size() << '\n';
     for (int i = 0; i < B.bridges.size(); i++)
         out << B.bridges[i] << '\n';
@@ -434,11 +440,12 @@ std::istream& operator>>(std::istream& in, Board& B)
     uint16_t size;
     in >> size;
     Board aux(size);
-    uint16_t piecesSize;
-    in >> piecesSize;
-    for (uint16_t i{ 0 }; i < piecesSize; i++) {
-        in >> aux.pieces[i];
-        aux(aux.pieces[i].getX(), aux.pieces[i].getY()) = aux.pieces[i];
+    uint16_t pieces;
+    in >> pieces;
+    Piece p;
+    for (uint16_t i = 0; i < pieces; i++) {
+        in >> p;
+        aux(p.getX(), p.getY()) = p;
     }
     uint16_t bridgesSize;
     in >> bridgesSize;
