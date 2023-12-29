@@ -17,16 +17,10 @@ const uint16_t& Piece::getY() const
     return y;
 }
 
-bool Piece::operator==(const Piece& other) const
-{
-    if (m_color != other.m_color)
-        return false;
-    if (x != other.getX())
-        return false;
-    if (y != other.getY())
-        return false;
-    return true;
+bool Piece::operator==(const Piece& other) const {
+    return (m_color == other.m_color) && (x == other.x) && (y == other.y);
 }
+
 
 std::ostream& operator<<(std::ostream& out, const Piece& piece)
 {

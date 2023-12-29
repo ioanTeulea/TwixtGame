@@ -42,7 +42,7 @@ public:
     bool placePiece(const Piece& newPiece);
 
     bool placeBridge(Piece& piece1,Piece& piece2);
-    void deleteBridge(Piece p1, Piece p2);
+    void deleteBridge(const Piece& p1,const Piece& p2);
     bool isBridgeBetween(const uint16_t& x1, const uint16_t& y1, const uint16_t& x2, const uint16_t& y2);
     bool availableWay(const uint16_t& x, const uint16_t& y, const uint16_t& sign, const bool& vertical);
     bool canPlaceBridge(const Piece& piece1, const Piece& piece2);

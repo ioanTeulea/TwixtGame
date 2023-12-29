@@ -124,16 +124,16 @@ bool Board::placeBridge(Piece& piece1,Piece& piece2)
     
 }
 
-void Board::deleteBridge(Piece p1,Piece p2)
+void Board::deleteBridge(const Piece& p1,const Piece& p2)
 {
     if (p1.getColor() != p2.getColor())
         return;
     else
     {
-        for (auto it = getBridges().begin(); it !=getBridges().end(); ++it) {
+        for (auto it = bridges.begin(); it !=bridges.end(); ++it) {
             if ((it->getPiece1()==p1 && it->getPiece2()==p2) ||
                 (it->getPiece2() == p1 && it->getPiece1() == p2) ){
-                getBridges().erase(it);
+                bridges.erase(it);
                 break;
             }
         }

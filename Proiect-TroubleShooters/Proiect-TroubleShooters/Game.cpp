@@ -138,14 +138,24 @@ void Game::action_addPawn()
 
 void Game::action_deleteBridge()
 {
-    uint16_t x, y;
-     consoleDisplay.displayMessage ("Choose the coordinates of the pillars between which the bridge is:\n");
-     consoleDisplay.displayMessage ("pilon1: ");
-    std::cin >> x >> y;
-    Piece p1(currentPlayer->getColor(), x, y);
-     consoleDisplay.displayMessage ("pilon2: ");
-    std::cin >> x >> y;
-    Piece p2(currentPlayer->getColor(), x, y);
+    uint16_t x1, y1,x2,y2;
+    while (board(x1, y1).getColor() != currentPlayer->getColor() || board(x2, y2).getColor() != currentPlayer->getColor())
+    {
+        if (board(x1, y1).getColor() != currentPlayer->getColor())
+        {
+            consoleDisplay.displayMessage("Different colors\n");
+            consoleDisplay.displayMessage("Choose the coordinates of the pillar1:");
+            std::cin >> x1 >> y1;
+        }
+        if (board(x2, y2).getColor() != currentPlayer->getColor())
+        {
+            consoleDisplay.displayMessage("Different colors\n");
+            consoleDisplay.displayMessage("Choose the coordinates of the pillar2:");
+            std::cin >> x2 >> y2;
+        }
+    }
+    Piece p1(currentPlayer->getColor(), x1, y1);
+    Piece p2(currentPlayer->getColor(), x2, y2);
     board.deleteBridge(p1, p2);
     currentPlayer->setRemainingBridges(currentPlayer->getRemainingBridges() + 1);
 }
@@ -240,10 +250,12 @@ bool Game::checkWin(Color color)
                 if (x.getPiece1().getColor() == color)
                 {
                     if (x.getPiece1() == road.front() && std::find(visited_pieces.begin(), visited_pieces.end(), x.getPiece2()) == visited_pieces.end()) {
+                        visited_pieces.push_back(x.getPiece1());
                         road.push(x.getPiece2());
                         isBridge = true;
                     }
                     else if (x.getPiece2() == road.front() && std::find(visited_pieces.begin(), visited_pieces.end(), x.getPiece1()) == visited_pieces.end()) {
+                        visited_pieces.push_back(x.getPiece2());
                         road.push(x.getPiece1());
                         isBridge = true;
                     }
@@ -370,6 +382,8 @@ void Game::Play_menu()
                     consoleDisplay.displayMessage("\n");
                     consoleDisplay.displayBoard(board);
                     consoleDisplay.displayPlayerInfo(*currentPlayer);
+                    if (checkGameResult())
+                        return;
                 }
                 else
                     consoleDisplay.displayMessage("You must place a piece!\n");
