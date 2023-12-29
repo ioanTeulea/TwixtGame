@@ -1,11 +1,11 @@
 #include "Board.h"
 
 // Constructor
-Board::Board(uint16_t boardSize) : size(boardSize), board(boardSize, std::vector<Piece>(boardSize)), pieces(), bridges(), engine(std::random_device{}()) {
+Board::Board(uint16_t boardSize) : size(boardSize), board(boardSize, std::vector<Piece>(boardSize)), bridges(), engine(std::random_device{}()) {
     
 }
 // Copy constructor
-Board::Board(const Board& other) : size(other.size), board(other.board), pieces(other.pieces), bridges(other.bridges), dozer(other.dozer) {
+Board::Board(const Board& other) : size(other.size), board(other.board), bridges(other.bridges), dozer(other.dozer) {
 }
 
 // Copy assignment operator
@@ -13,7 +13,6 @@ Board& Board::operator=(const Board& other) {
     if (this != &other) {
         size = other.size;
         board = other.board;
-        pieces = other.pieces;
         dozer = other.dozer;
        // bridges = other.bridges;
     }
@@ -65,10 +64,7 @@ void Board::setSize(std::uint16_t newSize)
 const std::vector<std::vector<Piece>>& Board::getBoard() const {
     return board;
 }
-std::vector<Piece>& Board::getPieces()
-{
-    return pieces;
-}
+
 std::vector<Bridge>& Board::getBridges()
 {
     return bridges;
@@ -78,11 +74,6 @@ std::vector<Bridge>& Board::getBridges()
 {
     // Presupunând c? x ?i y sunt indici valizi
     return board[x][y];
-}
-
-void Board::deletePieces()
-{
-    pieces.clear();
 }
 
 void Board::deleteBridges()
@@ -155,7 +146,6 @@ bool Board::placePiece(const Piece & newPiece)
             }
         }
       board[newPiece.getX()][newPiece.getY()] = newPiece;
-      pieces.push_back(newPiece);
       return true;
     }
     return false;
@@ -164,12 +154,9 @@ bool Board::placePiece(const Piece & newPiece)
 bool Board::isBridgeBetween(const uint16_t& x1, const uint16_t& y1, const uint16_t& x2, const uint16_t& y2)
 {
     Piece piece1, piece2;
-    for (const Piece& piece :pieces)
-    {
-        if (piece.getX() == x1 && piece.getY() == y1) { piece1 = piece; }
-        if (piece.getX() == x2 && piece.getY() == y2) { piece2 = piece; }
-    }
-    if (piece1.getColor()== piece2.getColor())
+    piece1 = board[x1][y1];
+    piece2 = board[x2][y2];
+    if (piece1.getColor() != None && piece1.getColor() == piece2.getColor())
         for (const auto& bridge : bridges)
         {
             if ((bridge.getPiece1() == piece1 && bridge.getPiece2() == piece2) || (bridge.getPiece2() == piece1 && bridge.getPiece1() == piece2))
@@ -280,7 +267,7 @@ bool Board::canPlaceBridge(const Piece& piece1, const Piece& piece2)
     return true;
 }
 
-Piece Board::dozerTurn(int& piece_location,const std::uint16_t& percentage)
+Piece Board::dozerTurn(int& piece_location, const std::uint16_t& percentage)
 {
     int dozer_action;
     {
@@ -289,17 +276,25 @@ Piece Board::dozerTurn(int& piece_location,const std::uint16_t& percentage)
     }
     if (dozer_action <= percentage)
     {
-        std::uniform_int_distribution<int> distribution(0, pieces.size() - 1);
-        piece_location = distribution(engine);
-        Piece& chosen_piece = pieces[piece_location];
-        dozer = { chosen_piece.getX(),chosen_piece.getY() };
-        return chosen_piece;
-    }
-    else
-    {
-        generateRandomPiece();
-        Piece emptyPiece;
-        return emptyPiece;
+        if (size != 0)
+        {
+            uint16_t x, y;
+            do
+            {
+                std::uniform_int_distribution<int> distribution(1, size - 2);
+                x = distribution(engine);
+                y = distribution(engine);
+            } while (!isOccupied(x, y));
+            Piece& chosen_piece = board[x][y];
+            dozer = { x,y };
+            return chosen_piece;
+        }
+        else
+        {
+            generateRandomPiece();
+            Piece emptyPiece;
+            return emptyPiece;
+        }
     }
 }
 
@@ -341,12 +336,10 @@ std::pair<std::uint16_t, std::uint16_t> Board::generateRandomPiece()
     return dozer;
 }
 
-void Board::deletePiece(Piece chosen_piece,int piece_location)
+void Board::deletePiece(Piece chosen_piece)
 {
     Piece empty;
     board[dozer.first][dozer.second] = empty;
-    pieces.erase(pieces.begin() + piece_location);
-   
 }
 
 void Board::generateMines(const uint16_t& mines_nr)
@@ -378,9 +371,6 @@ void Board::explode(const std::tuple<uint16_t, uint16_t, uint16_t>& mine)
                             bridges.erase(bridges.begin() + t);
                     }
                 }
-                for (int t = 0; t < pieces.size(); t++)
-                    if (pieces[t] == board[i][j])
-                        pieces.erase(pieces.begin()+t);
                 Piece empty;
                 board[i][j] = empty;
             }
@@ -393,9 +383,6 @@ void Board::explode(const std::tuple<uint16_t, uint16_t, uint16_t>& mine)
                     if (bridges[t].getPiece1() == board[std::get<0>(mine)][j] || bridges[t].getPiece2() == board[std::get<0>(mine)][j])
                        bridges.erase(bridges.begin() + t);
             }
-            for (int t = 0; t < pieces.size(); t++)
-                if (pieces[t] == board[std::get<0>(mine)][j])
-                    pieces.erase(pieces.begin() + t);
             Piece empty;
             board[std::get<0>(mine)][j] = empty;
         }
@@ -408,9 +395,6 @@ void Board::explode(const std::tuple<uint16_t, uint16_t, uint16_t>& mine)
                     if (bridges[t].getPiece1() == board[i][std::get<1>(mine)] || bridges[t].getPiece2() == board[i][std::get<1>(mine)])
                         bridges.erase(bridges.begin() + t);
             }
-            for (int t = 0; t < pieces.size(); t++)
-                if (pieces[t] == board[i][std::get<1>(mine)])
-                    pieces.erase(pieces.begin() + t);
             Piece empty;
             board[i][std::get<1>(mine)] = empty;
         }

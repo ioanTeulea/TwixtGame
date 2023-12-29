@@ -7,8 +7,6 @@
 class Board
 {
     std::uint16_t size; // Dimensiunea tablei
-  
-    std::vector<Piece> pieces;
     std::vector<Bridge> bridges;
     std::mt19937 engine;
     std::vector<std::tuple<uint16_t, uint16_t, uint16_t>> mines; // Vector de mine care detine coordonatele si tipul minei
@@ -29,12 +27,10 @@ public:
     void setSize(std::uint16_t newSize);
 
     const std::vector<std::vector<Piece>>& getBoard() const;
-    std::vector<Piece>& getPieces();
     std::vector<Bridge>& getBridges();
 
      Piece& operator()(uint16_t x, uint16_t y); // Operatorul () pentru accesul la piese
 
-    void deletePieces();
     void deleteBridges();
 
     bool isValidLocation(uint16_t x, uint16_t y) const;
@@ -50,7 +46,7 @@ public:
     Piece dozerTurn(int& piece_location, const std::uint16_t& percentage);
     uint16_t delete_DozerBridges(Piece random_piece);
     std::pair<std::uint16_t, std::uint16_t> generateRandomPiece();
-    void deletePiece(Piece chosen_piece, int piece_location);
+    void deletePiece(Piece chosen_piece);
     void generateMines(const uint16_t& mines_nr);
     void explode(const std::tuple<uint16_t, uint16_t, uint16_t>& mine);
     void reset();
