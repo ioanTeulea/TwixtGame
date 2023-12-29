@@ -10,6 +10,7 @@ class Board
   
     std::vector<Piece> pieces;
     std::vector<Bridge> bridges;
+    std::mt19937 engine;
     std::vector<std::tuple<uint16_t, uint16_t, uint16_t>> mines; // Vector de mine care detine coordonatele si tipul minei
 
 public:

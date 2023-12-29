@@ -35,7 +35,7 @@ void Game::switchPlayerColors()
 
 void Game::Setup()
 {
-    
+
     Board tempboard(board.getSize());
     board = std::move(tempboard);
     consoleDisplay.displayBoard(board);
@@ -64,37 +64,37 @@ void Game::action_placeBridge()
 {
     uint16_t x1, y1, x2, y2;
     bool bridge_placed = false;
-     consoleDisplay.displayMessage (("Choose the coordinates of the pillar1: "));
+    consoleDisplay.displayMessage(("Choose the coordinates of the pillar1: "));
     std::cin >> x1 >> y1;
-     consoleDisplay.displayMessage (("\nChoose the coordinates of the pillar2: "));
+    consoleDisplay.displayMessage(("\nChoose the coordinates of the pillar2: "));
     std::cin >> x2 >> y2;
     while (!board.isOccupied(x1, y1) || !board.isOccupied(x2, y2))
     {
-         consoleDisplay.displayMessage ("Invalid location\n");
+        consoleDisplay.displayMessage("Invalid location\n");
         if (!board.isOccupied(x1, y1))
         {
-             consoleDisplay.displayMessage ("Choose the coordinates of the pillar1:");
+            consoleDisplay.displayMessage("Choose the coordinates of the pillar1:");
             std::cin >> x1 >> y1;
         }
         if (!board.isOccupied(x2, y2))
         {
-             consoleDisplay.displayMessage ("\nChoose the coordinates of the pillar2: ");
+            consoleDisplay.displayMessage("\nChoose the coordinates of the pillar2: ");
             std::cin >> x2 >> y2;
 
         }
     }
-    while (board(x1, y1).getColor()!=currentPlayer->getColor()|| board(x2, y2).getColor() != currentPlayer->getColor())
+    while (board(x1, y1).getColor() != currentPlayer->getColor() || board(x2, y2).getColor() != currentPlayer->getColor())
     {
-        if(board(x1, y1).getColor() != currentPlayer->getColor())
-        { 
-             consoleDisplay.displayMessage ("Different colors\n");
-             consoleDisplay.displayMessage ("Choose the coordinates of the pillar1:");
+        if (board(x1, y1).getColor() != currentPlayer->getColor())
+        {
+            consoleDisplay.displayMessage("Different colors\n");
+            consoleDisplay.displayMessage("Choose the coordinates of the pillar1:");
             std::cin >> x1 >> y1;
         }
         if (board(x2, y2).getColor() != currentPlayer->getColor())
         {
-             consoleDisplay.displayMessage ("Different colors\n");
-             consoleDisplay.displayMessage ("Choose the coordinates of the pillar2:");
+            consoleDisplay.displayMessage("Different colors\n");
+            consoleDisplay.displayMessage("Choose the coordinates of the pillar2:");
             std::cin >> x2 >> y2;
         }
     }
@@ -104,7 +104,7 @@ void Game::action_placeBridge()
     }
     else
     {
-         consoleDisplay.displayMessage ("The bridge can't be placed.");
+        consoleDisplay.displayMessage("The bridge can't be placed.");
     }
 }
 
@@ -113,13 +113,13 @@ void Game::action_addPawn()
     uint16_t x, y;
     bool piece_placed = false;
     while (!piece_placed) {
-         consoleDisplay.displayMessage ("Choose the coordinates of the pillar: ");
+        consoleDisplay.displayMessage("Choose the coordinates of the pillar: ");
         std::cin >> x >> y;
         if (currentPlayer->getColor() == Red && (y == 0 || y == board.getSize() - 1)) {
-             consoleDisplay.displayMessage ("Can't do that!\n");
+            consoleDisplay.displayMessage("Can't do that!\n");
         }
         else if (currentPlayer->getColor() == Black && (x == 0 || x == board.getSize() - 1)) {
-             consoleDisplay.displayMessage ("Can't do that!\n");
+            consoleDisplay.displayMessage("Can't do that!\n");
         }
         else {
             Piece newPiece(currentPlayer->getColor(), x, y);
@@ -130,7 +130,7 @@ void Game::action_addPawn()
                     currentPlayer->advantage = true;
             }
             else
-                 consoleDisplay.displayMessage ("Can't do that!\n");
+                consoleDisplay.displayMessage("Can't do that!\n");
         }
     }
     currentPlayer->setRemainingPieces(currentPlayer->getRemainingPieces() - 1);
@@ -138,7 +138,7 @@ void Game::action_addPawn()
 
 void Game::action_deleteBridge()
 {
-    uint16_t x1, y1,x2,y2;
+    uint16_t x1, y1, x2, y2;
     while (board(x1, y1).getColor() != currentPlayer->getColor() || board(x2, y2).getColor() != currentPlayer->getColor())
     {
         if (board(x1, y1).getColor() != currentPlayer->getColor())
@@ -162,27 +162,61 @@ void Game::action_deleteBridge()
 
 void Game::display_changingBridges()
 {
-   
-     consoleDisplay.displayMessage ("Add or delete a bridge.\n");
-     consoleDisplay.displayMessage ("1 - Add a bridge, 2 - Delete a bridge\n");
+
+    consoleDisplay.displayMessage("Add or delete a bridge.\n");
+    consoleDisplay.displayMessage("1 - Add a bridge, 2 - Delete a bridge\n");
     uint16_t action1;
     std::cin >> action1;
-   switch (action1)
-   {
-        case 1:
-            action_placeBridge();
-            break;
-        case 2:
-            if (board.getBridges().empty())
-            {
-                 consoleDisplay.displayMessage ("No bridges to modify!");
-                return;
-            }
-            action_deleteBridge();
-            break;
-        default:
-            break;
+    switch (action1)
+    {
+    case 1:
+        action_placeBridge();
+        break;
+    case 2:
+        if (board.getBridges().empty())
+        {
+            consoleDisplay.displayMessage("No bridges to modify!");
+            return;
+        }
+        action_deleteBridge();
+        break;
+    default:
+        break;
     }
+}
+
+void Game::setGameDifficulty()
+{
+    if (difficulty == "Easy")
+        percentage = 10;
+    else
+        if (difficulty == "Medium")
+            percentage = 30;
+        else
+            percentage = 50;
+}
+
+void Game::actionRandomPiece(Piece random_piece, const int& location)
+{
+    if (random_piece.getColor() == Color::Red)
+    {
+        player1.setRemainingPieces(player1.getRemainingPieces() + 1);
+        player1.setRemainingBridges(player1.getRemainingBridges() + board.delete_DozerBridges(random_piece));
+        board.deletePiece(random_piece, location);
+        //un mesaj
+        consoleDisplay.displayMessage("The dozer had destroyed the pillar from coordinates " + std::to_string(random_piece.getX()) + " " + std::to_string(random_piece.getY()) + "\n");
+        consoleDisplay.displayBoard(board);
+    }
+    else
+        if (random_piece.getColor() == Color::Black)
+        {
+            player2.setRemainingPieces(player2.getRemainingPieces() + 1);
+            player2.setRemainingBridges(player2.getRemainingBridges() + board.delete_DozerBridges(random_piece));
+            board.deletePiece(random_piece, location);
+            //un mesaj
+            consoleDisplay.displayMessage("The dozer had destroyed the pillar from coordinates " + std::to_string(random_piece.getX()) + " " + std::to_string(random_piece.getY()) + "\n");
+            consoleDisplay.displayBoard(board);
+        }
 }
 
 void Game::reset()
@@ -229,7 +263,6 @@ bool Game::checkWin(Color color)
     std::vector<Piece> visited_pieces;
     std::vector<Piece> start_pieces;
 
-
     for (const Piece& x : board.getPieces()) {
         if (color == Red && (x.getX() == 0 || x.getX() == 1)) {
             start_pieces.push_back(x);
@@ -273,15 +306,15 @@ bool Game::checkWin(Color color)
 
 bool Game::checkGameResult()
 {
-    if (player1.getRemainingPieces() ==0 && player2.getRemainingPieces() ==0)
+    if (player1.getRemainingPieces() == 0 && player2.getRemainingPieces() == 0)
     {
-         consoleDisplay.displayMessage ("It' s a draw! Both players are out of pieces!\n");
+        consoleDisplay.displayMessage("It' s a draw! Both players are out of pieces!\n");
         return true;
     }
     else
         if (checkWin(currentPlayer->getColor()))
         {
-             consoleDisplay.displayMessage ("Player " + currentPlayer->getName() + " has won!" + "\n");
+            consoleDisplay.displayMessage("Player " + currentPlayer->getName() + " has won!" + "\n");
             return true;
         }
     return false;
@@ -289,7 +322,7 @@ bool Game::checkGameResult()
 
 void Game::forfeitGame()
 {
-     consoleDisplay.displayMessage ("Player " + currentPlayer->getName() + " has forfeited!" + "\n");
+    consoleDisplay.displayMessage("Player " + currentPlayer->getName() + " has forfeited!" + "\n");
 }
 
 //void Game::displayScore() const
@@ -303,31 +336,21 @@ void Game::Play_menu()
     bool firstTurn = true;
     Piece random_piece;
     int location;
-    std::uint16_t percentage;
     board.generateRandomPiece();
     consoleDisplay.displayBoard(board);
-    if (difficulty == "Easy")
-        percentage = 10;
-    else
-        if (difficulty == "Medium")
-            percentage = 30;
-        else
-            percentage = 50;
-    while (currentPlayer->getRemainingPieces() >=0   && !checkGameResult()) {
-        uint16_t x, y;
+    setGameDifficulty();
+    while (currentPlayer->getRemainingPieces() >= 0 && !checkGameResult()) {
         bool placed_piece = false;
         bool moveOn = false;
-        consoleDisplay.displayMessage ('\n' + currentPlayer->getColor()+ "'s turn\n");
+        consoleDisplay.displayMessage('\n' + currentPlayer->getColor() + "'s turn\n");
         consoleDisplay.displayPlayerInfo(*currentPlayer);
         while (!moveOn)
         {
-             consoleDisplay.displayMessage ("Choose an action (1 - place pawn, 2 - modify bridge, ");
+            consoleDisplay.displayMessage("Choose an action (1 - place pawn, 2 - modify bridge, ");
             if (currentPlayer == &player2 && firstTurn == true) {
-                 consoleDisplay.displayMessage ("3 - take over the first piece, ");
+                consoleDisplay.displayMessage("3 - take over the first piece, ");
             }
-             consoleDisplay.displayMessage ("4 - forfeit, ");
-             consoleDisplay.displayMessage ("5 - next player): ");
-            
+            consoleDisplay.displayMessage("4 - forfeit, 5 - next player): ");
             uint16_t action;
             std::cin >> action;
             switch (action) {
@@ -343,36 +366,16 @@ void Game::Play_menu()
                     action_addPawn();
                     if (currentPlayer == &player2 && firstTurn == true)
                         firstTurn = false;
-                     consoleDisplay.displayMessage ("\n");
+                    consoleDisplay.displayMessage("\n");
                     consoleDisplay.displayBoard(board);
                     placed_piece = true;
-                    random_piece = board.dozerTurn(location,percentage);
-                        if (random_piece.getColor() == Color::Red)
-                        {
-                            player1.setRemainingPieces(player1.getRemainingPieces() + 1);
-                            player1.setRemainingBridges(player1.getRemainingBridges() + board.delete_DozerBridges(random_piece));
-                            board.deletePiece(random_piece, location);
-                            //un mesaj
-                            consoleDisplay.displayMessage("The dozer had destroyed the pillar from coordinates " + std::to_string(random_piece.getX()) + " " + std::to_string(random_piece.getY()) + "\n");
-                            consoleDisplay.displayBoard(board);
-                        }
-                        else
-                            if (random_piece.getColor() == Color::Black)
-                            {
-                                player2.setRemainingPieces(player2.getRemainingPieces() + 1);
-                                player2.setRemainingBridges(player2.getRemainingBridges() + board.delete_DozerBridges(random_piece));
-                                board.deletePiece(random_piece, location);
-                                //un mesaj
-                                consoleDisplay.displayMessage("The dozer had destroyed the pillar from coordinates " + std::to_string(random_piece.getX()) + " " + std::to_string(random_piece.getY()) + "\n");
-                                consoleDisplay.displayBoard(board);
-                            }
-                            else
-                                if (random_piece.getColor() == Color::None)
-                                    break;
+                    random_piece = board.dozerTurn(location, percentage);
+                    if (random_piece.getColor() != Color::None)
+                        actionRandomPiece(random_piece, location);
                     consoleDisplay.displayPlayerInfo(*currentPlayer);
                 }
                 else
-                     consoleDisplay.displayMessage ("The piece is already added for this time.\n");
+                    consoleDisplay.displayMessage("The piece is already added for this time.\n");
                 break;
 
             case 2:
@@ -392,15 +395,15 @@ void Game::Play_menu()
                 if (currentPlayer == &player2 && firstTurn == true) {
                     switchPlayerColors();
                     firstTurn = false;
-                     consoleDisplay.displayMessage ("\n");
+                    consoleDisplay.displayMessage("\n");
                     consoleDisplay.displayBoard(board);
-                    board.dozerTurn(location,percentage);
+                    board.dozerTurn(location, percentage);
                 }
                 break;
             case 4:
                 forfeitGame();
                 switchPlayer();
-                 consoleDisplay.displayMessage ("Player " + currentPlayer->getName() + " has won!" + "\n");
+                consoleDisplay.displayMessage("Player " + currentPlayer->getName() + " has won!" + "\n");
                 return;
                 break;
             case 5:
@@ -410,11 +413,10 @@ void Game::Play_menu()
                     switchPlayer();
                 }
                 else
-                     consoleDisplay.displayMessage ("You must place a piece.\n");
+                    consoleDisplay.displayMessage("You must place a piece.\n");
                 break;
             default:
-                 consoleDisplay.displayMessage ("Action not available. Choose 1, 2,");
-                 consoleDisplay.displayMessage ("3, 4, 5\n");
+                consoleDisplay.displayMessage("Action not available. Choose 1, 2, 3, 4, 5\n");
                 continue; // Continua bucla pentru a alege o actiune valida
             }
         }
@@ -422,7 +424,7 @@ void Game::Play_menu()
 }
 
 void Game::Load_menu() {
-     consoleDisplay.displayMessage ("Choose an action: (1 - Start a new game, 2 - Load an existing one): ");
+    consoleDisplay.displayMessage("Choose an action: (1 - Start a new game, 2 - Load an existing one): ");
     while (1) {
         uint16_t action;
         std::cin >> action;
@@ -434,14 +436,14 @@ void Game::Load_menu() {
             Load("in.txt");
             return;
         default:
-             consoleDisplay.displayMessage ("Action not available. Choose 1, 2.\n");
+            consoleDisplay.displayMessage("Action not available. Choose 1, 2.\n");
             continue;
         }
     }
 }
 
 void Game::Restart_menu(bool& exit) {
-     consoleDisplay.displayMessage ("Choose an action: (1 - Play again, 2 - Exit): ");
+    consoleDisplay.displayMessage("Choose an action: (1 - Play again, 2 - Exit): ");
     while (1) {
         uint16_t action;
         std::cin >> action;
@@ -455,7 +457,7 @@ void Game::Restart_menu(bool& exit) {
             exit = true;
             return;
         default:
-             consoleDisplay.displayMessage ("Action not available. Choose 1, 2.\n");
+            consoleDisplay.displayMessage("Action not available. Choose 1, 2.\n");
             continue;
         }
     }
@@ -463,7 +465,7 @@ void Game::Restart_menu(bool& exit) {
 
 void Game::setBoardSize(const int boardSize)
 {
-    board.setSize(boardSize); 
+    board.setSize(boardSize);
 }
 void Game::setDifficulty(const QString& diff)
 {

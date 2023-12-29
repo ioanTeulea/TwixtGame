@@ -1,7 +1,7 @@
 #include "Board.h"
 
 // Constructor
-Board::Board(uint16_t boardSize) : size(boardSize), board(boardSize, std::vector<Piece>(boardSize)), pieces(), bridges() {
+Board::Board(uint16_t boardSize) : size(boardSize), board(boardSize, std::vector<Piece>(boardSize)), pieces(), bridges(), engine(std::random_device{}()) {
     
 }
 // Copy constructor
@@ -285,15 +285,11 @@ Piece Board::dozerTurn(int& piece_location,const std::uint16_t& percentage)
     int dozer_action;
     {
         std::uniform_int_distribution<int> distribution(1, 100);
-        std::random_device rd;
-        std::mt19937 engine(rd());
         dozer_action = distribution(engine);
     }
     if (dozer_action <= percentage)
     {
         std::uniform_int_distribution<int> distribution(0, pieces.size() - 1);
-        std::random_device rd;
-        std::mt19937 engine(rd());
         piece_location = distribution(engine);
         Piece& chosen_piece = pieces[piece_location];
         dozer = { chosen_piece.getX(),chosen_piece.getY() };
@@ -337,12 +333,8 @@ std::pair<std::uint16_t, std::uint16_t> Board::generateRandomPiece()
         do
         {
             std::uniform_int_distribution<int> distribution(1, getSize() - 2);
-            std::random_device rd1;
-            std::mt19937 eng1(rd1());
-            x = distribution(eng1);
-            std::random_device rd2;
-            std::mt19937 eng2(rd2());
-            y = distribution(eng2);
+            x = distribution(engine);
+            y = distribution(engine);
         } while (isOccupied(x, y));
         dozer = { x,y };
     }
@@ -362,18 +354,11 @@ void Board::generateMines(const uint16_t& mines_nr)
     for (int i{ 0 }; i < mines_nr; i++) {
         uint16_t x, y, type;
         std::uniform_int_distribution<int> distribution1(1, size - 2);
-        std::random_device rd1;
-        std::mt19937 eng1(rd1());
-        x = distribution1(eng1);
-
-        std::random_device rd2;
-        std::mt19937 eng2(rd2());
-        y = distribution1(eng2);
+        x = distribution1(engine);
+        y = distribution1(engine);
 
         std::uniform_int_distribution<int> distribution2(1, 3);
-        std::random_device rd3;
-        std::mt19937 eng3(rd3());
-        type = distribution2(eng3);
+        type = distribution2(engine);
 
         mines.push_back(std::make_tuple(x, y, type));
     }

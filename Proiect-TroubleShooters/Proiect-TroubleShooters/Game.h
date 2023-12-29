@@ -11,6 +11,7 @@ class Game : public QObject {  // Mo?tene?te QObject
     Player player2;
     ConsoleDisplay consoleDisplay;
     std::string difficulty;
+    uint16_t percentage;
 public:
     Board& board; // Referin?? la tabla de joc
     Player* currentPlayer; // Pointer c?tre juc?torul curent
@@ -26,6 +27,8 @@ public:
     void action_placeBridge();
     void action_deleteBridge();
     void display_changingBridges();
+    void setGameDifficulty();
+    void actionRandomPiece(Piece random_piece, const int& location);
     void reset();
     void Load(const std::string& filename);
     void Save(const std::string& filename);
