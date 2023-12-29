@@ -28,7 +28,7 @@ public:
     void action_deleteBridge();
     void display_changingBridges();
     void setGameDifficulty();
-    void actionRandomPiece(Piece random_piece, const int& location);
+    void actionRandomPiece(Piece random_piece);
     void reset();
     void Load(const std::string& filename);
     void Save(const std::string& filename);

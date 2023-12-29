@@ -196,13 +196,13 @@ void Game::setGameDifficulty()
             percentage = 50;
 }
 
-void Game::actionRandomPiece(Piece random_piece, const int& location)
+void Game::actionRandomPiece(Piece random_piece)
 {
     if (random_piece.getColor() == Color::Red)
     {
         player1.setRemainingPieces(player1.getRemainingPieces() + 1);
         player1.setRemainingBridges(player1.getRemainingBridges() + board.delete_DozerBridges(random_piece));
-        board.deletePiece(random_piece, location);
+        board.deletePiece(random_piece);
         //un mesaj
         consoleDisplay.displayMessage("The dozer had destroyed the pillar from coordinates " + std::to_string(random_piece.getX()) + " " + std::to_string(random_piece.getY()) + "\n");
         consoleDisplay.displayBoard(board);
@@ -212,7 +212,7 @@ void Game::actionRandomPiece(Piece random_piece, const int& location)
         {
             player2.setRemainingPieces(player2.getRemainingPieces() + 1);
             player2.setRemainingBridges(player2.getRemainingBridges() + board.delete_DozerBridges(random_piece));
-            board.deletePiece(random_piece, location);
+            board.deletePiece(random_piece);
             //un mesaj
             consoleDisplay.displayMessage("The dozer had destroyed the pillar from coordinates " + std::to_string(random_piece.getX()) + " " + std::to_string(random_piece.getY()) + "\n");
             consoleDisplay.displayBoard(board);
@@ -223,7 +223,6 @@ void Game::reset()
 {
     board.reset();
     board.deleteBridges();
-    board.deletePieces();
     currentPlayer = &player1;
 }
 
@@ -263,15 +262,17 @@ bool Game::checkWin(Color color)
     std::vector<Piece> visited_pieces;
     std::vector<Piece> start_pieces;
 
-    for (const Piece& x : board.getPieces()) {
-        if (color == Red && (x.getX() == 0 || x.getX() == 1)) {
-            start_pieces.push_back(x);
-        }
-        if (color == Black && (x.getY() == 0 || x.getY() == 1)) {
-            start_pieces.push_back(x);
-        }
+    for (uint16_t i = 0; i < board.getSize(); i++)
+    {
+        if (board(0,i).getColor() == Color::Red || board(1, i).getColor() == Color::Red)
+            start_pieces.push_back(board(0, i));
+        if (board(i, 0).getColor() == Color::Black || board(i,1).getColor() == Color::Black)
+            start_pieces.push_back(board(i, 0));
     }
-
+    for (Piece p : start_pieces)
+    {
+        std::cout << p.getColor() << " " << p.getX() << " " << p.getY() << "\n";
+    }
     while (!start_pieces.empty()) {
         if (std::find(visited_pieces.begin(), visited_pieces.end(), start_pieces.back()) == visited_pieces.end()) {
             road.push(start_pieces.back());
@@ -369,9 +370,9 @@ void Game::Play_menu()
                     consoleDisplay.displayMessage("\n");
                     consoleDisplay.displayBoard(board);
                     placed_piece = true;
-                    random_piece = board.dozerTurn(location, percentage);
+                    random_piece = board.dozerTurn(percentage);
                     if (random_piece.getColor() != Color::None)
-                        actionRandomPiece(random_piece, location);
+                        actionRandomPiece(random_piece);
                     consoleDisplay.displayPlayerInfo(*currentPlayer);
                 }
                 else
@@ -397,7 +398,7 @@ void Game::Play_menu()
                     firstTurn = false;
                     consoleDisplay.displayMessage("\n");
                     consoleDisplay.displayBoard(board);
-                    board.dozerTurn(location, percentage);
+                    board.dozerTurn(percentage);
                 }
                 break;
             case 4:

@@ -151,9 +151,11 @@ bool Board::placePiece(const Piece & newPiece)
     return false;
 }
 
-bool Board::isBridgeBetween(const uint16_t& x1, const uint16_t& y1, const uint16_t& x2, const uint16_t& y2)
+bool Board::isBridgeBetween(const int16_t& x1, const int16_t& y1, const int16_t& x2, const int16_t& y2)
 {
-    Piece piece1, piece2;
+    Piece piece1, piece2; 
+    if (x1 < 0 || x2 < 0 || y1 < 0 || y2 < 0)
+        return false;
     piece1 = board[x1][y1];
     piece2 = board[x2][y2];
     if (piece1.getColor() != None && piece1.getColor() == piece2.getColor())
@@ -165,7 +167,7 @@ bool Board::isBridgeBetween(const uint16_t& x1, const uint16_t& y1, const uint16
     return false;
 }
 
-bool Board::availableWay(const uint16_t& x, const uint16_t& y, const uint16_t& sign, const bool& vertical)
+bool Board::availableWay(const int16_t& x, const int16_t& y, const int16_t& sign, const bool& vertical)
 {
     if(vertical)
     {
@@ -266,36 +268,36 @@ bool Board::canPlaceBridge(const Piece& piece1, const Piece& piece2)
     return true;
 }
 
-Piece Board::dozerTurn(int& piece_location, const std::uint16_t& percentage)
+Piece Board::dozerTurn(const std::uint16_t& percentage)
 {
     int dozer_action;
     {
         std::uniform_int_distribution<int> distribution(1, 100);
         dozer_action = distribution(engine);
     }
-    if (dozer_action <= percentage)
+
+    if (dozer_action <= percentage && size > 0)
     {
-        if (size != 0)
+        std::cout << percentage << "\n";
+
+        uint16_t x, y;
+        do
         {
-            uint16_t x, y;
-            do
-            {
-                std::uniform_int_distribution<int> distribution(1, size - 2);
-                x = distribution(engine);
-                y = distribution(engine);
-            } while (!isOccupied(x, y));
-            Piece& chosen_piece = board[x][y];
-            dozer = { x,y };
-            return chosen_piece;
-        }
-        else
-        {
-            generateRandomPiece();
-            Piece emptyPiece;
-            return emptyPiece;
-        }
+            std::uniform_int_distribution<int> distribution(1, size - 2);
+            x = distribution(engine);
+            y = distribution(engine);
+        } while (!isOccupied(x, y));
+
+        dozer = { x, y };
+        return board[x][y];
+    }
+    else
+    {
+        generateRandomPiece();
+        return board[dozer.first][dozer.second];
     }
 }
+
 
 uint16_t Board::delete_DozerBridges(Piece random_piece)
 {
