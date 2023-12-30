@@ -39,12 +39,12 @@ void Game::Setup()
     Board tempboard(board.getSize());
     board = std::move(tempboard);
     consoleDisplay.displayBoard(board);
-    uint16_t maxPieces = (board.getSize() * board.getSize() / 2);
+    uint16_t maxPieces = (board.getSize() * 0,8);
     if (difficulty == "Medium")
-        maxPieces *= 0.8;
+        maxPieces = (board.getSize() * 0,65);
     else
         if (difficulty == "Hard")
-            maxPieces *= 0.6;
+            maxPieces = (board.getSize() * 0, 65);
     player1.setInitialValues(maxPieces);
     player2.setInitialValues(maxPieces);
     if (difficulty == "Hard")
@@ -188,7 +188,7 @@ void Game::display_changingBridges()
 void Game::setGameDifficulty()
 {
     if (difficulty == "Easy")
-        percentage = 10;
+        percentage = 0;
     else
         if (difficulty == "Medium")
             percentage = 30;
@@ -243,6 +243,9 @@ void Game::Load(const std::string& filename)
         this->currentPlayer = &p1;
     else
         this->currentPlayer = &p2;
+    std::string diff;
+    in >> diff;
+    difficulty = diff;
 }
 
 void Game::Save(const std::string& filename)
@@ -488,7 +491,8 @@ std::ostream& operator<<(std::ostream& out, const Game& game)
     out << game.player1 << '\n';
     out << game.player2 << '\n';
     out << game.board << '\n';
-    out << game.currentPlayer->getColor();
+    out << game.currentPlayer->getColor() << '\n';
+    out << game.difficulty;
     return out;
 }
 
@@ -503,5 +507,8 @@ std::istream& operator>>(std::istream& in, Game& game)
         game.currentPlayer = &game.player1;
     else
         game.currentPlayer = &game.player2;
+    std::string difficulty;
+    in >> difficulty;
+    game.difficulty = difficulty;
     return in;
 }
