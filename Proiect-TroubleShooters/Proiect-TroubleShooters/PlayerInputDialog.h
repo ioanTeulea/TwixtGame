@@ -2,7 +2,7 @@
 #include <QDialog>
 #include <QString>
 #include <QLineEdit>
-#include<QLabel>
+#include <QLabel>
 #include <QPushButton>
 #include <QSpinBox>
 #include <QComboBox>

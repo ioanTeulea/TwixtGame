@@ -15,6 +15,9 @@ PlayerInputDialog::PlayerInputDialog(QWidget* parent) : QDialog(parent) {
     m_difficultyComboBox->addItem("Medium");
     m_difficultyComboBox->addItem("Hard");
 
+    m_difficultyComboBox->setItemData(0, "Plenty of pieces, no Dozer, no Mines", Qt::ToolTipRole);
+    m_difficultyComboBox->setItemData(1, "Fewer pieces, Dozer enabled, no Mines", Qt::ToolTipRole);
+    m_difficultyComboBox->setItemData(2, "Fewer pieces, higher chances for Dozer, Mines enabled", Qt::ToolTipRole);
 
     // Creeaza butoanele OK si Anulare
     QPushButton* okButton = new QPushButton("OK", this);

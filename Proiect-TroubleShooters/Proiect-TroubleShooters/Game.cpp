@@ -39,12 +39,14 @@ void Game::Setup()
     Board tempboard(board.getSize());
     board = std::move(tempboard);
     consoleDisplay.displayBoard(board);
-    uint16_t maxPieces = (board.getSize() * 0,8);
-    if (difficulty == "Medium")
-        maxPieces = (board.getSize() * 0,65);
-    else
-        if (difficulty == "Hard")
-            maxPieces = (board.getSize() * 0, 65);
+    uint16_t maxPieces;
+    if (difficulty == "Easy") {
+        maxPieces = (board.getSize() * 0.8);
+    }
+    else{
+        maxPieces = (board.getSize() * 0.65);
+    }
+        
     player1.setInitialValues(maxPieces);
     player2.setInitialValues(maxPieces);
     if (difficulty == "Hard")
