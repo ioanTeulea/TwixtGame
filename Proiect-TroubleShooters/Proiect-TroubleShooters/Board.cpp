@@ -154,7 +154,7 @@ bool Board::placePiece(const Piece & newPiece)
 bool Board::isBridgeBetween(const int16_t& x1, const int16_t& y1, const int16_t& x2, const int16_t& y2)
 {
     Piece piece1, piece2; 
-    if (x1 < 0 || x2 < 0 || y1 < 0 || y2 < 0)
+    if (x1 < 0 || x2 < 0 || y1 < 0 || y2 < 0 || x1 > size - 1 || x2 > size - 1 || y1 > size - 1 || y2 > size - 1)
         return false;
     piece1 = board[x1][y1];
     piece2 = board[x2][y2];
@@ -401,6 +401,7 @@ void Board::explode(const std::tuple<uint16_t, uint16_t, uint16_t>& mine)
     default:
         break;
     }
+    std::cout << "A bomb has exploded!\n";
 }
 
 void Board::reset()

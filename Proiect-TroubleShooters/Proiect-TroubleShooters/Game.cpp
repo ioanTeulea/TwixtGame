@@ -41,10 +41,10 @@ void Game::Setup()
     consoleDisplay.displayBoard(board);
     uint16_t maxPieces;
     if (difficulty == "Easy") {
-        maxPieces = (board.getSize() * 0.8);
+        maxPieces = (board.getSize() * 1.2);
     }
     else{
-        maxPieces = (board.getSize() * 0.65);
+        maxPieces = (board.getSize() * 0.9);
     }
         
     player1.setInitialValues(maxPieces);
@@ -273,12 +273,23 @@ bool Game::checkWin(Color color)
     std::vector<Piece> visited_pieces;
     std::vector<Piece> start_pieces;
 
-    for (uint16_t i = 0; i < board.getSize(); i++)
-    {
-        if (board(0,i).getColor() == Color::Red || board(1, i).getColor() == Color::Red)
-            start_pieces.push_back(board(0, i));
-        if (board(i, 0).getColor() == Color::Black || board(i,1).getColor() == Color::Black)
-            start_pieces.push_back(board(i, 0));
+    if(color==Red){
+        for (uint16_t i = 0; i < board.getSize(); i++)
+        {
+            if (board(0, i).getColor() == Color::Red)
+                start_pieces.push_back(board(0, i));
+            if (board(1, i).getColor() == Color::Red)
+                start_pieces.push_back(board(1, i));
+        }
+    }
+    else {
+        for (uint16_t i = 0; i < board.getSize(); i++)
+        {
+            if (board(i,0).getColor() == Color::Red)
+                start_pieces.push_back(board(i, 0));
+            if (board(i,1).getColor() == Color::Red)
+                start_pieces.push_back(board(i, 1));
+        }
     }
     while (!start_pieces.empty()) {
         if (std::find(visited_pieces.begin(), visited_pieces.end(), start_pieces.back()) == visited_pieces.end()) {
@@ -302,8 +313,8 @@ bool Game::checkWin(Color color)
                     }
                 }
             }
-            if (!isBridge && ((color == 1 && road.front().getX() == board.getSize() - 1 || road.front().getX() == board.getSize() - 2) ||
-                (color == 2 && road.front().getY() == board.getSize() - 1 || road.front().getY() == board.getSize() - 2))) {
+            if (!isBridge && ((color == Red && (road.front().getX() == board.getSize() - 1 || road.front().getX() == board.getSize() - 2)) ||
+                (color == Black && (road.front().getY() == board.getSize() - 1 || road.front().getY() == board.getSize() - 2)))) {
                 return true;
             }
             road.pop();
