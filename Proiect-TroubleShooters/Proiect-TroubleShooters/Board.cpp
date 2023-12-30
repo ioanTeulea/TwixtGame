@@ -278,8 +278,6 @@ Piece Board::dozerTurn(const std::uint16_t& percentage)
 
     if (dozer_action <= percentage && size > 0)
     {
-        std::cout << percentage << "\n";
-
         uint16_t x, y;
         do
         {
