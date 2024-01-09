@@ -29,7 +29,7 @@ int main(int argc, char* argv[]) {
     playerDialog.exec();
     
     // Începe jocul
-    Twixt.Play();
+      //Twixt.Play();
 
     return app.exec();
 }

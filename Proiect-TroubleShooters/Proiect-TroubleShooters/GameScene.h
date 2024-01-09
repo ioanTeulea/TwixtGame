@@ -23,9 +23,14 @@ public:
 
 protected:
     void mousePressEvent(QGraphicsSceneMouseEvent* event) override;
+   // void mouseMoveEvent(QGraphicsSceneMouseEvent* event) override;
+    void mouseReleaseEvent(QGraphicsSceneMouseEvent* event) override;
+
 private:
     qreal cellSize = 50;
     qint32 boardSize = 10;
+    QGraphicsEllipseItem* startEllipse;
+    QList<QGraphicsLineItem*> lines;
 };
 
 #endif // GAMESCENE_H

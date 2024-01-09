@@ -1,6 +1,6 @@
 #include "GameScene.h"
 
-GameScene::GameScene(QObject* parent):QGraphicsScene(parent)
+GameScene::GameScene(QObject* parent):QGraphicsScene(parent), startEllipse(nullptr)
 {
     qreal radius = cellSize / 4.0; // raza cercului
     qreal distance = 1.0 * cellSize; // distan?a între cercuri
@@ -37,6 +37,8 @@ GameScene::GameScene(QObject* parent):QGraphicsScene(parent)
     addLine(middle, yOffset, middle, yOffset + sceneHeight, blackPen);
     middle = xOffset + distance * 0.6;
     addLine(middle, yOffset, middle, yOffset + sceneHeight, blackPen);
+
+    lines = QList<QGraphicsLineItem*>();
 }
 
 void GameScene::showCoordinates(qreal x, qreal y)
@@ -49,32 +51,65 @@ void GameScene::showCoordinates(qreal x, qreal y)
 
 void GameScene::mousePressEvent(QGraphicsSceneMouseEvent* event)
 {
-    // Tratarea evenimentului de click pe un cerc
-    QGraphicsItem* item = itemAt(event->scenePos(), QTransform());
-    if (item)
-    {
-        qDebug() << "Tipul obiectului: " << item->type();
-
-        if (item->type() == QGraphicsEllipseItem::Type)
+    
+        QGraphicsItem* item = itemAt(event->scenePos(), QTransform());
+        if (item && item->type() == QGraphicsEllipseItem::Type)
         {
-            // Schimbare culoare cerc
-            QGraphicsEllipseItem* ellipseItem = qgraphicsitem_cast<QGraphicsEllipseItem*>(item);
-            if (ellipseItem)
-            {
-                ellipseItem->setBrush(QBrush(Qt::red)); // Schimba?i culoarea la cea dorit?
-            }
+            startEllipse = qgraphicsitem_cast<QGraphicsEllipseItem*>(item);
+            startEllipse->setBrush(QBrush(Qt::red));  // Face cercul rosu
 
             qreal centerX = event->scenePos().x();
             qreal centerY = event->scenePos().y();
 
-            // Afi?a?i coordonatele cercului ap?sat
             showCoordinates(centerX, centerY);
         }
-    }
-    else
-    {
-        qDebug() << "Nu s-a gasit niciun cerc la pozitia data.";
-    }
+   
 
     QGraphicsScene::mousePressEvent(event);
+}
+
+//void GameScene::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
+//{
+//    if (selectedEllipse)
+//    {
+//        QPointF start = selectedEllipse->rect().center();
+//        QPointF end = event->scenePos();
+//
+//        if (!draggingLine->scene())
+//        {
+//            addItem(draggingLine);
+//        }
+//
+//        draggingLine->setLine(start.x(), start.y(), end.x(), end.y());
+//    }
+//
+//    QGraphicsScene::mouseMoveEvent(event);
+//}
+
+void GameScene::mouseReleaseEvent(QGraphicsSceneMouseEvent* event)
+{
+    if (startEllipse)
+    {
+        QGraphicsItem* item = itemAt(event->scenePos(), QTransform());
+        if (item && item->type() == QGraphicsEllipseItem::Type)
+        {
+            QGraphicsEllipseItem* endEllipse = qgraphicsitem_cast<QGraphicsEllipseItem*>(item);
+            if (endEllipse != startEllipse)
+            {
+                endEllipse->setBrush(QBrush(Qt::red));  // Face cercul rosu
+                QGraphicsLineItem* line = new QGraphicsLineItem();
+                QPen pen(Qt::red, 2, Qt::SolidLine);  // Linie ro?ie, grosime 2, linie punctat?
+                line->setPen(pen);
+                line->setLine(startEllipse->rect().center().x(), startEllipse->rect().center().y(),
+                    endEllipse->rect().center().x(), endEllipse->rect().center().y());
+                addItem(line);
+                lines.append(line);
+            }
+        }
+
+       
+        startEllipse = nullptr;
+    }
+
+    QGraphicsScene::mouseReleaseEvent(event);
 }
