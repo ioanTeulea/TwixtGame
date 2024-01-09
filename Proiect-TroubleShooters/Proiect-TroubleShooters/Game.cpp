@@ -285,9 +285,9 @@ bool Game::checkWin(Color color)
     else {
         for (uint16_t i = 0; i < board.getSize(); i++)
         {
-            if (board(i,0).getColor() == Color::Red)
+            if (board(i,0).getColor() == Color::Black)
                 start_pieces.push_back(board(i, 0));
-            if (board(i,1).getColor() == Color::Red)
+            if (board(i,1).getColor() == Color::Black)
                 start_pieces.push_back(board(i, 1));
         }
     }
@@ -313,8 +313,8 @@ bool Game::checkWin(Color color)
                     }
                 }
             }
-            if (!isBridge && ((color == Red && (road.front().getX() == board.getSize() - 1 || road.front().getX() == board.getSize() - 2)) ||
-                (color == Black && (road.front().getY() == board.getSize() - 1 || road.front().getY() == board.getSize() - 2)))) {
+            if (!isBridge && ((color == 1 && (road.front().getX() == board.getSize() - 1 || road.front().getX() == board.getSize() - 2)) ||
+                (color == 2 && (road.front().getY() == board.getSize() - 1 || road.front().getY() == board.getSize() - 2)))) {
                 return true;
             }
             road.pop();
@@ -352,6 +352,8 @@ void Game::forfeitGame()
 
 void Game::Play_menu()
 {
+    std::ifstream fin("game.in");
+    std::ofstream fout("game.out");
     bool firstTurn = true;
     Piece random_piece;
     int location;
@@ -369,7 +371,7 @@ void Game::Play_menu()
             if (currentPlayer == &player2 && firstTurn == true) {
                 consoleDisplay.displayMessage("3 - take over the first piece, ");
             }
-            consoleDisplay.displayMessage("4 - forfeit, 5 - next player): ");
+            consoleDisplay.displayMessage("4 - forfeit, 5 - next player, 6 - save the game): ");
             uint16_t action;
             std::cin >> action;
             switch (action) {
@@ -432,8 +434,11 @@ void Game::Play_menu()
                 else
                     consoleDisplay.displayMessage("You must place a piece.\n");
                 break;
+            case 6:
+                //Save("out.txt");
+                break;
             default:
-                consoleDisplay.displayMessage("Action not available. Choose 1, 2, 3, 4, 5\n");
+                consoleDisplay.displayMessage("Action not available. Choose 1, 2, 3, 4, 5, 6\n");
                 continue; // Continua bucla pentru a alege o actiune valida
             }
         }
