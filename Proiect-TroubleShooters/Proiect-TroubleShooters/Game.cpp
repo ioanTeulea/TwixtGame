@@ -43,10 +43,10 @@ void Game::Setup()
     if (difficulty == "Easy") {
         maxPieces = (board.getSize() * 1.2);
     }
-    else{
+    else {
         maxPieces = (board.getSize() * 0.9);
     }
-        
+
     player1.setInitialValues(maxPieces);
     player2.setInitialValues(maxPieces);
     if (difficulty == "Hard")
@@ -141,6 +141,10 @@ void Game::action_addPawn()
 void Game::action_deleteBridge()
 {
     uint16_t x1, y1, x2, y2;
+    consoleDisplay.displayMessage(("Choose the coordinates of the pillar1: "));
+    std::cin >> x1 >> y1;
+    consoleDisplay.displayMessage(("\nChoose the coordinates of the pillar2: "));
+    std::cin >> x2 >> y2;
     while (board(x1, y1).getColor() != currentPlayer->getColor() || board(x2, y2).getColor() != currentPlayer->getColor())
     {
         if (board(x1, y1).getColor() != currentPlayer->getColor())
@@ -248,9 +252,10 @@ void Game::Load(const std::string& filename)
     uint16_t color;
     in >> color;
     if (static_cast<Color>(color) == p1.getColor())
-        this->currentPlayer = &p1;
+        this->currentPlayer = &this->player1;
     else
-        this->currentPlayer = &p2;
+        if (static_cast<Color>(color) == p2.getColor())
+            this->currentPlayer = &this->player2;
     std::string diff;
     in >> diff;
     difficulty = diff;
@@ -259,7 +264,7 @@ void Game::Load(const std::string& filename)
 void Game::Save(const std::string& filename)
 {
     std::ofstream out(filename);
-    out << this;
+    out << *this;
 }
 
 
@@ -273,7 +278,7 @@ bool Game::checkWin(Color color)
     std::vector<Piece> visited_pieces;
     std::vector<Piece> start_pieces;
 
-    if(color==Red){
+    if (color == Red) {
         for (uint16_t i = 0; i < board.getSize(); i++)
         {
             if (board(0, i).getColor() == Color::Red)
@@ -285,9 +290,9 @@ bool Game::checkWin(Color color)
     else {
         for (uint16_t i = 0; i < board.getSize(); i++)
         {
-            if (board(i,0).getColor() == Color::Black)
+            if (board(i, 0).getColor() == Color::Black)
                 start_pieces.push_back(board(i, 0));
-            if (board(i,1).getColor() == Color::Black)
+            if (board(i, 1).getColor() == Color::Black)
                 start_pieces.push_back(board(i, 1));
         }
     }
@@ -352,18 +357,20 @@ void Game::forfeitGame()
 
 void Game::Play_menu()
 {
-    std::ifstream fin("game.in");
-    std::ofstream fout("game.out");
+    //std::ifstream fin("game.in");
+   // std::ofstream fout("game.out");
+
     bool firstTurn = true;
     Piece random_piece;
     int location;
     board.generateRandomPiece();
     consoleDisplay.displayBoard(board);
     setGameDifficulty();
+    std::cout << currentPlayer->getName() << " ";
     while (currentPlayer->getRemainingPieces() >= 0 && !checkGameResult()) {
         bool placed_piece = false;
         bool moveOn = false;
-        consoleDisplay.displayMessage('\n' + currentPlayer->getColor() + "'s turn\n");
+        consoleDisplay.displayMessage('\n' + currentPlayer->getName() + "'s turn\n");
         consoleDisplay.displayPlayerInfo(*currentPlayer);
         while (!moveOn)
         {
@@ -435,7 +442,7 @@ void Game::Play_menu()
                     consoleDisplay.displayMessage("You must place a piece.\n");
                 break;
             case 6:
-                //Save("out.txt");
+                Save("out_in.txt");
                 break;
             default:
                 consoleDisplay.displayMessage("Action not available. Choose 1, 2, 3, 4, 5, 6\n");
@@ -455,7 +462,7 @@ void Game::Load_menu() {
         case 1:
             return;
         case 2:
-            Load("in.txt");
+            Load("out_in.txt");
             return;
         default:
             consoleDisplay.displayMessage("Action not available. Choose 1, 2.\n");
@@ -497,8 +504,9 @@ void Game::setDifficulty(const QString& diff)
 void Game::Play() {
     bool exit = false;
     while (!exit) {
-        Load_menu();
         Setup();
+        Load_menu();
+
         Play_menu();
         Restart_menu(exit);
     }
@@ -524,7 +532,8 @@ std::istream& operator>>(std::istream& in, Game& game)
     if (static_cast<Color>(color) == game.player1.getColor())
         game.currentPlayer = &game.player1;
     else
-        game.currentPlayer = &game.player2;
+        if (static_cast<Color>(color) == game.player2.getColor())
+            game.currentPlayer = &game.player2;
     std::string difficulty;
     in >> difficulty;
     game.difficulty = difficulty;
