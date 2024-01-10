@@ -14,6 +14,8 @@ class MyWindow : public QObject
 
 public:
     MyWindow();
+    MenuScene* getMenuScene() const;
+    GameScene* getGameScene() const;
 
 public slots:
     void switchToGameScene();
@@ -23,6 +25,7 @@ private:
     GameScene* gameScene;
     QGraphicsView* graphicsView;
     QMainWindow* mainWindow;
+    MyWindow(const MyWindow&) = delete;
 };
 
 #endif // MYWINDOW_H

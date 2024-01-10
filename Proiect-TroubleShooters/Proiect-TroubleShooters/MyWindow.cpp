@@ -1,13 +1,14 @@
 #include "MyWindow.h"
 #include "PlayerInputDialog.h"
+#include "Game.h"
 #include <QDebug>
-#define INITIAL_WIDTH 800
-#define INITIAL_HEIGHT 600
+#define INITIAL_WIDTH 1000
+#define INITIAL_HEIGHT 800
 MyWindow::MyWindow()
     : QObject(nullptr)
 {
-    menuScene = new MenuScene(this);
-    gameScene = new GameScene(this);
+    menuScene = new MenuScene(this, INITIAL_WIDTH, INITIAL_HEIGHT);
+    gameScene = new GameScene(this, INITIAL_WIDTH, INITIAL_HEIGHT);
     menuScene->setSceneRect(0, 0, INITIAL_WIDTH, INITIAL_HEIGHT);
     // Use QMainWindow as the main window
     mainWindow = new QMainWindow();
@@ -23,12 +24,21 @@ MyWindow::MyWindow()
     connect(menuScene, &MenuScene::playClicked, this, &MyWindow::switchToGameScene);
 
 
-    // Other connections for other menu actions
-    // ...
 
     // Show the main window
     mainWindow->show();
 }
+// Implementarea getterilor
+MenuScene* MyWindow::getMenuScene() const
+{
+    return menuScene;
+}
+
+GameScene* MyWindow::getGameScene() const
+{
+    return gameScene;
+}
+
 
 void MyWindow::switchToGameScene()
 {
