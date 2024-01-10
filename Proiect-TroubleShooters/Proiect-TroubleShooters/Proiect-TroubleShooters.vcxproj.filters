@@ -56,6 +56,12 @@
     <ClCompile Include="GameScene.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="ClickableButton.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GameButton.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="MyWindow.h">
@@ -71,6 +77,12 @@
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="MenuScene.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="ClickableButton.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="GameButton.h">
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>
