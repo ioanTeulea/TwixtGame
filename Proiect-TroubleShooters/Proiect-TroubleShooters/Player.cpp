@@ -1,6 +1,6 @@
 #include "Player.h"
 #include"Piece.h"
-Player::Player(const std::string& playerName, Color playerColor) :name{ playerName }, color{ playerColor } {}
+Player::Player(const std::string& playerName, QColor playerColor) :name{ playerName }, color{ playerColor } {}
 std::string Player::getName() const
 {
 	return name;
@@ -9,7 +9,7 @@ void Player::setName(const std::string& newName)
 {
 	name = newName;
 }
-const Color& Player::getColor() const
+const QColor& Player::getColor() const
 {
 	return color;
 }
@@ -32,7 +32,7 @@ void Player::setRemainingBridges(uint16_t bridges)
 	remainingBridges = bridges;
 }
 
-void Player::setColor(Color c)
+void Player::setColor(QColor c)
 {
 	color = c;
 }
@@ -53,7 +53,7 @@ bool Player::operator==(const Player& other)
 std::ostream& operator<<(std::ostream& out, const Player& player)
 {
 	out << player.name << '\n';
-	out << player.color << '\n';
+	//out << player.color << '\n';
 	out << player.remainingPieces << '\n';
 	out << player.remainingBridges << '\n';
 	out << player.advantage;

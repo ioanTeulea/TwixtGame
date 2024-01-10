@@ -2,7 +2,7 @@
 
 // Constructor
 Board::Board(uint16_t boardSize) : size(boardSize), board(boardSize, std::vector<Piece>(boardSize)), bridges(), engine(std::random_device{}()) {
-    
+
 }
 // Copy constructor
 Board::Board(const Board& other) : size(other.size), board(other.board), bridges(other.bridges), dozer(other.dozer) {
@@ -14,7 +14,7 @@ Board& Board::operator=(const Board& other) {
         size = other.size;
         board = other.board;
         dozer = other.dozer;
-       // bridges = other.bridges;
+        // bridges = other.bridges;
     }
     return *this;
 }
@@ -22,7 +22,7 @@ Board& Board::operator=(const Board& other) {
 Board::Board(Board&& other) noexcept
     : size{ std::move(other.size) }, board{ std::move(other.board) }, dozer{ std::move(other.dozer) }
 {
-    // Dup? mutarea resurselor, cel?lalt obiect trebuie s? fie într-o stare valid?
+    // Dup? mutarea resurselor, cel?lalt obiect trebuie s? fie ?ntr-o stare valid?
     other.size = 0;
     other.board.clear();
 }
@@ -35,7 +35,7 @@ Board& Board::operator=(Board&& other) noexcept
         board = std::move(other.board);
         dozer = other.dozer;
 
-        // Dup? mutarea resurselor, cel?lalt obiect trebuie s? fie într-o stare valid?
+        // Dup? mutarea resurselor, cel?lalt obiect trebuie s? fie ?ntr-o stare valid?
         other.size = 0;
         other.board.clear();
     }
@@ -52,11 +52,11 @@ void Board::setSize(std::uint16_t newSize)
     if (newSize != size) {
         size = newSize;
 
-        // Reset?m ?i ajust?m structurile de date în consecin??
+        // Reset?m ?i ajust?m structurile de date ?n consecin??
         board.clear();
         board.resize(size, std::vector<Piece>(size, Piece())); // Reinitializ?m tabla cu dimensiunea nou?
 
-        
+
     }
 }
 
@@ -70,9 +70,9 @@ std::vector<Bridge>& Board::getBridges()
     return bridges;
 }
 
- Piece& Board::operator()(uint16_t x, uint16_t y)
+Piece& Board::operator()(uint16_t x, uint16_t y)
 {
-    // Presupunând c? x ?i y sunt indici valizi
+    // Presupun?nd c? x ?i y sunt indici valizi
     return board[x][y];
 }
 
@@ -85,45 +85,45 @@ bool Board::isValidLocation(uint16_t x, uint16_t y) const
 {
     if ((x == size - 1 || x == 0) && (y == size - 1 || y == 0))
         return false;
-    return x >= 0 && x <= size - 1 && y>=0 && y <= size - 1;
+    return x >= 0 && x <= size - 1 && y >= 0 && y <= size - 1;
 }
 
 bool Board::isOccupied(uint16_t x, uint16_t y) const {
-    return board[x][y].getColor() != Color::None || (x == dozer.first && y == dozer.second);
+    return board[x][y].getColor() != Qt::gray || (x == dozer.first && y == dozer.second);
 }
 
-bool Board::placeBridge(Piece& piece1,Piece& piece2) 
+bool Board::placeBridge(Piece& piece1, Piece& piece2)
 {
-        if ((abs(piece1.getX() - piece2.getX()) == 1 && abs(piece1.getY() - piece2.getY()) == 2) ||
-            (abs(piece1.getX() - piece2.getX()) == 2 && abs(piece1.getY() - piece2.getY()) == 1))
+    if ((abs(piece1.getX() - piece2.getX()) == 1 && abs(piece1.getY() - piece2.getY()) == 2) ||
+        (abs(piece1.getX() - piece2.getX()) == 2 && abs(piece1.getY() - piece2.getY()) == 1))
+    {
+        if (canPlaceBridge(piece1, piece2))
         {
-            if (canPlaceBridge(piece1, piece2))
-            {
-                Bridge newBridge(piece1, piece2);
-                bridges.push_back(newBridge);
-                return true;
-            }
-            else
-            {
-                return false;
-            }
+            Bridge newBridge(piece1, piece2);
+            bridges.push_back(newBridge);
+            return true;
         }
         else
         {
             return false;
         }
-    
+    }
+    else
+    {
+        return false;
+    }
+
 }
 
-void Board::deleteBridge(const Piece& p1,const Piece& p2)
+void Board::deleteBridge(const Piece& p1, const Piece& p2)
 {
     if (p1.getColor() != p2.getColor())
         return;
     else
     {
-        for (auto it = bridges.begin(); it !=bridges.end(); ++it) {
-            if ((it->getPiece1()==p1 && it->getPiece2()==p2) ||
-                (it->getPiece2() == p1 && it->getPiece1() == p2) ){
+        for (auto it = bridges.begin(); it != bridges.end(); ++it) {
+            if ((it->getPiece1() == p1 && it->getPiece2() == p2) ||
+                (it->getPiece2() == p1 && it->getPiece1() == p2)) {
                 bridges.erase(it);
                 break;
             }
@@ -133,27 +133,27 @@ void Board::deleteBridge(const Piece& p1,const Piece& p2)
     }
 }
 
-bool Board::placePiece(const Piece & newPiece)
+bool Board::placePiece(const Piece& newPiece)
 {
 
-    if (isValidLocation(newPiece.getX(),newPiece.getY()) && !isOccupied(newPiece.getX(), newPiece.getY()))
+    if (isValidLocation(newPiece.getX(), newPiece.getY()) && !isOccupied(newPiece.getX(), newPiece.getY()))
     {
-        for (int i = 0; i < mines.size();i++) {
+        for (int i = 0; i < mines.size(); i++) {
             if (newPiece.getX() == std::get<0>(mines[i]) && newPiece.getY() == std::get<1>(mines[i])) {
                 explode(mines[i]);
                 mines.erase(mines.begin() + i);
                 return true;
             }
         }
-      board[newPiece.getX()][newPiece.getY()] = newPiece;
-      return true;
+        board[newPiece.getX()][newPiece.getY()] = newPiece;
+        return true;
     }
     return false;
 }
 
 bool Board::isBridgeBetween(const int16_t& x1, const int16_t& y1, const int16_t& x2, const int16_t& y2)
 {
-    Piece piece1, piece2; 
+    Piece piece1, piece2;
     if (x1 < 0 || x2 < 0 || y1 < 0 || y2 < 0 || x1 > size - 1 || x2 > size - 1 || y1 > size - 1 || y2 > size - 1)
         return false;
     piece1 = board[x1][y1];
@@ -169,7 +169,7 @@ bool Board::isBridgeBetween(const int16_t& x1, const int16_t& y1, const int16_t&
 
 bool Board::availableWay(const int16_t& x, const int16_t& y, const int16_t& sign, const bool& vertical)
 {
-    if(vertical)
+    if (vertical)
     {
         if (isBridgeBetween(x + 1, y, x - 1, y - 1 * sign))
             return false;
@@ -380,7 +380,7 @@ void Board::explode(const std::tuple<uint16_t, uint16_t, uint16_t>& mine)
             if (board[std::get<0>(mine)][j].getColor() != None) {
                 for (int t = 0; t < bridges.size(); t++)
                     if (bridges[t].getPiece1() == board[std::get<0>(mine)][j] || bridges[t].getPiece2() == board[std::get<0>(mine)][j])
-                       bridges.erase(bridges.begin() + t);
+                        bridges.erase(bridges.begin() + t);
             }
             Piece empty;
             board[std::get<0>(mine)][j] = empty;
@@ -408,7 +408,7 @@ void Board::reset()
 {
     for (int row = 0; row < size; row++) {
         for (int col = 0; col < size; col++) {
-            board[row][col] = Color::None;
+            board[row][col] = Piece();
         }
     }
 }
@@ -429,9 +429,9 @@ std::ostream& operator<<(std::ostream& out, const Board& B)
     out << B.bridges.size() << '\n';
     for (int i = 0; i < B.bridges.size(); i++)
         out << B.bridges[i] << '\n';
-    out << B.mines.size()<<'\n';
+    out << B.mines.size() << '\n';
     for (int i = 0; i < B.mines.size(); i++)
-        out << std::get<0>(B.mines[i]) << " " << std::get<1>(B.mines[i]) << " " << std::get<2>(B.mines[i])<<'\n';
+        out << std::get<0>(B.mines[i]) << " " << std::get<1>(B.mines[i]) << " " << std::get<2>(B.mines[i]) << '\n';
     out << B.dozer.first << " " << B.dozer.second;
     return out;
 }

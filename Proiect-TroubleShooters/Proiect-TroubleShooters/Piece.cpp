@@ -1,8 +1,8 @@
 ﻿#include "Piece.h"
 #include "Player.h"
-Piece::Piece(Color color, uint16_t coordX, uint16_t coordY) :m_color{ color }, x{ coordX }, y{ coordY } {}
+Piece::Piece(QColor color, uint16_t coordX, uint16_t coordY) :m_color{ color }, x{ coordX }, y{ coordY } {}
 
-Color Piece::getColor() const
+QColor Piece::getColor() const
 {
     return m_color;
 }

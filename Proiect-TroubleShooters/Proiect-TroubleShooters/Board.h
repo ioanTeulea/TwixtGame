@@ -29,7 +29,7 @@ public:
     const std::vector<std::vector<Piece>>& getBoard() const;
     std::vector<Bridge>& getBridges();
 
-     Piece& operator()(uint16_t x, uint16_t y); // Operatorul () pentru accesul la piese
+    Piece& operator()(uint16_t x, uint16_t y); // Operatorul () pentru accesul la piese
 
     void deleteBridges();
 
@@ -38,8 +38,8 @@ public:
 
     bool placePiece(const Piece& newPiece);
 
-    bool placeBridge(Piece& piece1,Piece& piece2);
-    void deleteBridge(const Piece& p1,const Piece& p2);
+    bool placeBridge(Piece& piece1, Piece& piece2);
+    void deleteBridge(const Piece& p1, const Piece& p2);
     bool isBridgeBetween(const int16_t& x1, const int16_t& y1, const int16_t& x2, const int16_t& y2);
     bool availableWay(const int16_t& x, const int16_t& y, const int16_t& sign, const bool& vertical);
     bool canPlaceBridge(const Piece& piece1, const Piece& piece2);
@@ -53,6 +53,3 @@ public:
     friend std::ostream& operator<<(std::ostream& out, const Board& B);
     friend std::istream& operator>>(std::istream& in, Board& B);
 };
-
-
-
