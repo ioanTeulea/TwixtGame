@@ -5,14 +5,15 @@
 #include <QGraphicsScene>
 #include <QPixmap>
 #include <QGraphicsPixmapItem>
-#include "ClickableButton.h"
+#include <QGraphicsProxyWidget>
+#include "GameButton.h"
 
 class MenuScene : public QGraphicsScene
 {
     Q_OBJECT
 
 public:
-    MenuScene(QObject* parent = nullptr);
+    MenuScene(QObject* parent = nullptr, int initialWidth = 0, int initialHeight = 0);
 
 signals:
     void playClicked();
@@ -22,11 +23,13 @@ private slots:
     void exitClicked();
     void settingsClicked();
 private:
-    void addButton(const QString& text, qreal yPos, const char* signal, const QPixmap& buttonImage);
-    void addBackground();
+    QPushButton* createButton(const QString& text, qreal buttonWidth, qreal buttonHeight, qreal buttonX, qreal buttonY);
+    void addBackground(int Width, int Height);
     void resizeBackground(int width, int height);
     QPixmap originalBackgroundImage;
     QGraphicsPixmapItem* backgroundItem;
+    int Width;
+    int Height;
 };
 
 #endif // MENUSCENE_H
