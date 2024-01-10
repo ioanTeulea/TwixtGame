@@ -212,9 +212,9 @@ void Game::Load(const std::string& filename)
     uint16_t color;
     in >> color;
     if (static_cast<QColor>(color) == p1.getColor())
-        this->currentPlayer = &p1;
+        this->currentPlayer = &this->player1;
     else
-        this->currentPlayer = &p2;
+        this->currentPlayer = &this->player2;
     std::string diff;
     in >> diff;
     difficulty = diff;
@@ -223,7 +223,7 @@ void Game::Load(const std::string& filename)
 void Game::Save(const std::string& filename)
 {
     std::ofstream out(filename);
-    out << this;
+    out << *this;
 }
 
 
