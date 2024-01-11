@@ -93,6 +93,7 @@
     <ClCompile Include="Bridge.cpp" />
     <ClCompile Include="ClickableButton.cpp" />
     <ClCompile Include="ConsoleDisplay.cpp" />
+    <ClCompile Include="EscapeMenuDialog.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameButton.cpp" />
     <ClCompile Include="GameScene.cpp" />
@@ -117,9 +118,13 @@
     <QtMoc Include="GameScene.h" />
     <QtMoc Include="MenuScene.h" />
     <QtMoc Include="GameButton.h" />
+    <QtMoc Include="EscapeMenuDialog.h" />
     <ClInclude Include="Piece.h" />
     <ClInclude Include="Player.h" />
     <QtMoc Include="PlayerInputDialog.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="out_in.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.targets')">

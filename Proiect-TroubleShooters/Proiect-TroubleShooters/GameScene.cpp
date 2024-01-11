@@ -28,6 +28,11 @@ QPushButton* GameScene::getNextPlayerButton() const
     return nextPlayerButton;
 }
 
+EscapeMenuDialog* GameScene::getEscapeMenu() const
+{
+    return escapeMenu;
+}
+
 void GameScene::setBoardSize(int newSize)
 {
     boardSize = newSize;
@@ -231,6 +236,16 @@ void GameScene::PlayersInfo(const std::string& player1Name, QColor color1, const
     this->player1Name = QString::fromStdString(player1Name);
     this->player2Name = QString::fromStdString(player2Name);
     currentColor = player1Color;
+}
+void GameScene::keyPressEvent(QKeyEvent* event) {
+    if (event->key() == Qt::Key_Escape) {
+        
+        escapeMenu->exec();
+    }
+    else {
+        QGraphicsScene::keyPressEvent(event);
+    }
+}
 }
 void GameScene::onBoardLoaded(const Board& loadedBoard)
 {

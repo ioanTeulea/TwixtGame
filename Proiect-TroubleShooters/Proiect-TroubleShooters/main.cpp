@@ -7,6 +7,7 @@
 #include "MyWindow.h"  // Ad?uga?i header-ul pentru clasa CustomGraphicsScene
 #include "Game.h"
 #include "PlayerInputDialog.h"
+#include "EscapeMenuDialog.h"
 
 int main(int argc, char* argv[]) {
 
@@ -27,6 +28,10 @@ int main(int argc, char* argv[]) {
     QObject::connect(myWindow.getGameScene(), &GameScene::bridgeClicked, &Twixt, &Game::action_placeBridge);
     QObject::connect(myWindow.getGameScene(), &GameScene::deleteBridgeClicked, &Twixt, &Game::action_deleteBridge);
     QObject::connect(myWindow.getGameScene()->getNextPlayerButton(), &QPushButton::clicked, &Twixt, &Game::switchPlayer);
+    QObject::connect(&Twixt, &Game::currentPlayerColors, myWindow.getGameScene(), &GameScene::PlayerColors);
+    QObject::connect(myWindow.getGameScene()->getEscapeMenu(), &EscapeMenuDialog::save, &Twixt, &Game::Save);
+    playerDialog.exec();
+    Twixt.Setup();
     QObject::connect(&Twixt, &Game::PlayersInfo, myWindow.getGameScene(), &GameScene::PlayersInfo);
     QObject::connect(myWindow.getMenuScene(), &MenuScene::loadGame, &Twixt, &Game::Load);
     //playerDialog.exec();

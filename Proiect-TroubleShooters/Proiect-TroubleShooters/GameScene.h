@@ -14,8 +14,10 @@
 #include <QDebug>
 #include <QPushButton>
 #include <QGraphicsProxyWidget>
+#include <qcoreapplication.h>
 #include <QGraphicsDropShadowEffect>
 
+#include "EscapeMenuDialog.h"
 #include"Board.h"
 
 
@@ -27,11 +29,14 @@ public:
     GameScene(QObject* parent = nullptr, int initialWidth = 0, int initialHeight = 0);
     void showCoordinates(qreal x, qreal y);
     QPushButton* getNextPlayerButton() const;
+    EscapeMenuDialog* getEscapeMenu() const;
     void drawGameBoard();
 
 protected:
     void mousePressEvent(QGraphicsSceneMouseEvent* event) override;
     void mouseReleaseEvent(QGraphicsSceneMouseEvent* event) override;
+    void keyPressEvent(QKeyEvent* event) override;
+    void drawGameBoard();
    
     void switchColor();
     int Width;
@@ -50,6 +55,7 @@ private:
     QGraphicsTextItem* turnInfo;
     QColor currentColor;
     bool piecePlaced;
+    EscapeMenuDialog* escapeMenu = new EscapeMenuDialog(qobject_cast<QWidget*>(QCoreApplication::instance()));
 signals:
     void circleClicked(QColor color, const uint16_t i, const uint16_t j, bool& isOk);
     void bridgeClicked(const uint16_t x1, const uint16_t y1, const uint16_t x2, const uint16_t y2, bool& isOk);
