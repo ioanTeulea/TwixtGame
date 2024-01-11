@@ -22,8 +22,8 @@ MyWindow::MyWindow()
 
 
     connect(menuScene, &MenuScene::playClicked, this, &MyWindow::switchToGameScene);
-
-
+    connect(menuScene, &MenuScene::playClicked, gameScene, &GameScene::drawGameBoard);
+    connect(menuScene, &MenuScene::loadClicked, this, &MyWindow::switchToGameScene);
 
     // Show the main window
     mainWindow->show();

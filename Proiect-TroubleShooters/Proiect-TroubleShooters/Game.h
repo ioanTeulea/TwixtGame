@@ -27,7 +27,7 @@ public:
     void setGameDifficulty();
     void actionRandomPiece(Piece random_piece);
     void reset();
-    void Load(const std::string& filename);
+   
     void Save(const std::string& filename);
     friend std::ostream& operator<<(std::ostream& out, const Game& game);
     friend std::istream& operator>>(std::istream& in, Game& game);
@@ -35,9 +35,11 @@ private:
     void Play_menu();
     void Load_menu();
     void Restart_menu(bool& exit);
+    std::string numeFisier;
 signals:
-    void currentPlayerColors(QColor color1, QColor color2);
+    void PlayersInfo(const std::string &player1Name,QColor color1, const std::string& player2Name, QColor color2);
     void gameFinished();
+    void boardLoaded(Board board);
 public slots:
     void setDifficulty(const QString& difficulty);
     void setPlayerNames(const QString& namePlayer1, const QString& namePlayer2);
@@ -45,4 +47,5 @@ public slots:
     void action_addPawn(QColor color, const  uint16_t i, const  uint16_t j, bool& isOk);
     void action_placeBridge(const uint16_t x1, const uint16_t y1, const uint16_t x2, const uint16_t y2, bool& isOk);
     void action_deleteBridge(const uint16_t x1, const uint16_t y1, const uint16_t x2, const uint16_t y2);
+    void Load();
 };

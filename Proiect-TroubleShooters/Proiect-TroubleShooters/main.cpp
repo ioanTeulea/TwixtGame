@@ -27,9 +27,13 @@ int main(int argc, char* argv[]) {
     QObject::connect(myWindow.getGameScene(), &GameScene::bridgeClicked, &Twixt, &Game::action_placeBridge);
     QObject::connect(myWindow.getGameScene(), &GameScene::deleteBridgeClicked, &Twixt, &Game::action_deleteBridge);
     QObject::connect(myWindow.getGameScene()->getNextPlayerButton(), &QPushButton::clicked, &Twixt, &Game::switchPlayer);
-    QObject::connect(&Twixt, &Game::currentPlayerColors, myWindow.getGameScene(), &GameScene::PlayerColors);
-    playerDialog.exec();
+    QObject::connect(&Twixt, &Game::PlayersInfo, myWindow.getGameScene(), &GameScene::PlayersInfo);
+    QObject::connect(myWindow.getMenuScene(), &MenuScene::loadGame, &Twixt, &Game::Load);
+    //playerDialog.exec();
     Twixt.Setup();
+    QObject::connect(myWindow.getMenuScene()->getPlayButton(), &QPushButton::clicked, [&playerDialog]() {
+        playerDialog.exec();
+        });
     QObject::connect(&Twixt, &Game::gameFinished, &myWindow, [&myWindow, &Twixt]() {
         QObject::disconnect(myWindow.getGameScene(), &GameScene::circleClicked, &Twixt, &Game::action_addPawn);
         QObject::disconnect(myWindow.getGameScene(), &GameScene::bridgeClicked, &Twixt, &Game::action_placeBridge);
@@ -37,8 +41,6 @@ int main(int argc, char* argv[]) {
         QObject::disconnect(myWindow.getGameScene()->getNextPlayerButton(), &QPushButton::clicked, &Twixt, &Game::switchPlayer);
         // Deconecta?i orice alte semnale ?i sloturi între obiectele implicate
         });
-    // Începe jocul
-      //Twixt.Play();
 
     return app.exec();
 }

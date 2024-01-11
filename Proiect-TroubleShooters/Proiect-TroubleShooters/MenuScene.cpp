@@ -27,18 +27,19 @@ MenuScene::MenuScene(QObject* parent, int initialWidth, int initialHeight) : QGr
     // Adaug? imaginea de fundal
     addBackground(Width, Height);
     // Adaug? butoanele
-    QPushButton* playButton = createButton("Play", 100, 100, 100, 100);
+    playButton = createButton("Play", 100, 100, 100, 100);
     QGraphicsProxyWidget* proxyButton1 = new QGraphicsProxyWidget();
     proxyButton1->setWidget(playButton);
     addItem(proxyButton1);
-    connect(playButton, &QPushButton::clicked, this, &MenuScene::playClicked);
+    connect(playButton, &QPushButton::clicked, this, &MenuScene::onPlayClicked);
 
-    QPushButton* loadButton = createButton("Load", 100, 100, 100, 300);
+    loadButton = createButton("Load", 100, 100, 100, 300);
     QGraphicsProxyWidget* proxyButton2 = new QGraphicsProxyWidget();
     proxyButton2->setWidget(loadButton);
     addItem(proxyButton2);
+    connect(loadButton, &QPushButton::clicked, this, &MenuScene::onLoadClicked);
 
-    QPushButton* exitButton = createButton("Exit", 100, 100, 100, 500);
+    exitButton = createButton("Exit", 100, 100, 100, 500);
     QGraphicsProxyWidget* proxyButton3 = new QGraphicsProxyWidget();
     proxyButton3->setWidget(exitButton);
     addItem(proxyButton3);
@@ -48,23 +49,16 @@ MenuScene::MenuScene(QObject* parent, int initialWidth, int initialHeight) : QGr
      //addButton("Settings", 400, SLOT(settingsClicked()));
 }
 
-void MenuScene::settingsClicked()
+QPushButton* MenuScene::getPlayButton() const
 {
-    // Implementare pentru settingsClicked
-
+    return playButton;
 }
 
-void MenuScene::loadClicked()
+QPushButton* MenuScene::getloadButton() const
 {
-    // Implementare pentru loadClicked
-
+    return loadButton;
 }
 
-void MenuScene::exitClicked()
-{
-    // Implementare pentru exitClicked
-
-}
 QPushButton* MenuScene::createButton(const QString& text, qreal buttonWidth, qreal buttonHeight, qreal buttonX, qreal buttonY)
 {
     QPushButton* button = new QPushButton(text, nullptr);
@@ -98,4 +92,13 @@ void MenuScene::addBackground(int Width, int Height)
     resizeBackground(Width, Height);
     // Adaug? imaginea de fundal la scen?
     addItem(backgroundItem);
+}
+void MenuScene::onPlayClicked()
+{
+    emit playClicked();
+}
+void MenuScene::onLoadClicked()
+{
+    emit loadClicked();
+    emit loadGame();
 }

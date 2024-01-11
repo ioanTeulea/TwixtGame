@@ -14,6 +14,9 @@
 #include <QDebug>
 #include <QPushButton>
 #include <QGraphicsProxyWidget>
+#include <QGraphicsDropShadowEffect>
+
+#include"Board.h"
 
 
 class GameScene : public QGraphicsScene
@@ -24,11 +27,12 @@ public:
     GameScene(QObject* parent = nullptr, int initialWidth = 0, int initialHeight = 0);
     void showCoordinates(qreal x, qreal y);
     QPushButton* getNextPlayerButton() const;
+    void drawGameBoard();
 
 protected:
     void mousePressEvent(QGraphicsSceneMouseEvent* event) override;
     void mouseReleaseEvent(QGraphicsSceneMouseEvent* event) override;
-    void drawGameBoard();
+   
     void switchColor();
     int Width;
     int Height;
@@ -41,6 +45,9 @@ private:
     QPushButton* nextPlayerButton = nullptr;
     QColor player1Color;
     QColor player2Color;
+    QString  player1Name;
+    QString  player2Name;
+    QGraphicsTextItem* turnInfo;
     QColor currentColor;
     bool piecePlaced;
 signals:
@@ -49,7 +56,8 @@ signals:
     void deleteBridgeClicked(const uint16_t x1, const uint16_t y1, const uint16_t x2, const uint16_t y2);
 public slots:
     void setBoardSize(int newSize);
-    void PlayerColors(QColor color1, QColor color2);
+    void PlayersInfo(const std::string& player1Name, QColor color1, const std::string& player2Name, QColor color2);
+    void onBoardLoaded(const Board& loadedBoard);
 };
 
 #endif // GAMESCENE_H

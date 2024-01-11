@@ -13,7 +13,7 @@ void Game::setPlayerNames(const QString& namePlayer1, const QString& namePlayer2
     player2.setName(namePlayer2.toStdString());
     player2.setColor(Qt::black);
 
-    emit currentPlayerColors(player1.getColor(), player2.getColor());
+    emit PlayersInfo(player1.getName(),player1.getColor(),player2.getName(),player2.getColor());
 }
 
 void Game::switchPlayer()
@@ -94,10 +94,10 @@ void Game::action_addPawn(QColor color, const  uint16_t i, const  uint16_t j, bo
     isOk = false;
     if (!isOk) {
         consoleDisplay.displayMessage("Choose the coordinates of the pillar: ");
-        if (currentPlayer->getColor() == Red && (j == 0 || j == board.getSize() - 1)) {
+        if (currentPlayer->getColor() == Qt::red && (j == 0 || j == board.getSize() - 1)) {
             consoleDisplay.displayMessage("Can't do that!\n");
         }
-        else if (currentPlayer->getColor() == Black && (i == 0 || i == board.getSize() - 1)) {
+        else if (currentPlayer->getColor() == Qt::black && (i == 0 || i == board.getSize() - 1)) {
             consoleDisplay.displayMessage("Can't do that!\n");
         }
         else {
@@ -198,9 +198,9 @@ void Game::reset()
     currentPlayer = &player1;
 }
 
-void Game::Load(const std::string& filename)
+void Game::Load()
 {
-    std::ifstream in(filename);
+    std::ifstream in(numeFisier);
     Player p1, p2;
     in >> p1;
     this->player1 = p1;
@@ -212,18 +212,21 @@ void Game::Load(const std::string& filename)
     uint16_t color;
     in >> color;
     if (static_cast<QColor>(color) == p1.getColor())
-        this->currentPlayer = &p1;
+        this->currentPlayer = &this->player1;
     else
-        this->currentPlayer = &p2;
+        this->currentPlayer = &this->player2;
     std::string diff;
     in >> diff;
     difficulty = diff;
+    emit boardLoaded(board);
+    emit PlayersInfo(p1.getName(),p1.getColor(),p2.getName(), p2.getColor());
 }
 
 void Game::Save(const std::string& filename)
 {
+    numeFisier=  filename;
     std::ofstream out(filename);
-    out << this;
+    out << *this;
 }
 
 
@@ -415,7 +418,7 @@ void Game::Load_menu() {
         case 1:
             return;
         case 2:
-            Load("in.txt");
+            //Load("in.txt");
             return;
         default:
             consoleDisplay.displayMessage("Action not available. Choose 1, 2.\n");

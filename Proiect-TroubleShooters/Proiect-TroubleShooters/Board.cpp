@@ -76,6 +76,12 @@ Piece& Board::operator()(uint16_t x, uint16_t y)
     return board[x][y];
 }
 
+const Piece& Board::operator()(uint16_t x, uint16_t y) const
+{
+    // TODO: insert return statement here
+    return board[x][y];
+}
+
 void Board::deleteBridges()
 {
     bridges.clear();
