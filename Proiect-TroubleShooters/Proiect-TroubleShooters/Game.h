@@ -25,7 +25,6 @@ public:
     void Setup();
     void display_changingBridges();
     void setGameDifficulty();
-    void actionRandomPiece(Piece random_piece);
     void reset();
    
     void Save(const std::string& filename,bool isPiecePlaced);
@@ -39,6 +38,7 @@ signals:
     void PlayersInfo(const std::string &player1Name,QColor color1, const std::string& player2Name, QColor color2);
     void gameFinished();
     void boardLoaded(Board board,int isLastPiecePlaced);
+    void randomPiece(int X, int Y);
 public slots:
     void setDifficulty(const QString& difficulty);
     void setPlayerNames(const QString& namePlayer1, const QString& namePlayer2);
@@ -47,4 +47,5 @@ public slots:
     void action_placeBridge(const uint16_t x1, const uint16_t y1, const uint16_t x2, const uint16_t y2, bool& isOk);
     void action_deleteBridge(const uint16_t x1, const uint16_t y1, const uint16_t x2, const uint16_t y2);
     void Load();
+    void actionRandomPiece(Piece random_pice);
 };

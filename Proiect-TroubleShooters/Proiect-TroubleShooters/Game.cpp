@@ -26,6 +26,8 @@ void Game::switchPlayer()
     {
         currentPlayer = &player1;
     }
+    Piece random_piece = board.dozerTurn(30);
+    actionRandomPiece(random_piece);
 }
 
 void Game::switchPlayerColors()
@@ -100,6 +102,9 @@ void Game::action_addPawn(QColor color, const  uint16_t i, const  uint16_t j, bo
         else if (currentPlayer->getColor() == Qt::black && (i == 0 || i == board.getSize() - 1)) {
             consoleDisplay.displayMessage("Can't do that!\n");
         }
+        else
+            if (board(i, j).getColor() == Qt::blue)
+                consoleDisplay.displayMessage("Can't do that!\n");
         else {
             Piece newPiece(currentPlayer->getColor(), i, j);
             if (board.placePiece(newPiece))
@@ -164,8 +169,9 @@ void Game::setGameDifficulty()
 
 void Game::actionRandomPiece(Piece random_piece)
 {
-    consoleDisplay.displayMessage("Dozer's turn\n");
-    if (random_piece.getColor() == Color::Red)
+
+    //consoleDisplay.displayMessage("Dozer's turn\n");
+    if (random_piece.getColor() == Qt::red)
     {
         player1.setRemainingPieces(player1.getRemainingPieces() + 1);
         player1.setRemainingBridges(player1.getRemainingBridges() + board.delete_DozerBridges(random_piece));
@@ -175,7 +181,7 @@ void Game::actionRandomPiece(Piece random_piece)
         consoleDisplay.displayBoard(board);
     }
     else
-        if (random_piece.getColor() == Color::Black)
+        if (random_piece.getColor() == Qt::black)
         {
             player2.setRemainingPieces(player2.getRemainingPieces() + 1);
             player2.setRemainingBridges(player2.getRemainingBridges() + board.delete_DozerBridges(random_piece));
@@ -189,6 +195,7 @@ void Game::actionRandomPiece(Piece random_piece)
             consoleDisplay.displayMessage("The dozer moved to an empty position.\n");
             consoleDisplay.displayBoard(board);
         }
+    emit randomPiece(random_piece.getY(), random_piece.getX());
 }
 
 void Game::reset()

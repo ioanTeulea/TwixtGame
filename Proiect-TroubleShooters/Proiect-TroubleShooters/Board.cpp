@@ -298,8 +298,9 @@ Piece Board::dozerTurn(const std::uint16_t& percentage)
     }
     else
     {
-        generateRandomPiece();
-        return board[dozer.first][dozer.second];
+        std::pair<uint16_t, uint16_t>coordinates = generateRandomPiece();
+        Piece p(Qt::blue, coordinates.first, coordinates.second);
+        return p;
     }
 }
 
@@ -336,7 +337,7 @@ std::pair<std::uint16_t, std::uint16_t> Board::generateRandomPiece()
             std::uniform_int_distribution<int> distribution(1, getSize() - 2);
             x = distribution(engine);
             y = distribution(engine);
-        } while (isOccupied(x, y));
+        } while (isOccupied(x, y)&&(x!=0&&y!=0));
         dozer = { x,y };
     }
     return dozer;

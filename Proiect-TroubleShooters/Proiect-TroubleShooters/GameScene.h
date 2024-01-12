@@ -56,18 +56,21 @@ private:
     QGraphicsTextItem* turnInfo;
     QColor currentColor;
     bool piecePlaced;
+    int X_before = -1, Y_before = -1;
     EscapeMenuDialog* escapeMenu = new EscapeMenuDialog(qobject_cast<QWidget*>(QCoreApplication::instance()));
 signals:
     void circleClicked(QColor color, const uint16_t i, const uint16_t j, bool& isOk);
     void bridgeClicked(const uint16_t x1, const uint16_t y1, const uint16_t x2, const uint16_t y2, bool& isOk);
     void deleteBridgeClicked(const uint16_t x1, const uint16_t y1, const uint16_t x2, const uint16_t y2);
     bool isPiecePlaced(bool piecePlaced);
+
 public slots:
     void setBoardSize(int newSize);
     void PlayersInfo(const std::string& player1Name, QColor color1, const std::string& player2Name, QColor color2);
     void onBoardLoaded( Board loadedBoard,int isLastPiecePlaced);
     void drawGameBoard();
     void saveButtonClicked();
+    void randomPiece(int X, int Y);
 };
 
 #endif // GAMESCENE_H

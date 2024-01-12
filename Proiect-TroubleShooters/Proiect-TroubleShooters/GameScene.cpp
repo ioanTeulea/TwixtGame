@@ -1,4 +1,4 @@
-#include "GameScene.h"
+﻿#include "GameScene.h"
 
 
 GameScene::GameScene(QObject* parent, int initialWidth, int initialHeight) :QGraphicsScene(parent), startEllipse(nullptr)
@@ -154,7 +154,7 @@ void GameScene::drawGameBoard()
     qreal xOffset = -sceneWidth / 2.0;
     qreal yOffset = -sceneHeight / 2.0;
    
-    // Adaug? numele juc?torului 1 la st�nga tablei de joc
+    // Adaug? numele juc?torului 1 la stânga tablei de joc
     QGraphicsTextItem* player1TextItem = new QGraphicsTextItem(player1Name);
     player1TextItem->setFont(QFont("Arial", 12));  // Seteaz? fontul ?i dimensiunea
     player1TextItem->setDefaultTextColor(player1Color);  // Seteaz? culoarea textului
@@ -286,7 +286,7 @@ void GameScene::onBoardLoaded(Board loadedBoard,int isLastPiecePlaced)
     qreal xOffset = -sceneWidth / 2.0;
     qreal yOffset = -sceneHeight / 2.0;
 
-    // Adaug? numele juc?torului 1 la st�nga tablei de joc
+    // Adaug? numele juc?torului 1 la stânga tablei de joc
     QGraphicsTextItem* player1TextItem = new QGraphicsTextItem(player1Name);
     player1TextItem->setFont(QFont("Arial", 12));  // Seteaz? fontul ?i dimensiunea
     player1TextItem->setDefaultTextColor(player1Color);  // Seteaz? culoarea textului
@@ -333,9 +333,9 @@ void GameScene::onBoardLoaded(Board loadedBoard,int isLastPiecePlaced)
         uint16_t j2 = bridge.getPiece2().getX();
         uint16_t i2 = bridge.getPiece2().getY();
 
-        // Ad?uga?i o linie �ntre cele dou? cercuri
+        // Ad?uga?i o linie între cele dou? cercuri
         QGraphicsLineItem* line = new QGraphicsLineItem();
-        // Seteaz? culoarea �n func?ie de ce condi?ie consideri necesar?
+        // Seteaz? culoarea în func?ie de ce condi?ie consideri necesar?
         QPen pen(bridge.getPiece1().getColor(), 2, Qt::SolidLine);
         line->setPen(pen);
         line->setLine(xOffset + i1 * distance + radius / 2, yOffset + j1 * distance + radius / 2,
@@ -362,4 +362,52 @@ void GameScene::onBoardLoaded(Board loadedBoard,int isLastPiecePlaced)
     QGraphicsProxyWidget* proxyButton = new QGraphicsProxyWidget();
     proxyButton->setWidget(nextPlayerButton);
     addItem(proxyButton);
+}
+void GameScene::randomPiece(int X, int Y)
+{
+
+    if (X_before != -1 && Y_before != -1)
+    {
+        for (QGraphicsItem* item : items()) {
+            if (item->type() == QGraphicsEllipseItem::Type) {
+                QGraphicsEllipseItem* ellipse = qgraphicsitem_cast<QGraphicsEllipseItem*>(item);
+                int itemX = ellipse->data(0).toInt();
+                int itemY = ellipse->data(1).toInt();
+                if (X_before == itemX && Y_before == itemY) {
+                    ellipse->setBrush(QBrush(Qt::gray));
+                    ellipse->setData(2, QBrush(Qt::gray)); // Actualizează culoarea dată pentru utilizarea ulterioară
+                    break;
+                }
+            }
+        }
+    }
+
+    for (QGraphicsItem* item : items()) {
+        if (item->type() == QGraphicsEllipseItem::Type) {
+            QGraphicsEllipseItem* ellipse = qgraphicsitem_cast<QGraphicsEllipseItem*>(item);
+            int itemX = ellipse->data(0).toInt();
+            int itemY = ellipse->data(1).toInt();
+            X_before = itemX;
+            Y_before = itemY;
+            if (itemX == X && itemY == Y) {
+                ellipse->setBrush(QBrush(Qt::blue));
+                ellipse->setData(2, QBrush(Qt::blue)); // Actualizează culoarea dată pentru utilizarea ulterioară
+                for (QGraphicsItem* bridgeItem : items()) {
+                    if (bridgeItem->type() == QGraphicsLineItem::Type) {
+                        QGraphicsLineItem* line = qgraphicsitem_cast<QGraphicsLineItem*>(bridgeItem);
+                        int lineX1 = line->data(0).toUInt();
+                        int lineY1 = line->data(1).toUInt();
+                        int lineX2 = line->data(2).toUInt();
+                        int lineY2 = line->data(3).toUInt();
+
+                        if ((lineY1 == itemX && lineX1 == itemY) || (lineY2 == itemX && lineX2 == itemY)) {
+                            emit deleteBridgeClicked(lineX1, lineY1, lineX2, lineY2);
+                            removeItem(line);
+                        }
+                    }
+                }
+                break;
+            }
+        }
+    }
 }
