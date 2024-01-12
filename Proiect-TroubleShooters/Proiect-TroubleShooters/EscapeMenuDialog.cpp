@@ -42,9 +42,14 @@ EscapeMenuDialog::EscapeMenuDialog(QWidget* parent) : QDialog(parent) {
 void EscapeMenuDialog::resumeGame() {
     accept();
 }
-
+bool EscapeMenuDialog::isPiecePlaced(bool isPiecePlaced)
+{
+    isLastPiecePlaced = isPiecePlaced;
+    return isLastPiecePlaced;
+}
 void EscapeMenuDialog::saveGame() {
-    emit save("out_in.txt");
+    emit savedClicked();
+    emit save("out_in.txt",isLastPiecePlaced);
     accept();
 }
 

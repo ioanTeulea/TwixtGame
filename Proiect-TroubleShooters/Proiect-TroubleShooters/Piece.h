@@ -21,6 +21,7 @@ public:
     Piece(Piece&& other) noexcept = default;
     Piece& operator=(Piece&& other) noexcept = default;
     QColor getColor() const;
+    void setColor(QColor color);
     const uint16_t& getX()const;
     const uint16_t& getY()const;
     bool operator==(const Piece& other) const;

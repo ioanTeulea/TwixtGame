@@ -28,16 +28,17 @@ int main(int argc, char* argv[]) {
     QObject::connect(myWindow.getGameScene(), &GameScene::bridgeClicked, &Twixt, &Game::action_placeBridge);
     QObject::connect(myWindow.getGameScene(), &GameScene::deleteBridgeClicked, &Twixt, &Game::action_deleteBridge);
     QObject::connect(myWindow.getGameScene()->getNextPlayerButton(), &QPushButton::clicked, &Twixt, &Game::switchPlayer);
-    QObject::connect(&Twixt, &Game::currentPlayerColors, myWindow.getGameScene(), &GameScene::PlayerColors);
+    QObject::connect(&Twixt, &Game::PlayersInfo, myWindow.getGameScene(), &GameScene::PlayersInfo);
     QObject::connect(myWindow.getGameScene()->getEscapeMenu(), &EscapeMenuDialog::save, &Twixt, &Game::Save);
-    playerDialog.exec();
-    Twixt.Setup();
+    QObject::connect(myWindow.getGameScene()->getEscapeMenu(), &EscapeMenuDialog::savedClicked, myWindow.getGameScene(), &GameScene::saveButtonClicked);
+    QObject::connect(myWindow.getGameScene(), &GameScene::isPiecePlaced, myWindow.getGameScene()->getEscapeMenu(), &EscapeMenuDialog::isPiecePlaced);
     QObject::connect(&Twixt, &Game::PlayersInfo, myWindow.getGameScene(), &GameScene::PlayersInfo);
     QObject::connect(myWindow.getMenuScene(), &MenuScene::loadGame, &Twixt, &Game::Load);
-    //playerDialog.exec();
-    Twixt.Setup();
-    QObject::connect(myWindow.getMenuScene()->getPlayButton(), &QPushButton::clicked, [&playerDialog]() {
-        playerDialog.exec();
+    QObject::connect(&Twixt, &Game::boardLoaded, myWindow.getGameScene(), &GameScene::onBoardLoaded);
+    QObject::connect(myWindow.getMenuScene()->getPlayButton(), &QPushButton::clicked, [&playerDialog, &Twixt]() {
+        if (playerDialog.exec() == QDialog::Accepted) {
+            Twixt.Setup();
+        }
         });
     QObject::connect(&Twixt, &Game::gameFinished, &myWindow, [&myWindow, &Twixt]() {
         QObject::disconnect(myWindow.getGameScene(), &GameScene::circleClicked, &Twixt, &Game::action_addPawn);

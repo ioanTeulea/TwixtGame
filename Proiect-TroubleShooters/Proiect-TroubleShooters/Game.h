@@ -28,18 +28,17 @@ public:
     void actionRandomPiece(Piece random_piece);
     void reset();
    
-    void Save(const std::string& filename);
+    void Save(const std::string& filename,bool isPiecePlaced);
     friend std::ostream& operator<<(std::ostream& out, const Game& game);
     friend std::istream& operator>>(std::istream& in, Game& game);
 private:
     void Play_menu();
     void Load_menu();
     void Restart_menu(bool& exit);
-    std::string numeFisier;
 signals:
     void PlayersInfo(const std::string &player1Name,QColor color1, const std::string& player2Name, QColor color2);
     void gameFinished();
-    void boardLoaded(Board board);
+    void boardLoaded(Board board,int isLastPiecePlaced);
 public slots:
     void setDifficulty(const QString& difficulty);
     void setPlayerNames(const QString& namePlayer1, const QString& namePlayer2);

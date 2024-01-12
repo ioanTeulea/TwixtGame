@@ -192,6 +192,7 @@ void GameScene::drawGameBoard()
         }
     }
 
+
     qreal lineHeight = 2.0; // Grosimea liniei
     QPen redPen(Qt::red), blackPen(Qt::black);
     redPen.setWidthF(lineHeight);
@@ -212,6 +213,10 @@ void GameScene::drawGameBoard()
     QGraphicsProxyWidget* proxyButton = new QGraphicsProxyWidget();
     proxyButton->setWidget(nextPlayerButton);
     addItem(proxyButton);
+}
+void GameScene::saveButtonClicked()
+{
+    emit isPiecePlaced(piecePlaced);
 }
 void GameScene::switchColor()
 {
@@ -246,10 +251,32 @@ void GameScene::keyPressEvent(QKeyEvent* event) {
         QGraphicsScene::keyPressEvent(event);
     }
 }
-}
-void GameScene::onBoardLoaded(const Board& loadedBoard)
+void GameScene::onBoardLoaded(Board loadedBoard,int isLastPiecePlaced)
 {
     clear();
+    if (!nextPlayerButton) {
+        nextPlayerButton = new QPushButton("Next Player", nullptr);
+    }
+    if (isLastPiecePlaced == 1)
+    {
+        nextPlayerButton->setEnabled(true);
+        piecePlaced = true;
+    }
+    else if(isLastPiecePlaced == 0)
+    {
+        nextPlayerButton->setEnabled(false);
+        piecePlaced = false;
+    }
+
+    //connect(nextPlayerButton, &QPushButton::clicked, this, &GameScene::switchColor);
+    qreal buttonWidth = Width * 0.15;     // 15% din l??imea scenei
+    qreal buttonHeight = Height * 0.07;; // 5% din ?n?l?imea scenei
+    qreal buttonX = -Width / 2.0 + 10;;  // Ajusteaz? pozi?ia pe axa X
+    qreal buttonY = -Height / 2.0 + 10;  // Ajusteaz? pozi?ia pe axa Y
+
+
+    nextPlayerButton->setGeometry(buttonX, buttonY, buttonWidth, buttonHeight);
+
     qreal radius = cellSize / 4.0; // raza cercului
     qreal distance = 1.0 * cellSize; // distan?a ?ntre cercuri
 
@@ -258,6 +285,29 @@ void GameScene::onBoardLoaded(const Board& loadedBoard)
     qreal sceneHeight = loadedBoard.getSize()* distance;
     qreal xOffset = -sceneWidth / 2.0;
     qreal yOffset = -sceneHeight / 2.0;
+
+    // Adaug? numele juc?torului 1 la stânga tablei de joc
+    QGraphicsTextItem* player1TextItem = new QGraphicsTextItem(player1Name);
+    player1TextItem->setFont(QFont("Arial", 12));  // Seteaz? fontul ?i dimensiunea
+    player1TextItem->setDefaultTextColor(player1Color);  // Seteaz? culoarea textului
+    player1TextItem->setPos(xOffset - 150, yOffset + sceneHeight / 2 - player1TextItem->boundingRect().height() / 2);
+   // player1TextItem->setGraphicsEffect(glowEffect);
+    addItem(player1TextItem);
+
+    // Adaug? numele juc?torului 2 la dreapta tablei de joc
+    QGraphicsTextItem* player2TextItem = new QGraphicsTextItem(player2Name);
+    player2TextItem->setFont(QFont("Arial", 12));  // Seteaz? fontul ?i dimensiunea
+    player2TextItem->setDefaultTextColor(player2Color);  // Seteaz? culoarea textului
+    player2TextItem->setPos(xOffset + sceneWidth + 50, yOffset + sceneHeight / 2 - player2TextItem->boundingRect().height() / 2);
+    addItem(player2TextItem);
+
+    //Adaug? numele juc?torului curent deasupra tablei de joc
+    turnInfo = new QGraphicsTextItem(player1Name + "'s turn");
+    turnInfo->setFont(QFont("Arial", 14));  // Seteaz? fontul ?i dimensiunea
+    turnInfo->setDefaultTextColor(Qt::lightGray);  // Seteaz? culoarea textului
+    turnInfo->setPos(xOffset + sceneWidth / 2 - turnInfo->boundingRect().width() / 2, yOffset - 50);  // Ajusteaz? pozi?ia pentru a fi deasupra ?i la mijlocul tablei
+    addItem(turnInfo);
+
     setSceneRect(xOffset, yOffset, sceneWidth, sceneHeight);
     for (qreal i = 0; i < loadedBoard.getSize(); ++i)
     {
@@ -265,7 +315,7 @@ void GameScene::onBoardLoaded(const Board& loadedBoard)
         {
             QGraphicsEllipseItem* circle = new QGraphicsEllipseItem(i * distance + xOffset, j * distance + yOffset, radius, radius);
             circle->setPen(QPen(Qt::black));
-             QColor cellColor = loadedBoard(i,j).getColor();
+             QColor cellColor = loadedBoard(j,i).getColor();
             circle->setBrush(QBrush(cellColor));
             circle->setFlag(QGraphicsItem::ItemIsSelectable);
             circle->setData(0, i);  // ?n prima valoare (index 0), stocheaz? i
@@ -274,6 +324,24 @@ void GameScene::onBoardLoaded(const Board& loadedBoard)
 
             addItem(circle);
         }
+    }
+    for (const auto& bridge : loadedBoard.getBridges())
+    {
+        // Ob?ine?i coordonatele (i, j) ale celor dou? cercuri conectate de pod
+        uint16_t j1 = bridge.getPiece1().getX();
+        uint16_t i1 = bridge.getPiece1().getY();
+        uint16_t j2 = bridge.getPiece2().getX();
+        uint16_t i2 = bridge.getPiece2().getY();
+
+        // Ad?uga?i o linie între cele dou? cercuri
+        QGraphicsLineItem* line = new QGraphicsLineItem();
+        // Seteaz? culoarea în func?ie de ce condi?ie consideri necesar?
+        QPen pen(bridge.getPiece1().getColor(), 2, Qt::SolidLine);
+        line->setPen(pen);
+        line->setLine(xOffset + i1 * distance + radius / 2, yOffset + j1 * distance + radius / 2,
+            xOffset + i2 * distance + radius / 2, yOffset + j2 * distance + radius / 2);
+        addItem(line);
+        lines.append(line);
     }
     qreal lineHeight = 2.0; // Grosimea liniei
     QPen redPen(Qt::red), blackPen(Qt::black);
@@ -290,5 +358,8 @@ void GameScene::onBoardLoaded(const Board& loadedBoard)
     addLine(middle, yOffset, middle, yOffset + sceneHeight, blackPen);
 
     lines = QList<QGraphicsLineItem*>();
-
+    // Adaug? butonul ?n scen?
+    QGraphicsProxyWidget* proxyButton = new QGraphicsProxyWidget();
+    proxyButton->setWidget(nextPlayerButton);
+    addItem(proxyButton);
 }

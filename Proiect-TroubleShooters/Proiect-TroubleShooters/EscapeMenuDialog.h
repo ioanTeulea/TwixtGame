@@ -13,14 +13,16 @@ public:
 
 private:
     QString buttonStyle;
-
+    bool isLastPiecePlaced;
 signals:
-    void save(const std::string& filename);
-
+    void save(const std::string& filename,bool isPiecePlaced);
+    void savedClicked();
 private slots:
     void resumeGame();
     void saveGame();
     void forfeitGame();
+public slots:
+    bool isPiecePlaced(bool isPiecePlaced);
 };
 
 #endif

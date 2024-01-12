@@ -200,7 +200,13 @@ void Game::reset()
 
 void Game::Load()
 {
-    std::ifstream in(numeFisier);
+    std::string lastSavedFileName;
+    std::ifstream configFile("config.txt");
+    if (configFile.is_open()) {
+        configFile >> lastSavedFileName;
+        configFile.close();
+    }
+    std::ifstream in(lastSavedFileName);
     Player p1, p2;
     in >> p1;
     this->player1 = p1;
@@ -209,24 +215,29 @@ void Game::Load()
     Board board;
     in >> board;
     this->board = board;
-    uint16_t color;
-    in >> color;
-    if (static_cast<QColor>(color) == p1.getColor())
+    std::string colorStr;
+    in >> colorStr;
+    QColor Color(QString::fromStdString(colorStr));
+    if (Color == p1.getColor())
         this->currentPlayer = &this->player1;
     else
         this->currentPlayer = &this->player2;
     std::string diff;
     in >> diff;
     difficulty = diff;
-    emit boardLoaded(board);
+    int isLastPiecePlaced;
+    in >> isLastPiecePlaced;
     emit PlayersInfo(p1.getName(),p1.getColor(),p2.getName(), p2.getColor());
+    emit boardLoaded(board,isLastPiecePlaced);
 }
 
-void Game::Save(const std::string& filename)
+void Game::Save(const std::string& filename,bool isPiecePlaced)
 {
-    numeFisier=  filename;
     std::ofstream out(filename);
     out << *this;
+    out << isPiecePlaced;
+    std::ofstream configFile("config.txt");
+    configFile << filename;
 }
 
 
@@ -473,8 +484,9 @@ std::ostream& operator<<(std::ostream& out, const Game& game)
     out << game.player1 << '\n';
     out << game.player2 << '\n';
     out << game.board << '\n';
-    //out << game.currentPlayer->getColor() << '\n';
+    out << game.currentPlayer->getColor().name().toStdString() << '\n';
     out << game.difficulty;
+    out << '\n';
     return out;
 }
 

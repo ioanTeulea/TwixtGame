@@ -7,6 +7,11 @@ QColor Piece::getColor() const
     return m_color;
 }
 
+void Piece::setColor(QColor color)
+{
+    m_color = color;
+}
+
 const uint16_t& Piece::getX() const
 {
     return x;
@@ -24,16 +29,17 @@ bool Piece::operator==(const Piece& other) const {
 
 std::ostream& operator<<(std::ostream& out, const Piece& piece)
 {
-    out << piece.m_color << '\n';
+    out << piece.m_color.name().toStdString() << '\n';
     out << piece.x << " " << piece.y;
     return out;
 }
 
 std::istream& operator>>(std::istream& in, Piece& piece)
 {
-    uint16_t color;
-    in >> color;
-    piece.m_color = static_cast<Color>(color);
+    std::string colorStr;
+    in >> colorStr;
+    QColor Color(QString::fromStdString(colorStr));
+    piece.setColor(Color);
     in >> piece.x >> piece.y;
     return in;
 }

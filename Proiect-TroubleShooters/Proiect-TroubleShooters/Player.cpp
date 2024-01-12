@@ -53,7 +53,7 @@ bool Player::operator==(const Player& other)
 std::ostream& operator<<(std::ostream& out, const Player& player)
 {
 	out << player.name << '\n';
-	//out << player.color << '\n';
+	out << player.color.name().toStdString() << '\n';
 	out << player.remainingPieces << '\n';
 	out << player.remainingBridges << '\n';
 	out << player.advantage;
@@ -63,9 +63,11 @@ std::ostream& operator<<(std::ostream& out, const Player& player)
 std::istream& operator>>(std::istream& in, Player& player)
 {
 	in >> player.name;
-	uint16_t c;
-	in >> c;
-	player.color = static_cast<Color>(c);
+	std::string colorStr;
+	in >> colorStr;
+	QColor Color(QString::fromStdString(colorStr));
+
+	player.color = Color;
 	in >> player.remainingPieces;
 	in >> player.remainingBridges;
 	in >> player.advantage;

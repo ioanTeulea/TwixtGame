@@ -28,6 +28,7 @@ public:
 
     const std::vector<std::vector<Piece>>& getBoard() const;
     std::vector<Bridge>& getBridges();
+    
 
     Piece& operator()(uint16_t x, uint16_t y); // Operatorul () pentru accesul la piese
     const Piece& operator()(uint16_t x, uint16_t y) const;

@@ -1,7 +1,11 @@
 #include "Bridge.h"
 
 
-Bridge::Bridge(Piece& piece1, Piece& piece2) :m_piece1{ piece1 }, m_piece2{ piece2 } {}
+
+
+Bridge::Bridge() : m_piece1(defaultPiece()), m_piece2(defaultPiece()) {}
+
+Bridge::Bridge(Piece piece1, Piece piece2) :m_piece1{ piece1 }, m_piece2{ piece2 } {}
 
 Bridge& Bridge::operator=(const Bridge& other)
 {
@@ -37,6 +41,7 @@ std::ostream& operator<<(std::ostream& out, const Bridge& bridge)
 
 std::istream& operator>>(std::istream& in, Bridge& bridge)
 {
-    in >> bridge.m_piece1 >> bridge.m_piece2;
+    in >> bridge.m_piece1;
+    in>> bridge.m_piece2;
     return in;
 }

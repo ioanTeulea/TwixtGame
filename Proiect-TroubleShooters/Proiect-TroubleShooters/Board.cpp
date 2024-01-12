@@ -14,7 +14,7 @@ Board& Board::operator=(const Board& other) {
         size = other.size;
         board = other.board;
         dozer = other.dozer;
-        // bridges = other.bridges;
+        bridges = other.bridges;
     }
     return *this;
 }
@@ -34,7 +34,7 @@ Board& Board::operator=(Board&& other) noexcept
         size = other.size;
         board = std::move(other.board);
         dozer = other.dozer;
-
+        bridges = other.bridges;
         // Dup? mutarea resurselor, cel?lalt obiect trebuie s? fie ?ntr-o stare valid?
         other.size = 0;
         other.board.clear();
@@ -69,6 +69,7 @@ std::vector<Bridge>& Board::getBridges()
 {
     return bridges;
 }
+
 
 Piece& Board::operator()(uint16_t x, uint16_t y)
 {
@@ -425,12 +426,12 @@ std::ostream& operator<<(std::ostream& out, const Board& B)
     uint16_t pieces = 0;
     for (uint16_t i = 0; i < B.size; i++)
         for (uint16_t j = 0; j < B.size; j++)
-            if (B.board[i][j].getColor() != None)
+            if (B.board[i][j].getColor() != Qt::gray)
                 pieces++;
     out << pieces << '\n';
     for (uint16_t i = 0; i < B.size; i++)
         for (uint16_t j = 0; j < B.size; j++)
-            if (B.board[i][j].getColor() != None)
+            if (B.board[i][j].getColor() != Qt::gray)
                 out << B.board[i][j] << '\n';
     out << B.bridges.size() << '\n';
     for (int i = 0; i < B.bridges.size(); i++)
@@ -456,8 +457,13 @@ std::istream& operator>>(std::istream& in, Board& B)
     }
     uint16_t bridgesSize;
     in >> bridgesSize;
+    aux.getBridges().reserve(bridgesSize);
     for (uint16_t i{ 0 }; i < bridgesSize; i++) {
-        in >> aux.bridges[i];
+        Piece p1, p2;
+        in >> p1;
+        in >> p2;
+        Bridge bridge(p1, p2);
+        aux.getBridges().push_back(bridge);
     }
     uint16_t minesSize;
     in >> minesSize;
@@ -467,7 +473,7 @@ std::istream& operator>>(std::istream& in, Board& B)
         aux.mines[i] = std::make_tuple(mineX, mineY, type);
     }
     in >> aux.dozer.first >> aux.dozer.second;
-    B = aux;
+    B =std::move(aux);
 
     return in;
 }

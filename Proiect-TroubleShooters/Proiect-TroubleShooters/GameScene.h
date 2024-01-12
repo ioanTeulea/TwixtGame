@@ -19,6 +19,7 @@
 
 #include "EscapeMenuDialog.h"
 #include"Board.h"
+#include "Bridge.h"
 
 
 class GameScene : public QGraphicsScene
@@ -30,13 +31,13 @@ public:
     void showCoordinates(qreal x, qreal y);
     QPushButton* getNextPlayerButton() const;
     EscapeMenuDialog* getEscapeMenu() const;
-    void drawGameBoard();
+    
 
 protected:
     void mousePressEvent(QGraphicsSceneMouseEvent* event) override;
     void mouseReleaseEvent(QGraphicsSceneMouseEvent* event) override;
     void keyPressEvent(QKeyEvent* event) override;
-    void drawGameBoard();
+   
    
     void switchColor();
     int Width;
@@ -60,10 +61,13 @@ signals:
     void circleClicked(QColor color, const uint16_t i, const uint16_t j, bool& isOk);
     void bridgeClicked(const uint16_t x1, const uint16_t y1, const uint16_t x2, const uint16_t y2, bool& isOk);
     void deleteBridgeClicked(const uint16_t x1, const uint16_t y1, const uint16_t x2, const uint16_t y2);
+    bool isPiecePlaced(bool piecePlaced);
 public slots:
     void setBoardSize(int newSize);
     void PlayersInfo(const std::string& player1Name, QColor color1, const std::string& player2Name, QColor color2);
-    void onBoardLoaded(const Board& loadedBoard);
+    void onBoardLoaded( Board loadedBoard,int isLastPiecePlaced);
+    void drawGameBoard();
+    void saveButtonClicked();
 };
 
 #endif // GAMESCENE_H
