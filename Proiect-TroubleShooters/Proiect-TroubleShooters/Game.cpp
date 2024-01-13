@@ -27,6 +27,7 @@ void Game::switchPlayer()
         currentPlayer = &player1;
     }
     board(board.dozer.first, board.dozer.second).setColor(Qt::gray);
+   // board.deletePiece(board(board.dozer.second, board.dozer.first));
     Piece random_piece = board.dozerTurn(30);
     actionRandomPiece(random_piece);
 }
@@ -172,7 +173,7 @@ void Game::actionRandomPiece(Piece random_piece)
 {
 
     //consoleDisplay.displayMessage("Dozer's turn\n");
-    if (random_piece.getColor() == Qt::red)
+    if (board(random_piece.getX(),random_piece.getY()).getColor() == Qt::red)
     {
         player1.setRemainingPieces(player1.getRemainingPieces() + 1);
         player1.setRemainingBridges(player1.getRemainingBridges() + board.delete_DozerBridges(random_piece));
@@ -182,7 +183,7 @@ void Game::actionRandomPiece(Piece random_piece)
         //consoleDisplay.displayBoard(board);
     }
     else
-        if (random_piece.getColor() == Qt::black)
+        if (board(random_piece.getX(), random_piece.getY()).getColor() == Qt::black)
         {
             player2.setRemainingPieces(player2.getRemainingPieces() + 1);
             player2.setRemainingBridges(player2.getRemainingBridges() + board.delete_DozerBridges(random_piece));
@@ -196,6 +197,7 @@ void Game::actionRandomPiece(Piece random_piece)
             consoleDisplay.displayMessage("The dozer moved to an empty position.\n");
             consoleDisplay.displayBoard(board);
         }
+    board(random_piece.getY(), random_piece.getX()).setColor(random_piece.getColor());
     emit randomPiece(random_piece.getY(), random_piece.getX());
 }
 
