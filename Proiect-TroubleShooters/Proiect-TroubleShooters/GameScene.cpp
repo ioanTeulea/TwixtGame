@@ -1,4 +1,25 @@
 ﻿#include "GameScene.h"
+#define BUTTON_ENABLED_STYLE "QPushButton {" \
+"    background-color: #7B7B7B;" \
+"    color: white;" \
+"    border: 2px solid #343434;" \
+"    border-radius: 8px;" \
+"    padding: 4px 8px;" \
+"}" \
+"QPushButton:hover {" \
+"    background-color: #555555;" \
+"}"
+
+#define BUTTON_DISABLED_STYLE "QPushButton {" \
+"    background-color: #D1D1D1;" \
+"    color: #A6A6A6;" \
+"    border: 2px solid #B0B0B0;" \
+"    border-radius: 8px;" \
+"    padding: 4px 8px;" \
+"}" \
+"QPushButton:hover {" \
+"    background-color: #555555;" \
+"}"
 
 
 GameScene::GameScene(QObject* parent, int initialWidth, int initialHeight) :QGraphicsScene(parent), startEllipse(nullptr)
@@ -9,6 +30,7 @@ GameScene::GameScene(QObject* parent, int initialWidth, int initialHeight) :QGra
     if (!nextPlayerButton) {
         nextPlayerButton = new QPushButton("Next Player", nullptr);
         nextPlayerButton->setEnabled(false);
+        nextPlayerButton->setStyleSheet(BUTTON_DISABLED_STYLE);
     }
     //drawGameBoard();
     connect(nextPlayerButton, &QPushButton::clicked, this, &GameScene::switchColor);
@@ -22,7 +44,34 @@ void GameScene::showCoordinates(qreal x, qreal y)
 
     qDebug() << "x= " << X << " y=: " << Y;
 }
+bool GameScene::isPointInsideEllipse(const QPointF& point,  QGraphicsEllipseItem* ellipse)
+{
+    return ellipse->rect().contains(point);
+}
+void GameScene::applyGlowEffect(QGraphicsTextItem* textItem, int blurRadius, const QColor& glowColor, int offset)
+{
+    if (!textItem || !textItem->scene()) {
+        return;
+    }
 
+    // Creează un efect de umbră cu parametrii personalizați
+    QGraphicsDropShadowEffect* glowEffect = new QGraphicsDropShadowEffect;
+    glowEffect->setBlurRadius(blurRadius);  // Raza de blur
+    glowEffect->setColor(glowColor);        // Culoarea umbrei
+    glowEffect->setOffset(offset);          // Offsetul umbrei
+
+    // Aplică efectul de umbră pe QGraphicsTextItem
+    textItem->setGraphicsEffect(glowEffect);
+}
+bool GameScene::isPointInsideAnyEllipse(const QPointF& point, QList<QGraphicsEllipseItem*>& ellipses)
+{
+    for (QGraphicsEllipseItem* ellipse : ellipses) {
+        if (isPointInsideEllipse(point, ellipse)) {
+            return true;
+        }
+    }
+    return false;
+}
 QPushButton* GameScene::getNextPlayerButton() const
 {
     return nextPlayerButton;
@@ -57,15 +106,7 @@ void GameScene::mousePressEvent(QGraphicsSceneMouseEvent* event)
                 startEllipse->setBrush(currentColor);  // Face cercul rosu
                 startEllipse->setData(2, currentColor);
                 nextPlayerButton->setEnabled(true);
-                nextPlayerButton->setStyleSheet("QPushButton {"
-                    "   background-color: lightblue;"  // culoare de fundal
-                    "   color: black;"                  // culoare text
-                    "   border: 2px solid black;"       // grosimea bordurii ?i culoare neagr?
-                    "   border-radius: 10px;"           // col?uri rotunde
-                    "   padding: 5px 10px;"             // spa?iere ?ntre text ?i marginile butonului
-                    "   font-family: 'Times New Roman';" // fontul textului
-                    "   font-size: 12px;"               // dimensiunea fontului
-                    "}");
+                nextPlayerButton->setStyleSheet(BUTTON_DISABLED_STYLE);
                 piecePlaced = true;
                 qreal centerX = event->scenePos().x();
                 qreal centerY = event->scenePos().y();
@@ -81,8 +122,11 @@ void GameScene::mousePressEvent(QGraphicsSceneMouseEvent* event)
     }
     else if (item && item->type() == QGraphicsLineItem::Type) {
         QGraphicsLineItem* line = qgraphicsitem_cast<QGraphicsLineItem*>(item);
-        emit deleteBridgeClicked(line->data(0).toUInt(), line->data(1).toUInt(), line->data(2).toUInt(), line->data(3).toUInt());
-        removeItem(item);
+        QPointF clickPos = event->scenePos();
+        if (!isPointInsideAnyEllipse(clickPos, circlesList)) {
+            emit deleteBridgeClicked(line->data(0).toUInt(), line->data(1).toUInt(), line->data(2).toUInt(), line->data(3).toUInt());
+            removeItem(item);
+        }
     }
 
     QGraphicsScene::mousePressEvent(event);
@@ -132,39 +176,33 @@ void GameScene::drawGameBoard()
     connect(nextPlayerButton, &QPushButton::clicked, this, &GameScene::switchColor);
     qreal buttonWidth = Width * 0.15;     // 15% din l??imea scenei
     qreal buttonHeight = Height * 0.07;; // 5% din ?n?l?imea scenei
-    qreal buttonX = -Width / 2.0 + 10;;  // Ajusteaz? pozi?ia pe axa X
-    qreal buttonY = -Height / 2.0 + 10;  // Ajusteaz? pozi?ia pe axa Y
-
-
-    nextPlayerButton->setGeometry(buttonX, buttonY, buttonWidth, buttonHeight);
-    nextPlayerButton->setEnabled(false);
-
-    QGraphicsDropShadowEffect* glowEffect = new QGraphicsDropShadowEffect();
-    glowEffect->setBlurRadius(10);  // Ajusteaz? raza de blur pentru efectul de str?lucire
-    glowEffect->setColor(Qt::red);  // Ajusteaz? culoarea pentru efectul de str?lucire
-    glowEffect->setOffset(0);       // Ajusteaz? offset-ul pentru efectul de str?lucire
-
+   
 
     qreal radius = cellSize / 4.0; // raza cercului
-    qreal distance = 1.0 * cellSize; // distan?a ?ntre cercuri
+    qreal distance = 0.7 * cellSize; // distan?a ?ntre cercuri
 
     // Ini?ializarea dimensiunilor ?i coordonatelor scenei
     qreal sceneWidth = boardSize * distance;
     qreal sceneHeight = boardSize * distance;
     qreal xOffset = -sceneWidth / 2.0;
     qreal yOffset = -sceneHeight / 2.0;
+
+    qreal buttonX = xOffset + (sceneWidth - buttonWidth) / 2.0;
+    qreal buttonY = yOffset + sceneHeight + 10;
+    nextPlayerButton->setGeometry(buttonX, buttonY, buttonWidth, buttonHeight);
+    nextPlayerButton->setEnabled(false);
    
     // Adaug? numele juc?torului 1 la stânga tablei de joc
-    QGraphicsTextItem* player1TextItem = new QGraphicsTextItem(player1Name);
-    player1TextItem->setFont(QFont("Arial", 12));  // Seteaz? fontul ?i dimensiunea
+    player1TextItem = new QGraphicsTextItem(player1Name);
+    player1TextItem->setFont(QFont("Impact", 15));  // Seteaz? fontul ?i dimensiunea
     player1TextItem->setDefaultTextColor(player1Color);  // Seteaz? culoarea textului
-    player1TextItem->setPos(xOffset - 150, yOffset + sceneHeight / 2 - player1TextItem->boundingRect().height() / 2);
-    player1TextItem->setGraphicsEffect(glowEffect);
+    player1TextItem->setPos(xOffset - 100, yOffset + sceneHeight / 2 - player1TextItem->boundingRect().height() / 2);
+    applyGlowEffect(player1TextItem, 10, player1Color, 0);
     addItem(player1TextItem);
 
     // Adaug? numele juc?torului 2 la dreapta tablei de joc
-    QGraphicsTextItem* player2TextItem = new QGraphicsTextItem(player2Name);
-    player2TextItem->setFont(QFont("Arial", 12));  // Seteaz? fontul ?i dimensiunea
+    player2TextItem = new QGraphicsTextItem(player2Name);
+    player2TextItem->setFont(QFont("Impact", 15));  // Seteaz? fontul ?i dimensiunea
     player2TextItem->setDefaultTextColor(player2Color);  // Seteaz? culoarea textului
     player2TextItem->setPos(xOffset + sceneWidth + 50, yOffset + sceneHeight / 2 - player2TextItem->boundingRect().height() / 2);
     addItem(player2TextItem);
@@ -225,14 +263,20 @@ void GameScene::switchColor()
     {
         currentColor = player2Color;
         turnInfo->setPlainText(player2Name+"'s turn!");
+        applyGlowEffect(player2TextItem, 20, player2Color, 0);
+        player1TextItem->setGraphicsEffect(nullptr);
+        
     }
     else
     {
         currentColor = player1Color;
         turnInfo->setPlainText(player1Name+"'s turn!");
+        applyGlowEffect(player1TextItem, 20, player1Color, 0);
+        player2TextItem->setGraphicsEffect(nullptr);
     }
 
     nextPlayerButton->setEnabled(false);
+    nextPlayerButton->setStyleSheet(BUTTON_DISABLED_STYLE);
     piecePlaced = false;
 }
 void GameScene::PlayersInfo(const std::string& player1Name, QColor color1, const std::string& player2Name, QColor color2)
@@ -255,17 +299,20 @@ void GameScene::keyPressEvent(QKeyEvent* event) {
 void GameScene::onBoardLoaded(Board loadedBoard,int isLastPiecePlaced)
 {
     clear();
+    circlesList.clear();
     if (nextPlayerButton==nullptr) {
         nextPlayerButton = new QPushButton("Next Player", nullptr);
     }
     if (isLastPiecePlaced == 1)
     {
         nextPlayerButton->setEnabled(true);
+        nextPlayerButton->setStyleSheet(BUTTON_ENABLED_STYLE);
         piecePlaced = true;
     }
     else if(isLastPiecePlaced == 0)
     {
-        //nextPlayerButton->setEnabled(false);
+        nextPlayerButton->setEnabled(false);
+        nextPlayerButton->setStyleSheet(BUTTON_DISABLED_STYLE);
         piecePlaced = false;
     }
 
@@ -360,15 +407,16 @@ void GameScene::onBoardLoaded(Board loadedBoard,int isLastPiecePlaced)
 
     lines = QList<QGraphicsLineItem*>();
     // Adaug? butonul ?n scen?
-    //QGraphicsProxyWidget* proxyButton = new QGraphicsProxyWidget();
-    ///proxyButton->setWidget(nextPlayerButton);
-    //addItem(proxyButton);
+    QGraphicsProxyWidget* proxyButton = new QGraphicsProxyWidget();
+    proxyButton->setWidget(nextPlayerButton);
+    addItem(proxyButton);
 }
 void GameScene::onMineExploded(Board board)
 {
     if (nextPlayerButton != nullptr)
     {
         nextPlayerButton->setEnabled(true);
+        nextPlayerButton->setStyleSheet(BUTTON_ENABLED_STYLE);
         piecePlaced = true;
     }
 

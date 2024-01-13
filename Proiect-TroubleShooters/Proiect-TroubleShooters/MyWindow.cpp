@@ -2,8 +2,8 @@
 #include "PlayerInputDialog.h"
 #include "Game.h"
 #include <QDebug>
-#define INITIAL_WIDTH 1000
-#define INITIAL_HEIGHT 800
+#define INITIAL_WIDTH 900
+#define INITIAL_HEIGHT 700
 MyWindow::MyWindow()
     : QObject(nullptr)
 {

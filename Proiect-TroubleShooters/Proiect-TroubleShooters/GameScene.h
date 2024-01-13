@@ -44,7 +44,7 @@ protected:
     int Height;
 
 private:
-    qreal cellSize = 50;
+    qreal cellSize = 40;
     int boardSize;
     QGraphicsEllipseItem* startEllipse;
     QList<QGraphicsLineItem*> lines;
@@ -53,12 +53,15 @@ private:
     QColor player2Color;
     QString  player1Name;
     QString  player2Name;
-    QGraphicsTextItem* turnInfo;
+    QGraphicsTextItem* turnInfo, *player1TextItem,* player2TextItem;
     QList<QGraphicsEllipseItem*> circlesList;
     QColor currentColor;
     bool piecePlaced;
     int X_before = -1, Y_before = -1;
     EscapeMenuDialog* escapeMenu = new EscapeMenuDialog(qobject_cast<QWidget*>(QCoreApplication::instance()));
+    bool isPointInsideAnyEllipse(const QPointF& point, QList<QGraphicsEllipseItem*>& ellipses);
+    bool isPointInsideEllipse(const QPointF& point,  QGraphicsEllipseItem* ellipse);
+    void applyGlowEffect(QGraphicsTextItem* textItem, int blurRadius, const QColor& glowColor, int offset);
 signals:
     void circleClicked(QColor color, const uint16_t i, const uint16_t j, bool& isOk);
     void bridgeClicked(const uint16_t x1, const uint16_t y1, const uint16_t x2, const uint16_t y2, bool& isOk);
@@ -73,6 +76,7 @@ public slots:
     void drawGameBoard();
     void saveButtonClicked();
     void randomPiece(uint16_t X, uint16_t Y);
+    void gameFinished();
 };
 
 #endif // GAMESCENE_H

@@ -27,19 +27,19 @@ MenuScene::MenuScene(QObject* parent, int initialWidth, int initialHeight) : QGr
     // Adaug? imaginea de fundal
     addBackground(Width, Height);
     // Adaug? butoanele
-    playButton = createButton("Play", 100, 100, 100, 100);
+    playButton = createButton("Play", 100, 50, 95, 175);
     QGraphicsProxyWidget* proxyButton1 = new QGraphicsProxyWidget();
     proxyButton1->setWidget(playButton);
     addItem(proxyButton1);
     connect(playButton, &QPushButton::clicked, this, &MenuScene::onPlayClicked);
 
-    loadButton = createButton("Load", 100, 100, 100, 300);
+    loadButton = createButton("Load", 100, 50, 95, 325);
     QGraphicsProxyWidget* proxyButton2 = new QGraphicsProxyWidget();
     proxyButton2->setWidget(loadButton);
     addItem(proxyButton2);
     connect(loadButton, &QPushButton::clicked, this, &MenuScene::onLoadClicked);
 
-    exitButton = createButton("Exit", 100, 100, 100, 500);
+    exitButton = createButton("Exit", 100, 50, 95, 465);
     QGraphicsProxyWidget* proxyButton3 = new QGraphicsProxyWidget();
     proxyButton3->setWidget(exitButton);
     addItem(proxyButton3);

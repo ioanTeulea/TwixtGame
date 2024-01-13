@@ -8,7 +8,7 @@ PlayerInputDialog::PlayerInputDialog(QWidget* parent) : QDialog(parent) {
     m_player1NameEdit = new QLineEdit;
     m_player2NameEdit = new QLineEdit;
     m_boardSizeSpinBox = new QSpinBox;
-    m_boardSizeSpinBox->setRange(5, 100);
+    m_boardSizeSpinBox->setRange(5, 25);
 
     m_difficultyComboBox = new QComboBox;
     m_difficultyComboBox->addItem("Easy");
