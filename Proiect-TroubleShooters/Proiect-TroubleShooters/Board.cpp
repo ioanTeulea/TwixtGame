@@ -311,15 +311,16 @@ uint16_t Board::delete_DozerBridges(Piece random_piece)
     uint16_t numberBridges = 0;
     for (int i = 0; i < bridges.size(); i++)
     {
-        if (bridges[i].getPiece1() == random_piece || bridges[i].getPiece2() == random_piece)
+        if ((bridges[i].getPiece1().getX() == random_piece.getX() && bridges[i].getPiece1().getY() == random_piece.getY()) ||
+            (bridges[i].getPiece2().getX() == random_piece.getX() && bridges[i].getPiece2().getY() == random_piece.getY()))
         {
-            if (bridges[i].getPiece1() == random_piece)
+            if (bridges[i].getPiece1().getX() == random_piece.getX() && bridges[i].getPiece1().getY() == random_piece.getY())
             {
                 std::cout << "intra";
                 deleteBridge(random_piece, bridges[i].getPiece2());
 
             }
-            else if (bridges[i].getPiece2() == random_piece)
+            else if (bridges[i].getPiece2().getX() == random_piece.getX() && bridges[i].getPiece2().getY() == random_piece.getY())
             {
                 std::cout << "intra";
                 deleteBridge(bridges[i].getPiece1(), random_piece);
