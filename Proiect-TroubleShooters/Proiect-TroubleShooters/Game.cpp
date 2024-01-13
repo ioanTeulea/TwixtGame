@@ -26,9 +26,8 @@ void Game::switchPlayer()
     {
         currentPlayer = &player1;
     }
-    board(board.dozer.first, board.dozer.second).setColor(Qt::gray);
-    Piece random_piece = board.dozerTurn(30);
-    actionRandomPiece(random_piece);
+    std::pair<uint16_t, uint16_t> current_dozer = board.dozerTurn(30);
+    actionRandomPiece(current_dozer);
 }
 
 void Game::switchPlayerColors()
@@ -75,7 +74,9 @@ void Game::action_placeBridge(const uint16_t x1, const uint16_t y1, const uint16
     }
     if (board(x1, y1).getColor() != currentPlayer->getColor() || board(x2, y2).getColor() != currentPlayer->getColor())
     {
-        consoleDisplay.displayMessage("Invalid location\n");
+        consoleDisplay.displayMessage((board(x1, y1).getColor().name().toStdString()) + "\n");
+        consoleDisplay.displayMessage((board(x2, y2).getColor().name().toStdString()) + "\n");
+        consoleDisplay.displayMessage("Invalid location!\n");
         isOk = false;
         return;
     }
@@ -95,6 +96,7 @@ void Game::action_placeBridge(const uint16_t x1, const uint16_t y1, const uint16
 void Game::action_addPawn(QColor color, const  uint16_t i, const  uint16_t j, bool& isOk)
 {
     isOk = false;
+    consoleDisplay.displayMessage(board(i, j).getColor().name().toStdString()+"\n");
     if (!isOk) {
         consoleDisplay.displayMessage("Choose the coordinates of the pillar: ");
         if (currentPlayer->getColor() == Qt::red && (j == 0 || j == board.getSize() - 1)) {
@@ -168,27 +170,27 @@ void Game::setGameDifficulty()
             percentage = 50;
 }
 
-void Game::actionRandomPiece(Piece random_piece)
+void Game::actionRandomPiece(std::pair<uint16_t,uint16_t> random_piece)
 {
 
     //consoleDisplay.displayMessage("Dozer's turn\n");
-    if (random_piece.getColor() == Qt::red)
+    if (board(random_piece.first,random_piece.second).getColor()==Qt::red)
     {
         player1.setRemainingPieces(player1.getRemainingPieces() + 1);
-        player1.setRemainingBridges(player1.getRemainingBridges() + board.delete_DozerBridges(random_piece));
-        board.deletePiece(random_piece);
+        player1.setRemainingBridges(player1.getRemainingBridges() + board.delete_DozerBridges(board(random_piece.first, random_piece.second)));
+        board.deletePiece(board(random_piece.first, random_piece.second));
         //un mesaj
-        consoleDisplay.displayMessage("The dozer had destroyed the pillar from coordinates " + std::to_string(random_piece.getX()) + " " + std::to_string(random_piece.getY()) + "\n");
+        consoleDisplay.displayMessage("The dozer had destroyed the pillar from coordinates " + std::to_string(random_piece.first) + " " + std::to_string(random_piece.second) + "\n");
         //consoleDisplay.displayBoard(board);
     }
     else
-        if (random_piece.getColor() == Qt::black)
+        if (board(random_piece.first, random_piece.second).getColor() == Qt::black)
         {
             player2.setRemainingPieces(player2.getRemainingPieces() + 1);
-            player2.setRemainingBridges(player2.getRemainingBridges() + board.delete_DozerBridges(random_piece));
-            board.deletePiece(random_piece);
+            player2.setRemainingBridges(player2.getRemainingBridges() + board.delete_DozerBridges(board(random_piece.first, random_piece.second)));
+            board.deletePiece(board(random_piece.first, random_piece.second));
             //un mesaj
-            consoleDisplay.displayMessage("The dozer had destroyed the pillar from coordinates " + std::to_string(random_piece.getX()) + " " + std::to_string(random_piece.getY()) + "\n");
+            consoleDisplay.displayMessage("The dozer had destroyed the pillar from coordinates " + std::to_string(random_piece.first) + " " + std::to_string(random_piece.second) + "\n");
             //consoleDisplay.displayBoard(board);
         }
         else
@@ -196,7 +198,7 @@ void Game::actionRandomPiece(Piece random_piece)
             consoleDisplay.displayMessage("The dozer moved to an empty position.\n");
             consoleDisplay.displayBoard(board);
         }
-    emit randomPiece(random_piece.getY(), random_piece.getX());
+    emit randomPiece(random_piece.second, random_piece.first);
 }
 
 void Game::reset()
@@ -412,8 +414,8 @@ void Game::Play_menu()
                 if (placed_piece)
                 {
                     moveOn = true;
-                    random_piece = board.dozerTurn(percentage);
-                    actionRandomPiece(random_piece);
+                    //random_piece = board.dozerTurn(percentage);
+                    //actionRandomPiece(random_piece);
                     switchPlayer();
                 }
                 else

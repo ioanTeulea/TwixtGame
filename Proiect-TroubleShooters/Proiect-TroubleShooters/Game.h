@@ -12,6 +12,7 @@ class Game : public QObject {  // Mo?tene?te QObject
     ConsoleDisplay consoleDisplay;
     std::string difficulty;
     uint16_t percentage;
+    std::pair<uint16_t, uint16_t>lastDozer{ -1,-1 };
 public:
     Board& board; // Referin?? la tabla de joc
     Player* currentPlayer; // Pointer c?tre juc?torul curent
@@ -47,5 +48,5 @@ public slots:
     void action_placeBridge(const uint16_t x1, const uint16_t y1, const uint16_t x2, const uint16_t y2, bool& isOk);
     void action_deleteBridge(const uint16_t x1, const uint16_t y1, const uint16_t x2, const uint16_t y2);
     void Load();
-    void actionRandomPiece(Piece random_pice);
+    void actionRandomPiece(std::pair<uint16_t, uint16_t> random_pice);
 };

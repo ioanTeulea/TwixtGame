@@ -24,10 +24,10 @@ int main(int argc, char* argv[]) {
     QObject::connect(&playerDialog, &PlayerInputDialog::acceptedWithBoardSize, &Twixt, &Game::setBoardSize);
     QObject::connect(&playerDialog, &PlayerInputDialog::acceptedWithBoardSize, myWindow.getGameScene(), &GameScene::setBoardSize);
     QObject::connect(&playerDialog, &PlayerInputDialog::acceptedWithDifficulty, &Twixt, &Game::setDifficulty);
+    QObject::connect(&Twixt, &Game::randomPiece, myWindow.getGameScene(), &GameScene::randomPiece);
     QObject::connect(myWindow.getGameScene(), &GameScene::circleClicked, &Twixt, &Game::action_addPawn);
     QObject::connect(myWindow.getGameScene(), &GameScene::bridgeClicked, &Twixt, &Game::action_placeBridge);
     QObject::connect(myWindow.getGameScene(), &GameScene::deleteBridgeClicked, &Twixt, &Game::action_deleteBridge);
-    QObject::connect(&Twixt, &Game::randomPiece, myWindow.getGameScene(), &GameScene::randomPiece);
     QObject::connect(myWindow.getGameScene()->getNextPlayerButton(), &QPushButton::clicked, &Twixt, &Game::switchPlayer);
     QObject::connect(&Twixt, &Game::PlayersInfo, myWindow.getGameScene(), &GameScene::PlayersInfo);
     QObject::connect(myWindow.getGameScene()->getEscapeMenu(), &EscapeMenuDialog::save, &Twixt, &Game::Save);

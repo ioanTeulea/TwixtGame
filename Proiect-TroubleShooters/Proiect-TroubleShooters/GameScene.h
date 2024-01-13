@@ -70,7 +70,7 @@ public slots:
     void onBoardLoaded( Board loadedBoard,int isLastPiecePlaced);
     void drawGameBoard();
     void saveButtonClicked();
-    void randomPiece(int X, int Y);
+    void randomPiece(uint16_t X, uint16_t Y);
 };
 
 #endif // GAMESCENE_H

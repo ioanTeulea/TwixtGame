@@ -135,8 +135,8 @@ void Board::deleteBridge(const Piece& p1, const Piece& p2)
                 break;
             }
         }
-        board[p1.getX()][p1.getY()] = Piece(p1.getColor(), p1.getX(), p1.getY());
-        board[p2.getX()][p2.getY()] = Piece(p2.getColor(), p2.getX(), p2.getY());
+       // board[p1.getX()][p1.getY()] = Piece(p1.getColor(), p1.getX(), p1.getY());
+        //board[p2.getX()][p2.getY()] = Piece(p2.getColor(), p2.getX(), p2.getY());
     }
 }
 
@@ -275,7 +275,7 @@ bool Board::canPlaceBridge(const Piece& piece1, const Piece& piece2)
     return true;
 }
 
-Piece Board::dozerTurn(const std::uint16_t& percentage)
+std::pair<std::uint16_t, std::uint16_t> Board::dozerTurn(const std::uint16_t& percentage)
 {
     int dozer_action;
     {
@@ -294,16 +294,14 @@ Piece Board::dozerTurn(const std::uint16_t& percentage)
         } while (!isOccupied(x, y));
 
         dozer = { x, y };
-        Piece p(Qt::blue, x, y);
-        return p;
+        return dozer;
         
     }
     else
     {
         std::pair<uint16_t, uint16_t>coordinates = generateRandomPiece();
         dozer = { coordinates.first, coordinates.second };
-        Piece p(Qt::blue, coordinates.first, coordinates.second);
-        return p;
+        return dozer;
     }
 }
 
@@ -317,11 +315,13 @@ uint16_t Board::delete_DozerBridges(Piece random_piece)
         {
             if (bridges[i].getPiece1() == random_piece)
             {
+                std::cout << "intra";
                 deleteBridge(random_piece, bridges[i].getPiece2());
 
             }
             else if (bridges[i].getPiece2() == random_piece)
             {
+                std::cout << "intra";
                 deleteBridge(bridges[i].getPiece1(), random_piece);
             }
             numberBridges++;
@@ -351,7 +351,7 @@ std::pair<std::uint16_t, std::uint16_t> Board::generateRandomPiece()
 void Board::deletePiece(Piece chosen_piece)
 {
     Piece empty;
-    board[dozer.first][dozer.second] = empty;
+    board[chosen_piece.getX()][chosen_piece.getY()] = empty;
 }
 
 void Board::generateMines(const uint16_t& mines_nr)

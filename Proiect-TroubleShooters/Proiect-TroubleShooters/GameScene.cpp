@@ -363,7 +363,7 @@ void GameScene::onBoardLoaded(Board loadedBoard,int isLastPiecePlaced)
     proxyButton->setWidget(nextPlayerButton);
     addItem(proxyButton);
 }
-void GameScene::randomPiece(int X, int Y)
+void GameScene::randomPiece(uint16_t X,uint16_t Y)
 {
 
     if (X_before != -1 && Y_before != -1)
