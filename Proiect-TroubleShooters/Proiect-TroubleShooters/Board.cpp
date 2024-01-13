@@ -96,7 +96,7 @@ bool Board::isValidLocation(uint16_t x, uint16_t y) const
 }
 
 bool Board::isOccupied(uint16_t x, uint16_t y) const {
-    return board[x][y].getColor() != Qt::gray || (x == dozer.first && y == dozer.second);
+    return board[x][y].getColor() != Qt::gray;
 }
 
 bool Board::placeBridge(Piece& piece1, Piece& piece2)
@@ -294,11 +294,14 @@ Piece Board::dozerTurn(const std::uint16_t& percentage)
         } while (!isOccupied(x, y));
 
         dozer = { x, y };
-        return board[x][y];
+        Piece p(Qt::blue, x, y);
+        return p;
+        
     }
     else
     {
         std::pair<uint16_t, uint16_t>coordinates = generateRandomPiece();
+        dozer = { coordinates.first, coordinates.second };
         Piece p(Qt::blue, coordinates.first, coordinates.second);
         return p;
     }
@@ -329,6 +332,7 @@ uint16_t Board::delete_DozerBridges(Piece random_piece)
 
 std::pair<std::uint16_t, std::uint16_t> Board::generateRandomPiece()
 {
+    std::pair<std::uint16_t, std::uint16_t>Dozer;
     if (getSize() != 0)
     {
         uint16_t x, y;
@@ -337,10 +341,11 @@ std::pair<std::uint16_t, std::uint16_t> Board::generateRandomPiece()
             std::uniform_int_distribution<int> distribution(1, getSize() - 2);
             x = distribution(engine);
             y = distribution(engine);
-        } while (isOccupied(x, y)&&(x!=0&&y!=0));
-        dozer = { x,y };
+            std::cout << "da\n";
+        } while (isOccupied(x, y)&&x>0&&x<size-1&&y>0&&y<size-1);
+        Dozer = { x,y };
     }
-    return dozer;
+    return Dozer;
 }
 
 void Board::deletePiece(Piece chosen_piece)

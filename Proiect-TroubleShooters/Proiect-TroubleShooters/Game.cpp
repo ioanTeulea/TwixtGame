@@ -26,6 +26,7 @@ void Game::switchPlayer()
     {
         currentPlayer = &player1;
     }
+    board(board.dozer.first, board.dozer.second).setColor(Qt::gray);
     Piece random_piece = board.dozerTurn(30);
     actionRandomPiece(random_piece);
 }
@@ -178,7 +179,7 @@ void Game::actionRandomPiece(Piece random_piece)
         board.deletePiece(random_piece);
         //un mesaj
         consoleDisplay.displayMessage("The dozer had destroyed the pillar from coordinates " + std::to_string(random_piece.getX()) + " " + std::to_string(random_piece.getY()) + "\n");
-        consoleDisplay.displayBoard(board);
+        //consoleDisplay.displayBoard(board);
     }
     else
         if (random_piece.getColor() == Qt::black)
@@ -188,7 +189,7 @@ void Game::actionRandomPiece(Piece random_piece)
             board.deletePiece(random_piece);
             //un mesaj
             consoleDisplay.displayMessage("The dozer had destroyed the pillar from coordinates " + std::to_string(random_piece.getX()) + " " + std::to_string(random_piece.getY()) + "\n");
-            consoleDisplay.displayBoard(board);
+            //consoleDisplay.displayBoard(board);
         }
         else
         {
