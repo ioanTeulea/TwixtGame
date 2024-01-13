@@ -54,6 +54,7 @@ private:
     QString  player1Name;
     QString  player2Name;
     QGraphicsTextItem* turnInfo;
+    QList<QGraphicsEllipseItem*> circlesList;
     QColor currentColor;
     bool piecePlaced;
     int X_before = -1, Y_before = -1;
@@ -68,6 +69,7 @@ public slots:
     void setBoardSize(int newSize);
     void PlayersInfo(const std::string& player1Name, QColor color1, const std::string& player2Name, QColor color2);
     void onBoardLoaded( Board loadedBoard,int isLastPiecePlaced);
+    void onMineExploded(Board board);
     void drawGameBoard();
     void saveButtonClicked();
     void randomPiece(uint16_t X, uint16_t Y);

@@ -36,6 +36,7 @@ int main(int argc, char* argv[]) {
     QObject::connect(&Twixt, &Game::PlayersInfo, myWindow.getGameScene(), &GameScene::PlayersInfo);
     QObject::connect(myWindow.getMenuScene(), &MenuScene::loadGame, &Twixt, &Game::Load);
     QObject::connect(&Twixt, &Game::boardLoaded, myWindow.getGameScene(), &GameScene::onBoardLoaded);
+    QObject::connect(&Twixt, &Game::mineExploded, myWindow.getGameScene(), &GameScene::onMineExploded);
     QObject::connect(myWindow.getMenuScene()->getPlayButton(), &QPushButton::clicked, [&playerDialog, &Twixt]() {
         if (playerDialog.exec() == QDialog::Accepted) {
             Twixt.Setup();

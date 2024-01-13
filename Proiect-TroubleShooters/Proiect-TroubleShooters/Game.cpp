@@ -26,8 +26,16 @@ void Game::switchPlayer()
     {
         currentPlayer = &player1;
     }
-    std::pair<uint16_t, uint16_t> current_dozer = board.dozerTurn(30);
-    actionRandomPiece(current_dozer);
+    if (difficulty == "Medium")
+    {
+        std::pair<uint16_t, uint16_t> current_dozer = board.dozerTurn(30);
+        actionRandomPiece(current_dozer);
+    }
+    else if (difficulty == "Hard")
+    {
+        std::pair<uint16_t, uint16_t> current_dozer = board.dozerTurn(40);
+        actionRandomPiece(current_dozer);
+    }
 }
 
 void Game::switchPlayerColors()
@@ -45,10 +53,10 @@ void Game::Setup()
     //consoleDisplay.displayBoard(board);
     uint16_t maxPieces;
     if (difficulty == "Easy") {
-        maxPieces = (board.getSize() * 1.2);
+        maxPieces = (board.getSize() * 2.0);
     }
     else {
-        maxPieces = (board.getSize() * 0.9);
+        maxPieces = (board.getSize() * 1.7);
     }
 
     player1.setInitialValues(maxPieces);
@@ -60,6 +68,11 @@ void Game::Setup()
         //std::cin >> nr_mines;
         nr_mines = board.getSize() / 3;
         board.generateMines(nr_mines);
+        const auto& mines = board.getMines();
+        consoleDisplay.displayMessage("Generated Mines:\n");
+        for (const auto& mine : mines) {
+            consoleDisplay.displayMessage("Mine at coordinates: " + std::to_string(std::get<0>(mine)) + ", " + std::to_string(std::get<1>(mine)) + std::to_string(std::get<2>(mine))+ "\n");
+        }
     }
 }
 
@@ -110,15 +123,33 @@ void Game::action_addPawn(QColor color, const  uint16_t i, const  uint16_t j, bo
                 consoleDisplay.displayMessage("Can't do that!\n");
         else {
             Piece newPiece(currentPlayer->getColor(), i, j);
-            if (board.placePiece(newPiece))
-            {
-                isOk = true;
-                currentPlayer->setRemainingPieces(currentPlayer->getRemainingPieces() - 1);
-                if (board(i, j).getColor() == Qt::gray)
-                    currentPlayer->advantage = true;
+            bool exploded = false;
+            for (int i = 0; i < board.getMines().size(); i++) {
+                if (i < board.getMines().size() && newPiece.getX() == std::get<0>(board.getMines()[i]) && newPiece.getY() == std::get<1>(board.getMines()[i])) {
+                    board.explode(board.getMines()[i]);
+                    board.getMines().erase(board.getMines().begin() + i);
+                    exploded = true;
+                   
+                    break;
+                }
             }
-            else
-                consoleDisplay.displayMessage("Can't do that!\n");
+            if (exploded)
+            {
+                consoleDisplay.displayBoard(board);
+                emit mineExploded(board);
+            }
+            else 
+            {
+                if (board.placePiece(newPiece))
+                {
+                    isOk = true;
+                    currentPlayer->setRemainingPieces(currentPlayer->getRemainingPieces() - 1);
+                    if (board(i, j).getColor() == Qt::gray)
+                        currentPlayer->advantage = true;
+                }
+                else
+                    consoleDisplay.displayMessage("Can't do that!\n");
+            }
         }
     }
 
@@ -206,6 +237,11 @@ void Game::reset()
     board.reset();
     board.deleteBridges();
     currentPlayer = &player1;
+}
+
+std::string Game::getDifficulty()
+{
+    return difficulty;
 }
 
 void Game::Load()

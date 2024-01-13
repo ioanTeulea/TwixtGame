@@ -27,7 +27,7 @@ public:
     void display_changingBridges();
     void setGameDifficulty();
     void reset();
-   
+    std::string getDifficulty();
     void Save(const std::string& filename,bool isPiecePlaced);
     friend std::ostream& operator<<(std::ostream& out, const Game& game);
     friend std::istream& operator>>(std::istream& in, Game& game);
@@ -39,6 +39,7 @@ signals:
     void PlayersInfo(const std::string &player1Name,QColor color1, const std::string& player2Name, QColor color2);
     void gameFinished();
     void boardLoaded(Board board,int isLastPiecePlaced);
+    void mineExploded(Board board);
     void randomPiece(int X, int Y);
 public slots:
     void setDifficulty(const QString& difficulty);

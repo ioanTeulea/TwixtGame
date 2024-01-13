@@ -70,6 +70,11 @@ std::vector<Bridge>& Board::getBridges()
     return bridges;
 }
 
+ std::vector<std::tuple<uint16_t, uint16_t, uint16_t>>& Board::getMines()
+{
+    return mines;
+}
+
 
 Piece& Board::operator()(uint16_t x, uint16_t y)
 {
@@ -96,7 +101,7 @@ bool Board::isValidLocation(uint16_t x, uint16_t y) const
 }
 
 bool Board::isOccupied(uint16_t x, uint16_t y) const {
-    return board[x][y].getColor() != Qt::gray;
+    return board[x][y].getColor() != Qt::gray || (x == dozer.first && y == dozer.second);
 }
 
 bool Board::placeBridge(Piece& piece1, Piece& piece2)
@@ -145,13 +150,6 @@ bool Board::placePiece(const Piece& newPiece)
 
     if (isValidLocation(newPiece.getX(), newPiece.getY()) && !isOccupied(newPiece.getX(), newPiece.getY()))
     {
-        for (int i = 0; i < mines.size(); i++) {
-            if (newPiece.getX() == std::get<0>(mines[i]) && newPiece.getY() == std::get<1>(mines[i])) {
-                explode(mines[i]);
-                mines.erase(mines.begin() + i);
-                return true;
-            }
-        }
         board[newPiece.getX()][newPiece.getY()] = newPiece;
         return true;
     }
@@ -377,7 +375,7 @@ void Board::explode(const std::tuple<uint16_t, uint16_t, uint16_t>& mine)
     case 1:
         for (int i{ std::get<0>(mine) - 1 }; i < std::get<0>(mine) + 1; i++)
             for (int j{ std::get<1>(mine) - 1 }; j < std::get<1>(mine) + 1; j++) {
-                if (board[i][j].getColor() != None) {
+                if (board[i][j].getColor() != Qt::gray) {
                     for (int t = 0; t < bridges.size(); t++)
                     {
                         if (bridges[t].getPiece1() == board[i][j] || bridges[t].getPiece2() == board[i][j])
@@ -391,7 +389,7 @@ void Board::explode(const std::tuple<uint16_t, uint16_t, uint16_t>& mine)
     case 2:
         for (int j{ 0 }; j < size - 1; j++)
         {
-            if (board[std::get<0>(mine)][j].getColor() != None) {
+            if (board[std::get<0>(mine)][j].getColor() != Qt::gray) {
                 for (int t = 0; t < bridges.size(); t++)
                     if (bridges[t].getPiece1() == board[std::get<0>(mine)][j] || bridges[t].getPiece2() == board[std::get<0>(mine)][j])
                         bridges.erase(bridges.begin() + t);
@@ -403,7 +401,7 @@ void Board::explode(const std::tuple<uint16_t, uint16_t, uint16_t>& mine)
     case 3:
         for (int i{ 0 }; i < size - 1; i++)
         {
-            if (board[i][std::get<1>(mine)].getColor() != None) {
+            if (board[i][std::get<1>(mine)].getColor() != Qt::gray) {
                 for (int t = 0; t < bridges.size(); t++)
                     if (bridges[t].getPiece1() == board[i][std::get<1>(mine)] || bridges[t].getPiece2() == board[i][std::get<1>(mine)])
                         bridges.erase(bridges.begin() + t);

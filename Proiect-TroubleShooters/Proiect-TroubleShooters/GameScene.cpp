@@ -189,6 +189,7 @@ void GameScene::drawGameBoard()
             circle->setData(1, j);  // ?n a doua valoare (index 1), stocheaz? j
             circle->setData(2, QBrush(Qt::gray)); //In a treia valoarea stocheaza culoarea
             addItem(circle);
+            circlesList.append(circle);
         }
     }
 
@@ -254,7 +255,7 @@ void GameScene::keyPressEvent(QKeyEvent* event) {
 void GameScene::onBoardLoaded(Board loadedBoard,int isLastPiecePlaced)
 {
     clear();
-    if (!nextPlayerButton) {
+    if (nextPlayerButton==nullptr) {
         nextPlayerButton = new QPushButton("Next Player", nullptr);
     }
     if (isLastPiecePlaced == 1)
@@ -264,7 +265,7 @@ void GameScene::onBoardLoaded(Board loadedBoard,int isLastPiecePlaced)
     }
     else if(isLastPiecePlaced == 0)
     {
-        nextPlayerButton->setEnabled(false);
+        //nextPlayerButton->setEnabled(false);
         piecePlaced = false;
     }
 
@@ -275,7 +276,7 @@ void GameScene::onBoardLoaded(Board loadedBoard,int isLastPiecePlaced)
     qreal buttonY = -Height / 2.0 + 10;  // Ajusteaz? pozi?ia pe axa Y
 
 
-    nextPlayerButton->setGeometry(buttonX, buttonY, buttonWidth, buttonHeight);
+    //nextPlayerButton->setGeometry(buttonX, buttonY, buttonWidth, buttonHeight);
 
     qreal radius = cellSize / 4.0; // raza cercului
     qreal distance = 1.0 * cellSize; // distan?a ?ntre cercuri
@@ -359,9 +360,34 @@ void GameScene::onBoardLoaded(Board loadedBoard,int isLastPiecePlaced)
 
     lines = QList<QGraphicsLineItem*>();
     // Adaug? butonul ?n scen?
-    QGraphicsProxyWidget* proxyButton = new QGraphicsProxyWidget();
-    proxyButton->setWidget(nextPlayerButton);
-    addItem(proxyButton);
+    //QGraphicsProxyWidget* proxyButton = new QGraphicsProxyWidget();
+    ///proxyButton->setWidget(nextPlayerButton);
+    //addItem(proxyButton);
+}
+void GameScene::onMineExploded(Board board)
+{
+    if (nextPlayerButton != nullptr)
+    {
+        nextPlayerButton->setEnabled(true);
+        piecePlaced = true;
+    }
+
+    // Itrează prin lista de cercuri
+    foreach(QGraphicsEllipseItem * circle, circlesList)
+    {
+        // Obține coordonatele cercului din datele sale
+        int i = circle->data(1).toInt();
+        int j = circle->data(0).toInt();
+        if(i==board.dozer.first && j==board.dozer.second)
+            circle->setBrush(QBrush(Qt::blue));
+        else
+        { // Actualizează datele cercului cu cele din noua placă (board)
+            QColor cellColor = board(j, i).getColor();
+            circle->setBrush(QBrush(cellColor));
+            circle->setData(2, QBrush(cellColor));
+        }
+    }
+    
 }
 void GameScene::randomPiece(uint16_t X,uint16_t Y)
 {

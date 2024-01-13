@@ -18,10 +18,10 @@ void ConsoleDisplay::displayBoard(Board& board) const
         }
         for (uint16_t col = 0; col < board.getSize(); col++) {
             if (!((row == board.getSize() - 1 || row == 0) && (col == board.getSize() - 1 || col == 0))) {
-                if (board(row,col).getColor() == static_cast<int>(Color::Red)) {
+                if (board(row,col).getColor() ==Qt::red) {
                     std::cout << "R ";
                 }
-                else if (board(row,col).getColor() == static_cast<int>(Color::Black)) {
+                else if (board(row,col).getColor() ==Qt::black) {
                     std::cout << "B ";
                 }
                 else if (row == board.dozer.first && col == board.dozer.second)
