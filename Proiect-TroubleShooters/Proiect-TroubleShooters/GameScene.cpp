@@ -456,16 +456,57 @@ void GameScene::onMineExploded(Board board)
         // Obține coordonatele cercului din datele sale
         int i = circle->data(1).toInt();
         int j = circle->data(0).toInt();
-        if(i==board.dozer.first && j==board.dozer.second)
+        if (i == board.dozer.first && j == board.dozer.second)
             circle->setBrush(QBrush(Qt::blue));
         else
         { // Actualizează datele cercului cu cele din noua placă (board)
-            QColor cellColor = board(j, i).getColor();
+            QColor cellColor = board(i, j).getColor();
             circle->setBrush(QBrush(cellColor));
             circle->setData(2, QBrush(cellColor));
         }
+        if (i > 0 && i < board.board.size() && j>0 && j < board.board.size())
+        {
+            for (QGraphicsItem* bridgeItem : items()) {
+                if (bridgeItem->type() == QGraphicsLineItem::Type) {
+                    QGraphicsLineItem* line = qgraphicsitem_cast<QGraphicsLineItem*>(bridgeItem);
+                    int lineX1 = line->data(0).toUInt();
+                    int lineY1 = line->data(1).toUInt();
+                    int lineX2 = line->data(2).toUInt();
+                    int lineY2 = line->data(3).toUInt();
+
+                    if ((lineY1 == i && lineX1 == j) || (lineY2 == i && lineX2 == j)) {
+                        emit deleteBridgeClicked(lineX1, lineY1, lineX2, lineY2);
+                        removeItem(line);
+                    }
+                }
+            }
+        }
     }
-    
+    qreal radius = cellSize / 4.0;
+    qreal distance = 0.7 * cellSize;
+    qreal sceneWidth = boardSize * distance;
+    qreal sceneHeight = boardSize * distance;
+    qreal xOffset = -sceneWidth / 2.0;
+    qreal yOffset = -sceneHeight / 2.0;
+
+    for (const auto& bridge : board.getBridges())
+    {
+        uint16_t j1 = bridge.getPiece1().getX();
+        uint16_t i1 = bridge.getPiece1().getY();
+        uint16_t j2 = bridge.getPiece2().getX();
+        uint16_t i2 = bridge.getPiece2().getY();
+        QGraphicsLineItem* line = new QGraphicsLineItem();
+        QPen pen(bridge.getPiece1().getColor(), 2, Qt::SolidLine);
+        line->setPen(pen);
+        line->setLine(xOffset + i1 * distance + radius / 2, yOffset + j1 * distance + radius / 2, xOffset + i2 * distance + radius / 2, yOffset + j2 * distance + radius / 2);
+        line->setData(0, j1);
+        line->setData(1, i1);
+        line->setData(2, j2);
+        line->setData(3, i2);
+        addItem(line);
+        lines.append(line);
+    }
+
 }
 void GameScene::randomPiece(uint16_t X,uint16_t Y)
 {
