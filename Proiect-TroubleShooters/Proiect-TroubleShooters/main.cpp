@@ -42,6 +42,7 @@ int main(int argc, char* argv[]) {
             Twixt.Setup();
         }
         });
+    QObject::connect(&Twixt, &Game::gameFinished, myWindow.getGameScene(), &GameScene::gameFinished);
     QObject::connect(&Twixt, &Game::gameFinished, &myWindow, [&myWindow, &Twixt]() {
         QObject::disconnect(myWindow.getGameScene(), &GameScene::circleClicked, &Twixt, &Game::action_addPawn);
         QObject::disconnect(myWindow.getGameScene(), &GameScene::bridgeClicked, &Twixt, &Game::action_placeBridge);

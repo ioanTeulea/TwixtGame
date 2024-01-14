@@ -122,8 +122,12 @@ void GameScene::mousePressEvent(QGraphicsSceneMouseEvent* event)
     }
     else if (item && item->type() == QGraphicsLineItem::Type) {
         QGraphicsLineItem* line = qgraphicsitem_cast<QGraphicsLineItem*>(item);
+        QPen pen = line->pen();
+        QColor lineColor = pen.color();
+
+        
         QPointF clickPos = event->scenePos();
-        if (!isPointInsideAnyEllipse(clickPos, circlesList)) {
+        if (!isPointInsideAnyEllipse(clickPos, circlesList) && lineColor==currentColor) {
             emit deleteBridgeClicked(line->data(0).toUInt(), line->data(1).toUInt(), line->data(2).toUInt(), line->data(3).toUInt());
             removeItem(item);
         }
@@ -300,6 +304,7 @@ void GameScene::onBoardLoaded(Board loadedBoard,int isLastPiecePlaced)
 {
     clear();
     circlesList.clear();
+    lines.clear();
     if (nextPlayerButton==nullptr) {
         nextPlayerButton = new QPushButton("Next Player", nullptr);
     }
@@ -319,14 +324,10 @@ void GameScene::onBoardLoaded(Board loadedBoard,int isLastPiecePlaced)
     //connect(nextPlayerButton, &QPushButton::clicked, this, &GameScene::switchColor);
     qreal buttonWidth = Width * 0.15;     // 15% din l??imea scenei
     qreal buttonHeight = Height * 0.07;; // 5% din ?n?l?imea scenei
-    qreal buttonX = -Width / 2.0 + 10;;  // Ajusteaz? pozi?ia pe axa X
-    qreal buttonY = -Height / 2.0 + 10;  // Ajusteaz? pozi?ia pe axa Y
-
-
-    //nextPlayerButton->setGeometry(buttonX, buttonY, buttonWidth, buttonHeight);
+  
 
     qreal radius = cellSize / 4.0; // raza cercului
-    qreal distance = 1.0 * cellSize; // distan?a ?ntre cercuri
+    qreal distance = 0.7 * cellSize; // distan?a ?ntre cercuri
 
     // Ini?ializarea dimensiunilor ?i coordonatelor scenei
     qreal sceneWidth = loadedBoard.getSize()* distance;
@@ -334,8 +335,12 @@ void GameScene::onBoardLoaded(Board loadedBoard,int isLastPiecePlaced)
     qreal xOffset = -sceneWidth / 2.0;
     qreal yOffset = -sceneHeight / 2.0;
 
+    qreal buttonX = xOffset + (sceneWidth - buttonWidth) / 2.0;
+    qreal buttonY = yOffset + sceneHeight + 10;
+    nextPlayerButton->setGeometry(buttonX, buttonY, buttonWidth, buttonHeight);
+
     // Adaug? numele juc?torului 1 la stânga tablei de joc
-    QGraphicsTextItem* player1TextItem = new QGraphicsTextItem(player1Name);
+    player1TextItem = new QGraphicsTextItem(player1Name);
     player1TextItem->setFont(QFont("Arial", 12));  // Seteaz? fontul ?i dimensiunea
     player1TextItem->setDefaultTextColor(player1Color);  // Seteaz? culoarea textului
     player1TextItem->setPos(xOffset - 150, yOffset + sceneHeight / 2 - player1TextItem->boundingRect().height() / 2);
@@ -343,7 +348,7 @@ void GameScene::onBoardLoaded(Board loadedBoard,int isLastPiecePlaced)
     addItem(player1TextItem);
 
     // Adaug? numele juc?torului 2 la dreapta tablei de joc
-    QGraphicsTextItem* player2TextItem = new QGraphicsTextItem(player2Name);
+    player2TextItem = new QGraphicsTextItem(player2Name);
     player2TextItem->setFont(QFont("Arial", 12));  // Seteaz? fontul ?i dimensiunea
     player2TextItem->setDefaultTextColor(player2Color);  // Seteaz? culoarea textului
     player2TextItem->setPos(xOffset + sceneWidth + 50, yOffset + sceneHeight / 2 - player2TextItem->boundingRect().height() / 2);
@@ -369,7 +374,7 @@ void GameScene::onBoardLoaded(Board loadedBoard,int isLastPiecePlaced)
             circle->setData(0, i);  // ?n prima valoare (index 0), stocheaz? i
             circle->setData(1, j);  // ?n a doua valoare (index 1), stocheaz? j
             circle->setData(2, QBrush(cellColor)); //In a treia valoarea stocheaza culoarea
-
+            circlesList.append(circle);
             addItem(circle);
         }
     }
@@ -483,5 +488,17 @@ void GameScene::randomPiece(uint16_t X,uint16_t Y)
                 break;
             }
         }
+    }
+}
+
+void GameScene::gameFinished()
+{
+    if (currentColor == player1Color)
+    {
+        turnInfo->setPlainText(player1Name + " won!");
+    }
+    else if(currentColor == player1Color)
+    {
+        turnInfo->setPlainText(player2Name + " won!");
     }
 }

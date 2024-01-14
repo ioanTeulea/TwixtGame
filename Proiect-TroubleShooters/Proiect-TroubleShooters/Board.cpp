@@ -472,10 +472,11 @@ std::istream& operator>>(std::istream& in, Board& B)
     }
     uint16_t minesSize;
     in >> minesSize;
+    aux.getMines().reserve(minesSize);
     for (uint16_t i{ 0 }; i < minesSize; i++) {
         uint16_t mineX, mineY, type;
-        in >> mineX, mineY, type;
-        aux.mines[i] = std::make_tuple(mineX, mineY, type);
+        in >> mineX>> mineY>> type;
+        aux.getMines().push_back(std::make_tuple(mineX, mineY, type));
     }
     in >> aux.dozer.first >> aux.dozer.second;
     B =std::move(aux);
