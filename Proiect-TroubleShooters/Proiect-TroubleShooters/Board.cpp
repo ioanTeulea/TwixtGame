@@ -314,13 +314,11 @@ uint16_t Board::delete_DozerBridges(Piece random_piece)
         {
             if (bridges[i].getPiece1().getX() == random_piece.getX() && bridges[i].getPiece1().getY() == random_piece.getY())
             {
-                std::cout << "intra";
                 deleteBridge(random_piece, bridges[i].getPiece2());
 
             }
             else if (bridges[i].getPiece2().getX() == random_piece.getX() && bridges[i].getPiece2().getY() == random_piece.getY())
             {
-                std::cout << "intra";
                 deleteBridge(bridges[i].getPiece1(), random_piece);
             }
             numberBridges++;
@@ -340,7 +338,6 @@ std::pair<std::uint16_t, std::uint16_t> Board::generateRandomPiece()
             std::uniform_int_distribution<int> distribution(1, getSize() - 2);
             x = distribution(engine);
             y = distribution(engine);
-            std::cout << "da\n";
         } while (isOccupied(x, y)&&x>0&&x<size-1&&y>0&&y<size-1);
         Dozer = { x,y };
     }

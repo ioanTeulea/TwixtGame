@@ -415,6 +415,10 @@ void GameScene::onBoardLoaded(Board loadedBoard,int isLastPiecePlaced)
         line->setPen(pen);
         line->setLine(xOffset + i1 * distance + radius / 2, yOffset + j1 * distance + radius / 2,
             xOffset + i2 * distance + radius / 2, yOffset + j2 * distance + radius / 2);
+        line->setData(0, j1);
+        line->setData(1, i1);
+        line->setData(2, j2);
+        line->setData(3, i2);
         addItem(line);
         lines.append(line);
     }
