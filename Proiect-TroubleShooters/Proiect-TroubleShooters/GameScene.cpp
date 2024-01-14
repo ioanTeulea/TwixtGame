@@ -35,6 +35,7 @@ GameScene::GameScene(QObject* parent, int initialWidth, int initialHeight) :QGra
     //drawGameBoard();
     connect(nextPlayerButton, &QPushButton::clicked, this, &GameScene::switchColor);
     piecePlaced = false;
+   
 }
 
 void GameScene::showCoordinates(qreal x, qreal y)
@@ -62,6 +63,22 @@ void GameScene::applyGlowEffect(QGraphicsTextItem* textItem, int blurRadius, con
 
     // Aplică efectul de umbră pe QGraphicsTextItem
     textItem->setGraphicsEffect(glowEffect);
+}
+void GameScene::addLegend()
+{
+    qreal legendX = sceneRect().width() - sceneRect().width() * 0.45;
+    qreal legendY = -sceneRect().height() + sceneRect().height() * 0.45;
+
+    QGraphicsTextItem* legendText = new QGraphicsTextItem("Buldozerist");
+    legendText->setFont(QFont("Arial", 10));
+    legendText->setDefaultTextColor(Qt::blue);
+    legendText->setPos(legendX, legendY);
+    addItem(legendText);
+
+    // Draw the blue circle
+    QGraphicsEllipseItem* blueCircle = new QGraphicsEllipseItem(legendX - 10, legendY - 5, 10, 10);
+    blueCircle->setBrush(QBrush(Qt::blue));
+    addItem(blueCircle);
 }
 bool GameScene::isPointInsideAnyEllipse(const QPointF& point, QList<QGraphicsEllipseItem*>& ellipses)
 {
@@ -106,7 +123,7 @@ void GameScene::mousePressEvent(QGraphicsSceneMouseEvent* event)
                 startEllipse->setBrush(currentColor);  // Face cercul rosu
                 startEllipse->setData(2, currentColor);
                 nextPlayerButton->setEnabled(true);
-                nextPlayerButton->setStyleSheet(BUTTON_DISABLED_STYLE);
+                nextPlayerButton->setStyleSheet(BUTTON_ENABLED_STYLE);
                 piecePlaced = true;
                 qreal centerX = event->scenePos().x();
                 qreal centerY = event->scenePos().y();
@@ -283,13 +300,13 @@ void GameScene::switchColor()
     nextPlayerButton->setStyleSheet(BUTTON_DISABLED_STYLE);
     piecePlaced = false;
 }
-void GameScene::PlayersInfo(const std::string& player1Name, QColor color1, const std::string& player2Name, QColor color2)
+void GameScene::PlayersInfo(const std::string& player1Name, QColor color1, const std::string& player2Name, QColor color2,QColor currentColor)
 {
     player1Color = color1;
     player2Color = color2;
     this->player1Name = QString::fromStdString(player1Name);
     this->player2Name = QString::fromStdString(player2Name);
-    currentColor = player1Color;
+    this->currentColor = currentColor;
 }
 void GameScene::keyPressEvent(QKeyEvent* event) {
     if (event->key() == Qt::Key_Escape) {
@@ -300,11 +317,13 @@ void GameScene::keyPressEvent(QKeyEvent* event) {
         QGraphicsScene::keyPressEvent(event);
     }
 }
+
 void GameScene::onBoardLoaded(Board loadedBoard,int isLastPiecePlaced)
 {
     clear();
     circlesList.clear();
     lines.clear();
+
     if (nextPlayerButton==nullptr) {
         nextPlayerButton = new QPushButton("Next Player", nullptr);
     }
@@ -341,21 +360,24 @@ void GameScene::onBoardLoaded(Board loadedBoard,int isLastPiecePlaced)
 
     // Adaug? numele juc?torului 1 la stânga tablei de joc
     player1TextItem = new QGraphicsTextItem(player1Name);
-    player1TextItem->setFont(QFont("Arial", 12));  // Seteaz? fontul ?i dimensiunea
+    player1TextItem->setFont(QFont("Impact", 15));  // Seteaz? fontul ?i dimensiunea
     player1TextItem->setDefaultTextColor(player1Color);  // Seteaz? culoarea textului
-    player1TextItem->setPos(xOffset - 150, yOffset + sceneHeight / 2 - player1TextItem->boundingRect().height() / 2);
-   // player1TextItem->setGraphicsEffect(glowEffect);
+    player1TextItem->setPos(xOffset - 100, yOffset + sceneHeight / 2 - player1TextItem->boundingRect().height() / 2);
+    applyGlowEffect(player1TextItem, 10, player1Color, 0);
     addItem(player1TextItem);
 
     // Adaug? numele juc?torului 2 la dreapta tablei de joc
     player2TextItem = new QGraphicsTextItem(player2Name);
-    player2TextItem->setFont(QFont("Arial", 12));  // Seteaz? fontul ?i dimensiunea
+    player2TextItem->setFont(QFont("Impact", 15));  // Seteaz? fontul ?i dimensiunea
     player2TextItem->setDefaultTextColor(player2Color);  // Seteaz? culoarea textului
     player2TextItem->setPos(xOffset + sceneWidth + 50, yOffset + sceneHeight / 2 - player2TextItem->boundingRect().height() / 2);
     addItem(player2TextItem);
 
+    if(currentColor==player1Color)
     //Adaug? numele juc?torului curent deasupra tablei de joc
     turnInfo = new QGraphicsTextItem(player1Name + "'s turn");
+    else
+        turnInfo = new QGraphicsTextItem(player2Name + "'s turn");
     turnInfo->setFont(QFont("Arial", 14));  // Seteaz? fontul ?i dimensiunea
     turnInfo->setDefaultTextColor(Qt::lightGray);  // Seteaz? culoarea textului
     turnInfo->setPos(xOffset + sceneWidth / 2 - turnInfo->boundingRect().width() / 2, yOffset - 50);  // Ajusteaz? pozi?ia pentru a fi deasupra ?i la mijlocul tablei
@@ -415,6 +437,9 @@ void GameScene::onBoardLoaded(Board loadedBoard,int isLastPiecePlaced)
     QGraphicsProxyWidget* proxyButton = new QGraphicsProxyWidget();
     proxyButton->setWidget(nextPlayerButton);
     addItem(proxyButton);
+
+    if (loadedBoard.dozer.first != 0 && loadedBoard.dozer.second != 0)
+        addLegend();
 }
 void GameScene::onMineExploded(Board board)
 {
@@ -496,9 +521,18 @@ void GameScene::gameFinished()
     if (currentColor == player1Color)
     {
         turnInfo->setPlainText(player1Name + " won!");
+        nextPlayerButton->setEnabled(false);
     }
     else if(currentColor == player1Color)
     {
         turnInfo->setPlainText(player2Name + " won!");
+        nextPlayerButton->setEnabled(false);
     }
+}
+
+void GameScene::gameDifficulty(const QString& difficulty)
+{
+    gameDiff = difficulty;
+    if (gameDiff == QString::fromStdString("Medium") || gameDiff == QString::fromStdString("Hard"))
+        addLegend();
 }

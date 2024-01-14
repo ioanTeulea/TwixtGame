@@ -26,6 +26,7 @@ signals:
 private slots:
     void onPlayClicked();
     void onLoadClicked();
+    void onExitClicked();
 private:
     QPushButton* createButton(const QString& text, qreal buttonWidth, qreal buttonHeight, qreal buttonX, qreal buttonY);
     void addBackground(int Width, int Height);

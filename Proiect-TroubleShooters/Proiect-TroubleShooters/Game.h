@@ -36,11 +36,12 @@ private:
     void Load_menu();
     void Restart_menu(bool& exit);
 signals:
-    void PlayersInfo(const std::string &player1Name,QColor color1, const std::string& player2Name, QColor color2);
+    void PlayersInfo(const std::string &player1Name,QColor color1, const std::string& player2Name, QColor color2,QColor currentColor);
     void gameFinished();
     void boardLoaded(Board board,int isLastPiecePlaced);
     void mineExploded(Board board);
     void randomPiece(int X, int Y);
+    void gameDifficulty(const QString& difficulty);
 public slots:
     void setDifficulty(const QString& difficulty);
     void setPlayerNames(const QString& namePlayer1, const QString& namePlayer2);

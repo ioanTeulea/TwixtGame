@@ -10,6 +10,7 @@ MyWindow::MyWindow()
     menuScene = new MenuScene(this, INITIAL_WIDTH, INITIAL_HEIGHT);
     gameScene = new GameScene(this, INITIAL_WIDTH, INITIAL_HEIGHT);
     menuScene->setSceneRect(0, 0, INITIAL_WIDTH, INITIAL_HEIGHT);
+    gameScene->setSceneRect(0, 0, INITIAL_WIDTH, INITIAL_HEIGHT);
     // Use QMainWindow as the main window
     mainWindow = new QMainWindow();
 
@@ -24,7 +25,7 @@ MyWindow::MyWindow()
     connect(menuScene, &MenuScene::playClicked, this, &MyWindow::switchToGameScene);
     connect(menuScene, &MenuScene::playClicked, gameScene, &GameScene::drawGameBoard);
     connect(menuScene, &MenuScene::loadClicked, this, &MyWindow::switchToGameScene);
-
+    connect(menuScene, &MenuScene::exitClicked, this, &MyWindow::onExitClicked);
     // Show the main window
     mainWindow->show();
 }
@@ -37,6 +38,11 @@ MenuScene* MyWindow::getMenuScene() const
 GameScene* MyWindow::getGameScene() const
 {
     return gameScene;
+}
+
+void MyWindow::onExitClicked()
+{
+    mainWindow->close();
 }
 
 

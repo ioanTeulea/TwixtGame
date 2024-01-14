@@ -13,7 +13,7 @@ void Game::setPlayerNames(const QString& namePlayer1, const QString& namePlayer2
     player2.setName(namePlayer2.toStdString());
     player2.setColor(Qt::black);
 
-    emit PlayersInfo(player1.getName(),player1.getColor(),player2.getName(),player2.getColor());
+    emit PlayersInfo(player1.getName(),player1.getColor(),player2.getName(),player2.getColor(),player1.getColor());
 }
 
 void Game::switchPlayer()
@@ -263,17 +263,21 @@ void Game::Load()
     this->board = board;
     std::string colorStr;
     in >> colorStr;
-    QColor Color(QString::fromStdString(colorStr));
-    if (Color == p1.getColor())
-        this->currentPlayer = &this->player1;
-    else
-        this->currentPlayer = &this->player2;
     std::string diff;
     in >> diff;
     difficulty = diff;
     int isLastPiecePlaced;
     in >> isLastPiecePlaced;
-    emit PlayersInfo(p1.getName(),p1.getColor(),p2.getName(), p2.getColor());
+    QColor Color(QString::fromStdString(colorStr));
+    if (Color == p1.getColor())
+    {
+        this->currentPlayer = &this->player1;
+    }
+    else
+    {
+        this->currentPlayer = &this->player2;
+    }
+    emit PlayersInfo(p1.getName(),p1.getColor(),p2.getName(), p2.getColor(),Color);
     emit boardLoaded(board,isLastPiecePlaced);
 }
 
@@ -512,6 +516,7 @@ void Game::setBoardSize(const int boardSize)
 void Game::setDifficulty(const QString& diff)
 {
     difficulty = diff.toStdString();
+    emit gameDifficulty(diff);
 }
 
 bool Game::Play() {

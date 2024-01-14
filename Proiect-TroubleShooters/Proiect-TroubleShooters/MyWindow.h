@@ -7,7 +7,7 @@
 #include "GameScene.h"
 #include <QGraphicsView>
 #include <QMainWindow>
-
+#include "EscapeMenuDialog.h"
 class MyWindow : public QObject
 {
     Q_OBJECT
@@ -19,6 +19,7 @@ public:
 
 public slots:
     void switchToGameScene();
+    void onExitClicked();
 
 private:
     MenuScene* menuScene;

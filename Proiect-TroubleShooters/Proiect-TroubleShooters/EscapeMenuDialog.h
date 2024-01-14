@@ -17,6 +17,7 @@ private:
 signals:
     void save(const std::string& filename,bool isPiecePlaced);
     void savedClicked();
+    void forfeitClicked();
 private slots:
     void resumeGame();
     void saveGame();

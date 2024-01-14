@@ -16,6 +16,8 @@
 #include <QGraphicsProxyWidget>
 #include <qcoreapplication.h>
 #include <QGraphicsDropShadowEffect>
+#include <QPixmap>
+#include <QGraphicsPixmapItem>
 
 #include "EscapeMenuDialog.h"
 #include"Board.h"
@@ -37,7 +39,7 @@ protected:
     void mousePressEvent(QGraphicsSceneMouseEvent* event) override;
     void mouseReleaseEvent(QGraphicsSceneMouseEvent* event) override;
     void keyPressEvent(QKeyEvent* event) override;
-   
+    void resizeBackground(int width, int height);
    
     void switchColor();
     int Width;
@@ -53,6 +55,7 @@ private:
     QColor player2Color;
     QString  player1Name;
     QString  player2Name;
+    QString gameDiff;
     QGraphicsTextItem* turnInfo, *player1TextItem,* player2TextItem;
     QList<QGraphicsEllipseItem*> circlesList;
     QColor currentColor;
@@ -62,6 +65,7 @@ private:
     bool isPointInsideAnyEllipse(const QPointF& point, QList<QGraphicsEllipseItem*>& ellipses);
     bool isPointInsideEllipse(const QPointF& point,  QGraphicsEllipseItem* ellipse);
     void applyGlowEffect(QGraphicsTextItem* textItem, int blurRadius, const QColor& glowColor, int offset);
+    void addLegend();
 signals:
     void circleClicked(QColor color, const uint16_t i, const uint16_t j, bool& isOk);
     void bridgeClicked(const uint16_t x1, const uint16_t y1, const uint16_t x2, const uint16_t y2, bool& isOk);
@@ -70,13 +74,14 @@ signals:
 
 public slots:
     void setBoardSize(int newSize);
-    void PlayersInfo(const std::string& player1Name, QColor color1, const std::string& player2Name, QColor color2);
+    void PlayersInfo(const std::string& player1Name, QColor color1, const std::string& player2Name, QColor color2,QColor currentColor);
     void onBoardLoaded( Board loadedBoard,int isLastPiecePlaced);
     void onMineExploded(Board board);
     void drawGameBoard();
     void saveButtonClicked();
     void randomPiece(uint16_t X, uint16_t Y);
     void gameFinished();
+    void gameDifficulty(const QString& difficulty);
 };
 
 #endif // GAMESCENE_H

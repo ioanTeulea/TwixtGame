@@ -26,7 +26,7 @@ EscapeMenuDialog::EscapeMenuDialog(QWidget* parent) : QDialog(parent) {
     resumeButton->setStyleSheet(buttonStyle);
     saveButton->setStyleSheet(buttonStyle);
     forfeitButton->setStyleSheet(buttonStyle);
-
+    setFixedSize(150, 100);
     connect(resumeButton, &QPushButton::clicked, this, &EscapeMenuDialog::resumeGame);
     connect(saveButton, &QPushButton::clicked, this, &EscapeMenuDialog::saveGame);
     connect(forfeitButton, &QPushButton::clicked, this, &EscapeMenuDialog::forfeitGame);
@@ -55,5 +55,7 @@ void EscapeMenuDialog::saveGame() {
 
 void EscapeMenuDialog::forfeitGame() {
     
+    
+    emit forfeitClicked();
     accept();
 }

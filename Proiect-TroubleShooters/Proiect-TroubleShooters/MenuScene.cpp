@@ -42,6 +42,7 @@ MenuScene::MenuScene(QObject* parent, int initialWidth, int initialHeight) : QGr
     exitButton = createButton("Exit", 100, 50, 95, 465);
     QGraphicsProxyWidget* proxyButton3 = new QGraphicsProxyWidget();
     proxyButton3->setWidget(exitButton);
+    connect(exitButton, &QPushButton::clicked, this, &MenuScene::onExitClicked);
     addItem(proxyButton3);
 
     // addButton("Load", 200, SLOT(loadClicked()));
@@ -101,4 +102,9 @@ void MenuScene::onLoadClicked()
 {
     emit loadClicked();
     emit loadGame();
+}
+
+void MenuScene::onExitClicked()
+{
+    emit exitClicked();
 }
