@@ -373,8 +373,8 @@ void Board::explode(const std::tuple<uint16_t, uint16_t, uint16_t>& mine)
     switch (std::get<2>(mine))
     {
     case 1:
-        for (int i{ std::get<0>(mine) - 1 }; i < std::get<0>(mine) + 1; i++)
-            for (int j{ std::get<1>(mine) - 1 }; j < std::get<1>(mine) + 1; j++) {
+        for (int i{ std::get<0>(mine) - 1 }; i <= std::get<0>(mine) + 1; i++)
+            for (int j{ std::get<1>(mine) - 1 }; j <= std::get<1>(mine) + 1; j++) {
                 if (board[i][j].getColor() != Qt::gray) {
                     for (int t = 0; t < bridges.size(); t++)
                     {
